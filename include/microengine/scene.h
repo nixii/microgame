@@ -19,6 +19,13 @@ typedef struct me_scene {
     #undef X
 } me_scene;
 
+// generate the functions for attaching components
+#define X(name, type)\
+    void me_scene_attach_##name##(me_scene *s, entity e, type t);\
+    void me_scene_detach_##name##(me_scene *s, entity e);
+    ME_COMPONENTS
+#undef X
+
 // create a new empty scene
 me_scene *me_scene_new();
 

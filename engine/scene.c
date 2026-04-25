@@ -51,3 +51,17 @@ void me_scene_destroy(me_scene *s)
 {
     free(s);
 }
+
+// generate the functions for attaching components
+#define X(name, type)\
+    void me_scene_attach_##name##(me_scene *s, entity e, type t)\
+    {\
+        s->name##_has[e] = 1;\
+        s->name##_components[e] = t;\
+    }\
+    void me_scene_detach_##name##(me_scene *s, entity e)\
+    {\
+        s->name##_has[e] = 0;\
+    }
+    ME_COMPONENTS
+#undef X
