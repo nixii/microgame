@@ -1,3 +1,5 @@
 mg
+tb
 *.o
 .DS_Store
+libmicrogame.a

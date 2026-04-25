@@ -4,31 +4,51 @@ UNAME_S = $(shell uname -s)
 CC = clang
 CFLAGS = -Wall -Wextra
 
-LDFLAGS = -L/opt/homebrew/opt/raylib/lib -lraylib
-IFLAGS = -I/opt/homebrew/opt/raylib/include
+LDFLAGS = -L/opt/homebrew/opt/raylib/lib -lraylib -L./lib -lmicrogame -lmicroengine
+IFLAGS = -I/opt/homebrew/opt/raylib/include -I./include
 
-SRCS =  $(wildcard src/*.c)
-SRCS += $(wildcard src/**/*.c)
-SRCS += $(wildcard src/**/**/*.c)
-OBJS =  $(SRCS:.c=.o)
+# runtime objects
+RT_SRCS =  $(wildcard runtime/*.c)
+RT_SRCS += $(wildcard runtime/**/*.c)
+RT_SRCS += $(wildcard runtime/**/**/*.c)
+RT_OBJS =  $(RT_SRCS:.c=.o)
+RT_TARGET = ./lib/libmicrogame.a
 
-TARGET = mg
+# build microgame
+microgame: $(RT_OBJS)
+	ar rcs $(RT_TARGET) $(RT_OBJS)
+
+# engine objects
+EG_SRCS =  $(wildcard engine/*.c)
+EG_SRCS += $(wildcard engine/**/*.c)
+EG_SRCS += $(wildcard engine/**/**/*.c)
+EG_OBJS =  $(EG_SRCS:.c=.o)
+EG_TARGET = ./lib/libmicroengine.a
+
+# build microengine
+microengine: $(EG_OBJS)
+	ar rcs $(EG_TARGET) $(EG_OBJS)
+
+# testbed objects
+TB_SRCS = $(wildcard test/*.c)
+TB_OBJS = $(TB_SRCS:.c=.o)
+TB_TARGET = tb
+
+# build the testbed
+test: $(TB_OBJS) microgame
+	$(CC) -o $(TB_TARGET) $(TB_OBJS) $(LDFLAGS) $(IFLAGS) $(CFLAGS)
+
+# build and run the test
+.PHONY: run
+run: test
+	@echo
+	./$(TB_TARGET)
 
 # build individual objects
 %.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS)
 
-# build the whole thing
-.PHONY: all
-all: $(OBJS)
-	$(CC) -o $(TARGET) $(OBJS) $(CFLAGS) $(IFLAGS) $(LDFLAGS)
-
-# build and run
-.PHONY: run
-run: all
-	./$(TARGET)
-
-# clean it up
+# clean up
 .PHONY: clean
 clean:
-	rm $(OBJS) $(TARGET)
+	rm $(RT_OBJS) $(TB_OBJS) $(RT_TARGET) $(TB_TARGET)
