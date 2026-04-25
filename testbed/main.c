@@ -14,7 +14,7 @@ int main(void)
         vec3_new(0, 0, 0),
         vec3_new(1, 1, 1)
     ));
-    me_scene_attach_mesh(s, e, mesh_from(1,
+    me_scene_attach_mesh(s, e, mesh_from(3,
         vec3_new(10, 10, 30),
         vec3_new(300, 180, 30),
         vec3_new(40, 210, 30)

@@ -62,7 +62,7 @@ void microgame_set_scene(game *g, me_scene *s)
     g->mainScene = s;
 }
 
-int microgame_running(game *g)
+int microgame_running(game *_)
 {
     return !WindowShouldClose();
 }
@@ -80,15 +80,14 @@ void microgame_render(game *g)
         if (!g->mainScene->has_transform[i]) continue;
         if (!g->mainScene->has_mesh[i]) continue;
 
-        me_vec3 t = g->mainScene->transform_components[i].pos;
         me_mesh m = g->mainScene->mesh_components[i];
 
-        for (int i = 0; i < m.triCount; i++)
+        for (int i = 0; i < m.vertCount; i++)
         {
             mr_renderer_render_triangle(&g->renderer, 
-                m.points[i * 3].x, m.points[i * 3].y,
-                m.points[i * 3 + 1].x, m.points[i * 3 + 1].y,
-                m.points[i * 3 + 2].x, m.points[i * 3 + 2].y,
+                m.verts[i * 3].x, m.verts[i * 3].y,
+                m.verts[i * 3 + 1].x, m.verts[i * 3 + 1].y,
+                m.verts[i * 3 + 2].x, m.verts[i * 3 + 2].y,
                 mr_rgb(255, 0, 255)
             );
         }

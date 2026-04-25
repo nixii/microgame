@@ -18,3 +18,5 @@ me_transform me_transform_blank()
         me_vec3_new(1, 1, 1)
     );
 }
+
+void me_transform_destroy(me_transform *_) {}
