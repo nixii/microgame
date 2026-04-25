@@ -1,9 +1,11 @@
 
 #ifndef MICROENGINE_MESH_H
-#define v
+#define MICROENGINE_MESH_H
+
+#include "microengine/math.h"
 
 typedef struct me_mesh {
-    float *points;
+    me_vec3 *points;
     int triCount;
 } me_mesh;
 

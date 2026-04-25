@@ -19,6 +19,9 @@ void mr_renderer_clear(mr_renderer *r, uint32_t color);
 // render a square
 void mr_renderer_render_square(mr_renderer *r, int x, int y, int w, int h, uint32_t color);
 
+// render a triangle
+void mr_renderer_render_triangle(mr_renderer *r, int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color);
+
 // destroy a renderer
 void mr_renderer_destroy(mr_renderer *r);
 

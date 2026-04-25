@@ -78,8 +78,20 @@ void microgame_render(game *g)
     {
         if (!g->mainScene->alive[i]) continue;
         if (!g->mainScene->has_transform[i]) continue;
+        if (!g->mainScene->has_mesh[i]) continue;
+
         me_vec3 t = g->mainScene->transform_components[i].pos;
-        mr_renderer_render_square(&g->renderer, t.x, t.y, t.z, t.z, mr_rgb(255, 0, 0));
+        me_mesh m = g->mainScene->mesh_components[i];
+
+        for (int i = 0; i < m.triCount; i++)
+        {
+            mr_renderer_render_triangle(&g->renderer, 
+                m.points[i * 3].x, m.points[i * 3].y,
+                m.points[i * 3 + 1].x, m.points[i * 3 + 1].y,
+                m.points[i * 3 + 2].x, m.points[i * 3 + 2].y,
+                mr_rgb(255, 0, 255)
+            );
+        }
     }
     
     // Draw the texture

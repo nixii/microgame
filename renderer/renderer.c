@@ -55,12 +55,8 @@ void mr_renderer_render_square(mr_renderer *r, int x, int y, int w, int h, uint3
 }
 
 // render a triangle
-void mr_renderer_render_triangle(mr_renderer *r, int tri[], uint32_t color)
+void mr_renderer_render_triangle(mr_renderer *r, int x1, int y1, int x2, int y2, int x3, int y3, uint32_t color)
 {
-    // store the locations
-    int x1 = tri[0]; int y1 = tri[1];
-    int x2 = tri[2]; int y2 = tri[3];
-    int x3 = tri[4]; int y3 = tri[5];
 
     // calculate the bounds (super ugly)
     int minX = x1 < x2 ? (x1 < x3 ? x1 : x3) : (x2 < x3 ? x2 : x3);
@@ -69,21 +65,21 @@ void mr_renderer_render_triangle(mr_renderer *r, int tri[], uint32_t color)
     int maxY = y1 > y2 ? (y1 > y3 ? y1 : y3) : (y2 > y3 ? y2 : y3);
 
     // the are of the triangle
-    float area = abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
+    float area = fabs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
 
     // for every point
-    for (y = minY; y <= maxY; y++)
+    for (int y = minY; y <= maxY; y++)
     {
-        for (x = minX; x <= maxX; x++)
+        for (int x = minX; x <= maxX; x++)
         {
 
             // the other triangle areas
-            float a1 = abs((x * (y2 - y3) + x2 * (y3 - y) + x3 * (y - y2)) / 2.0);
-            float a2 = abs((x1 * (y - y3) + x * (y3 - y1) + x3 * (y1 - y)) / 2.0);
-            float a3 = abs((x1 * (y2 - y) + x2 * (y - y1) + x * (y1 - y2)) / 2.0);
+            float a1 = fabs((x * (y2 - y3) + x2 * (y3 - y) + x3 * (y - y2)) / 2.0);
+            float a2 = fabs((x1 * (y - y3) + x * (y3 - y1) + x3 * (y1 - y)) / 2.0);
+            float a3 = fabs((x1 * (y2 - y) + x2 * (y - y1) + x * (y1 - y2)) / 2.0);
 
             // area add
-            if (abs(area - a1 - a2 - a3) < 0.5)
+            if (fabs(area - a1 - a2 - a3) < 0.5)
                 r->pixels[x + y * r->width] = color;
         }
     }
