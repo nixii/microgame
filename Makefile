@@ -84,7 +84,7 @@ RENDER_OBJS = $(RENDER_SRCS:.c=.o)
 
 # compile a test source
 renderer/%.o: renderer/%.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(RL_LDFLAGS) $(RL_IFLAGS) $(IFLAGS)
+	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS)
 
 # compile the whole test thing
 renderer: $(RENDER_OBJS)
