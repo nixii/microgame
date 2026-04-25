@@ -15,7 +15,7 @@ RT_OBJS =  $(RT_SRCS:.c=.o)
 RT_TARGET = ./lib/libmicrogame.a
 
 # build microgame
-microgame: $(RT_OBJS)
+microgame: $(RT_OBJS) microengine
 	ar rcs $(RT_TARGET) $(RT_OBJS)
 
 # engine objects
