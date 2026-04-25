@@ -51,4 +51,4 @@ run: test
 # clean up
 .PHONY: clean
 clean:
-	rm $(RT_OBJS) $(TB_OBJS) $(RT_TARGET) $(TB_TARGET)
+	rm $(RT_OBJS) $(TB_OBJS) $(EG_OBJS) $(RT_TARGET) $(TB_TARGET) $(EG_TARGET)

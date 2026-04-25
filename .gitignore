@@ -3,3 +3,4 @@ tb
 *.o
 .DS_Store
 libmicrogame.a
+libmicroengine.a
