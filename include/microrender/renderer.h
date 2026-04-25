@@ -19,6 +19,12 @@ void mr_renderer_clear(mr_renderer *r, uint32_t color);
 // destroy a renderer
 void mr_renderer_destroy(mr_renderer *r);
 
+// rgb
+inline static uint32_t mr_rgb(uint8_t r, uint8_t g, uint8_t b)
+{
+    return (r) | (g << 8) | (b << 16) | (0xFF << 24);
+}
+
 // strip automatically
 #ifndef MICRORENDER_NOSTROP
     #define renderer mr_renderer
