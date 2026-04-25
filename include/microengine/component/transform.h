@@ -2,7 +2,7 @@
 #ifndef MICROENGINE_TRANSFORM_H
 #define MICROENGINE_TRANSFORM_H
 
-#include "microengine/vec3.h"
+#include "microengine/math.h"
 
 typedef struct me_transform {
     me_vec3 pos;

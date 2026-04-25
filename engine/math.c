@@ -1,6 +1,6 @@
 
 #include <math.h>
-#include "microengine/vec3.h"
+#include "microengine/math.h"
 
 // create a new vec3
 me_vec3 me_vec3_new(float x, float y, float z)
