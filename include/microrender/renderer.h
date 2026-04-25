@@ -16,6 +16,9 @@ mr_renderer mr_renderer_new(int width, int height);
 // clear the renderer
 void mr_renderer_clear(mr_renderer *r, uint32_t color);
 
+// render a square
+void mr_renderer_render_square(mr_renderer *r, int x, int y, int w, int h, uint32_t color);
+
 // destroy a renderer
 void mr_renderer_destroy(mr_renderer *r);
 

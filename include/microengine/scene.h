@@ -13,7 +13,7 @@ typedef struct me_scene {
 
     // add components X macro
     #define X(name, type)\
-        uint8_t name##_has[ME_MAX_ENTITIES];\
+        uint8_t has_##name[ME_MAX_ENTITIES];\
         type name##_components[ME_MAX_ENTITIES];
         ME_COMPONENTS
     #undef X
@@ -22,7 +22,9 @@ typedef struct me_scene {
 // generate the functions for attaching components
 #define X(name, type)\
     void me_scene_attach_##name(me_scene *s, entity e, type t);\
-    void me_scene_detach_##name(me_scene *s, entity e);
+    void me_scene_detach_##name(me_scene *s, entity e);\
+    int me_scene_has_##name(me_scene *s, entity e);\
+    type *me_scene_get_##name(me_scene *s, entity e);
     ME_COMPONENTS
 #undef X
 

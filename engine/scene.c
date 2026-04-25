@@ -56,12 +56,20 @@ void me_scene_destroy(me_scene *s)
 #define X(name, type)\
     void me_scene_attach_##name(me_scene *s, entity e, type t)\
     {\
-        s->name##_has[e] = 1;\
+        s->has_##name[e] = 1;\
         s->name##_components[e] = t;\
     }\
     void me_scene_detach_##name(me_scene *s, entity e)\
     {\
-        s->name##_has[e] = 0;\
+        s->has_##name[e] = 0;\
+    }\
+    int me_scene_has_##name(me_scene *s, entity e)\
+    {\
+        return s->has_##name[e];\
+    }\
+    type *me_scene_get_##name(me_scene *s, entity e)\
+    {\
+        return &s->name##_components[e];\
     }
     ME_COMPONENTS
 #undef X

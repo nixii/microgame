@@ -1,9 +1,11 @@
 
 #include <raylib.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "microgame/microgame.h"
 #include "microrender/renderer.h"
 #include "microengine/scene.h"
+#include "microengine/math.h"
 
 typedef struct game {
     int width;
@@ -67,13 +69,23 @@ int microgame_running(game *g)
 
 void microgame_render(game *g)
 {
+
+    // Clear the screen
     mr_renderer_clear(&g->renderer, mr_rgb(0, 0, 0));
+
+    // Draw each entity as a square
+    for (int i = 0; i < ME_MAX_ENTITIES; i++)
+    {
+        if (!g->mainScene->alive[i]) continue;
+        if (!g->mainScene->has_transform[i]) continue;
+        me_vec3 t = g->mainScene->transform_components[i].pos;
+        mr_renderer_render_square(&g->renderer, t.x, t.y, t.z, t.z, mr_rgb(255, 0, 0));
+    }
+    
+    // Draw the texture
     UpdateTexture(g->bufTex, g->renderer.pixels);
-
     BeginDrawing();
-
     DrawTexture(g->bufTex, 0, 0, WHITE);
-
     EndDrawing();
 }
 
