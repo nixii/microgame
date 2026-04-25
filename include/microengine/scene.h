@@ -8,21 +8,36 @@
 
 typedef struct me_scene {
     uint8_t alive[ME_MAX_ENTITIES];
+    int free_stack[ME_MAX_ENTITIES];
+    int free_top;
 
     // add components X macro
-#define X(name, type)\
-    uint8_t name##_has[ME_MAX_ENTITIES];\
-    type name##_components[ME_MAX_ENTITIES];
-
-    ME_COMPONENTS
-
-#undef X
+    #define X(name, type)\
+        uint8_t name##_has[ME_MAX_ENTITIES];\
+        type name##_components[ME_MAX_ENTITIES];
+        ME_COMPONENTS
+    #undef X
 } me_scene;
 
+// create a new empty scene
+me_scene *me_scene_new();
+
 // spawn a brand new entity
-me_entity me_scene_spawn();
+me_entity me_scene_spawn(me_scene *s);
 
 // destroy an entity
-void me_scene_destroy(me_entity e);
+void me_scene_despawn(me_scene *s, me_entity e);
+
+// destroy the whole scene
+void me_scene_destroy(me_scene *s);
+
+// alias everything
+#ifndef MICROENGINE_NOSTRIP
+    #define scene me_scene
+    #define scene_new me_scene_new
+    #define scene_spawn me_scene_spawn
+    #define scene_despawn me_scene_despawn
+    #define scene_destroy me_scene_destroy
+#endif
 
 #endif // MICROENGINE_SCENE_H
