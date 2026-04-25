@@ -21,7 +21,7 @@ ENGINE_LINK = -lmicroengine
 # final destinations
 TARGET_TEST = test
 TARGET_MICROGAME = microgame
-TARGET_MICRORUNTIME = lib/microgame.a
+TARGET_MICRORUNTIME = lib/libmicrogame.a
 TARGET_MICROENGINE = lib/libmicroengine.a
 TARGET_MICRORENDER = lib/libmicrorender.a
 
@@ -34,12 +34,12 @@ TEST_SRCS = $(wildcard testbed/*.c)
 TEST_OBJS = $(TEST_SRCS:.c=.o)
 
 # compile a test source
-testbed/%.o: runtime/%.c
+testbed/%.o: testbed/%.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS)
 
 # compile the whole test thing
-$(TARGET_TEST): $(TEST_OBJS) runtime
-	$(CC) -o $(TARGET_TEST) $(TEST_OBJS) $(CFLAGS)
+$(TARGET_TEST): $(TEST_OBJS) runtime engine 
+	$(CC) -o $(TARGET_TEST) $(TEST_OBJS) $(CFLAGS) $(IFLAGS) $(MICRO_LINKDIR) $(RUNTIME_LINK) $(ENGINE_LINK) $(RENDERER_LINK) $(RL_LDFLAGS)
 
 ##############
 # RUNTIME    #
@@ -54,7 +54,7 @@ runtime/%.o: runtime/%.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(RL_LDFLAGS) $(RL_IFLAGS) $(IFLAGS)
 
 # compile the whole test thing
-runtime: $(RUNTIME_OBJS) engine
+runtime: $(RUNTIME_OBJS) engine renderer
 	ar rcs $(TARGET_MICRORUNTIME) $(RUNTIME_OBJS)
 
 ##############

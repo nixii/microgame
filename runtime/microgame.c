@@ -1,6 +1,9 @@
 
+#include <raylib.h>
+#include <stdlib.h>
 #include "microgame/microgame.h"
 #include "microrender/renderer.h"
+#include "microengine/scene.h"
 
 typedef struct game {
     int width;
@@ -9,10 +12,10 @@ typedef struct game {
     int fps;
 
 // the renderer
-    me_renderer renderer;
+    mr_renderer renderer;
 
 // engine objects
-    me_scene *mainScene
+    me_scene *mainScene;
 
 // raylib objects
     Image bufImg;
@@ -37,7 +40,7 @@ game *microgame_init(int width, int height, char *title, int fps)
     SetTargetFPS(g->fps);
 
     // create the renderer
-    g->renderer = me_renderer_new(g->width, g->height);
+    g->renderer = mr_renderer_new(g->width, g->height);
 
     // create the raylib objects
     g->bufImg = (Image){
@@ -48,6 +51,8 @@ game *microgame_init(int width, int height, char *title, int fps)
         .mipmaps = 1
     };
     g->bufTex = LoadTextureFromImage(g->bufImg);
+
+    return g;
 }
 
 void microgame_set_scene(game *g, me_scene *s)
@@ -62,7 +67,7 @@ int microgame_running(game *g)
 
 void microgame_render(game *g)
 {
-    me_renderer_clear(&g->renderer, mr_rgb(255, 0, 0));
+    mr_renderer_clear(&g->renderer, mr_rgb(0, 0, 0));
     UpdateTexture(g->bufTex, g->renderer.pixels);
 
     BeginDrawing();
@@ -74,6 +79,6 @@ void microgame_render(game *g)
 
 void microgame_end(game *g)
 {
-    me_renderer_destroy(&g->renderer);
+    mr_renderer_destroy(&g->renderer);
     CloseWindow();
 }

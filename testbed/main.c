@@ -7,9 +7,9 @@ int main(void)
 {
     scene *s = scene_new();
     entity e = scene_spawn(s);
-    scene_attach_transform(s, e, transform_clear());
+    me_scene_attach_transform(s, e, transform_blank());
 
-    microgame *g = microgame_init(600, 400, "test", 30);
+    game *g = microgame_init(600, 400, "test", 30);
     microgame_set_scene(g, s);
 
     while (microgame_running(g))
