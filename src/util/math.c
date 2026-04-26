@@ -59,7 +59,7 @@ vec3 vec3_rotZ(vec3 v, float a) {
 
 // rotate every axis
 vec3 vec3_rot(vec3 v, vec3 a) {
-    return vec3_rotZ(vec3_rotY(vec3_rotX(v, a.x), a.y), a.z);
+    return vec3_rotZ(vec3_rotX(vec3_rotY(v, a.y), a.x), a.z);
 }
 
 // cross product

@@ -15,19 +15,20 @@ int main(void)
 
     // cube points
     vec3 cube[8] = {
-        vec3_new(-0.5, -0.5, 5),
-        vec3_new(-0.5, -0.5, 6),
-        vec3_new(0.5, -0.5, 5),
-        vec3_new(0.5, -0.5, 6),
-        vec3_new(-0.5, 0.5, 5),
-        vec3_new(-0.5, 0.5, 6),
-        vec3_new(0.5, 0.5, 5),
-        vec3_new(0.5, 0.5, 6),
+        vec3_new(-0.5, -0.5, -0.5),
+        vec3_new(-0.5, -0.5, 0.5),
+        vec3_new(0.5, -0.5, -0.5),
+        vec3_new(0.5, -0.5, 0.5),
+        vec3_new(-0.5, 0.5, -0.5),
+        vec3_new(-0.5, 0.5, 0.5),
+        vec3_new(0.5, 0.5, -0.5),
+        vec3_new(0.5, 0.5, 0.5),
     };
 
     // make a test triangle
     entity test = scene_spawn(s);
     mesh *m = scene_attach_mesh(s, test, mesh_new(rgb_rand(), 36, (vec3[]){
+        
         // Back face (z = 6)
         cube[1], cube[5], cube[3],
         cube[3], cube[5], cube[7],
@@ -35,7 +36,6 @@ int main(void)
         // Front face (z = 5)
         cube[0], cube[2], cube[4],
         cube[2], cube[6], cube[4],
-
 
         // Left face (x = -0.5)
         cube[0], cube[4], cube[1],
@@ -56,6 +56,8 @@ int main(void)
 
     // get the transform
     transform *t = get_transform(s, test);
+    camera *c = &s->camera;
+    c->transform.pos = vec3_new(0, 3, -10);
 
     // set the scene
     game_set_scene(g, s);
@@ -64,8 +66,9 @@ int main(void)
     // update
     while (game_still_running(g)) {
 
-        // just move it back and forth!
-        t->pos.z = 5 + sinf((float)frame / 30) * 10;
+        // rotate the camera
+        c->transform.rot.y = sinf((float)frame / 30);
+        c->transform.pos.x = -sinf((float)frame / 30) * 16;
 
         game_update(g);
         frame++;

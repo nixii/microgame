@@ -10,6 +10,10 @@ camera camera_new() {
 
 vec2 camera_project_point(camera *c, vec3 p, int width, int height) {
     
+    // transform!
+    p = vec3_sub(p, c->transform.pos);
+    p = vec3_rot(p, vec3_mul(c->transform.rot, -1));
+
     // avoid divide-by-zero
     if (p.z <= 0) return vec2_new(-1, -1);
 
