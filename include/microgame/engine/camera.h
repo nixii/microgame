@@ -3,6 +3,7 @@
 #define MG_CAMERA_H
 
 #include "microgame/util/transform.h"
+#include "microgame/util/math.h"
 
 typedef struct camera {
     transform transform;
@@ -10,5 +11,6 @@ typedef struct camera {
 } camera;
 
 camera camera_new();
+vec2 camera_project_point(camera *c, vec3 p, int width, int height);
 
 #endif // MG_CAMERA_H
