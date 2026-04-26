@@ -20,6 +20,10 @@ vec3 vec3_rotX(vec3 v, float a);
 vec3 vec3_rotY(vec3 v, float a);
 vec3 vec3_rotZ(vec3 v, float a);
 vec3 vec3_rot(vec3 v, vec3 a);
+vec3 vec3_cross(vec3 a, vec3 b);
+float vec3_dot(vec3 a, vec3 b);
+float vec3_len(vec3 a);
+vec3 vec3_normal(vec3 a);
 
 // vec2 type
 typedef struct vec2 {

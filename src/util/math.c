@@ -62,6 +62,30 @@ vec3 vec3_rot(vec3 v, vec3 a) {
     return vec3_rotZ(vec3_rotY(vec3_rotX(v, a.x), a.y), a.z);
 }
 
+// cross product
+vec3 vec3_cross(vec3 a, vec3 b) {
+    return vec3_new(
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    );
+}
+
+// dot product
+float vec3_dot(vec3 a, vec3 b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+// get the length
+float vec3_len(vec3 a) {
+    return sqrtf(a.x * a.x + a.y * a.y + a.z * a.z);
+}
+
+// normalize a vec
+vec3 vec3_normal(vec3 a) {
+    return vec3_div(a, vec3_len(a));
+}
+
 
 
 /*******************

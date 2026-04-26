@@ -28,9 +28,7 @@ int main(void)
     // update
     while (game_still_running(g)) {
 
-        for (int i = 0; i < m->numVerts; i++) {
-            // m->verts[i].z -= (float)frame / 120;
-        }
+        m->verts[1].y = sinf((float)frame / 30) * 10;
 
         game_update(g);
         frame++;
