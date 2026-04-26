@@ -24,7 +24,7 @@ me_vec2 project_to_vec2(me_vec3 v, me_transform t, me_camera cam, int width, int
     });
 
     // projection
-    if (v.z <= 0) return (me_vec2){-1, -1};
+    if (v.z <= 0.4) return (me_vec2){-1, -1};
 
     float f = 1.0f / tanf(cam.fov * 0.5f);
 
@@ -70,6 +70,11 @@ void microengine_render(me_scene *s, mr_renderer *r)
                 me_vec2 p1 = project_to_vec2(v1, t, cam, r->width, r->height);
                 me_vec2 p2 = project_to_vec2(v2, t, cam, r->width, r->height);
                 me_vec2 p3 = project_to_vec2(v3, t, cam, r->width, r->height);
+
+                // skip if incorrect
+                if (p1.x == p1.y && p1.x == -1) continue;
+                if (p2.x == p2.y && p2.x == -1) continue;
+                if (p3.x == p3.y && p3.x == -1) continue;
 
                 printf("point: %f %f %f %f %f %f\n", 
                     p1.x, p1.y,
