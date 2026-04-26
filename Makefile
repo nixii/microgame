@@ -1,102 +1,69 @@
 
-UNAME_S = $(shell uname -s)
-
-# just normal compiler
-CC = clang
+CC = cc
 CFLAGS = -Wall -Wextra
 
-# links and includes for raylib
-RL_LDFLAGS = -L/opt/homebrew/opt/raylib/lib -lraylib
-RL_IFLAGS = -I/opt/homebrew/opt/raylib/include
-
-# include the custom headers
+# include everything
 IFLAGS = -Iinclude
 
-# link the stuff
-MICRO_LINKDIR = -Llib
-RUNTIME_LINK = -lmicrogame
-RENDERER_LINK = -lmicrorender
-ENGINE_LINK = -lmicroengine
+# add in raylib
+ADD_RAYLIB = -L/opt/homebrew/opt/raylib/lib -lraylib -I/opt/homebrew/opt/raylib/include
 
-# final destinations
-TARGET_TEST = test
-TARGET_MICROGAME = microgame
-TARGET_MICRORUNTIME = lib/libmicrogame.a
-TARGET_MICROENGINE = lib/libmicroengine.a
-TARGET_MICRORENDER = lib/libmicrorender.a
+#############
+# build src #
+#############
 
-##############
-# TESTBED    #
-##############
+# get the source and obj files
+SRCS =  $(wildcard src/*.c)
+SRCS += $(wildcard src/**/*.c)
+SRCS += $(wildcard src/**/**/.c)
+OBJS =  $(SRCS:.c=.o)
 
-# source files
-TEST_SRCS = $(wildcard testbed/*.c)
-TEST_OBJS = $(TEST_SRCS:.c=.o)
+# target
+TARGET = lib/libmicrogame.a
 
-# compile a test source
+# build a single obj
+src/%.o: src/%.c
+	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(ADD_RAYLIB)
+
+# build everything
+engine: $(OBJS)
+	ar rcs $(TARGET) $(OBJS)
+
+###########
+# testbed #
+###########
+
+# get the source and obj files
+T_SRCS =  $(wildcard testbed/*.c)
+T_SRCS += $(wildcard testbed/**/*.c)
+T_SRCS += $(wildcard testbed/**/**/.c)
+T_OBJS =  $(T_SRCS:.c=.o)
+
+# target
+T_TARGET = test
+
+# target includes/libs
+LINK_MICROGAME = -Llib -lmicrogame
+
+# build a single obj
 testbed/%.o: testbed/%.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS)
 
-# compile the whole test thing
-$(TARGET_TEST): $(TEST_OBJS) runtime engine 
-	$(CC) -o $(TARGET_TEST) $(TEST_OBJS) $(CFLAGS) $(IFLAGS) $(MICRO_LINKDIR) $(RUNTIME_LINK) $(ENGINE_LINK) $(RENDERER_LINK) $(RL_LDFLAGS)
+# build everything
+test: $(T_OBJS) engine
+	$(CC) -o $(T_TARGET) $(T_OBJS) $(CFLAGS) $(LINK_MICROGAME) $(ADD_RAYLIB)
 
-##############
-# RUNTIME    #
-##############
+#####################
+# General functions #
+#####################
 
-# source files
-RUNTIME_SRCS = $(wildcard runtime/*.c)
-RUNTIME_OBJS = $(RUNTIME_SRCS:.c=.o)
-
-# compile a test source
-runtime/%.o: runtime/%.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(RL_LDFLAGS) $(RL_IFLAGS) $(IFLAGS)
-
-# compile the whole test thing
-runtime: $(RUNTIME_OBJS) engine renderer
-	ar rcs $(TARGET_MICRORUNTIME) $(RUNTIME_OBJS)
-
-##############
-# ENGINE     #
-##############
-
-# source files
-ENGINE_SRCS =  $(wildcard engine/*.c)
-ENGINE_SRCS += $(wildcard engine/**/*.c)
-ENGINE_OBJS = $(ENGINE_SRCS:.c=.o)
-
-# compile a test source
-engine/%.o: engine/%.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS)
-
-# compile the whole test thing
-engine: $(ENGINE_OBJS)
-	ar rcs $(TARGET_MICROENGINE) $(ENGINE_OBJS)
-
-##############
-# RENDERER   #
-##############
-
-# source files
-RENDER_SRCS = $(wildcard renderer/*.c)
-RENDER_OBJS = $(RENDER_SRCS:.c=.o)
-
-# compile a test source
-renderer/%.o: renderer/%.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS)
-
-# compile the whole test thing
-renderer: $(RENDER_OBJS)
-	ar rcs $(TARGET_MICRORENDER) $(RENDER_OBJS)
-
-##############
-# CLEAN      #
-##############
+# clean it all up
 .PHONY: clean
 clean:
-	rm -f $(TEST_OBJS) $(TARGET_TEST)
-	rm -f $(RUNTIME_OBJS) $(TARGET_MICRORUNTIME)
-	rm -f $(ENGINE_OBJS) $(TARGET_MICROENGINE)
-	rm -f $(RENDER_OBJS) $(TARGET_MICRORENDER)
-	@echo Clean completed.
+	rm -f -- $(T_OBJS) $(T_TARGET) $(OBJS) $(TARGET)
+	@echo Clean done
+
+# run it too
+.PHONY: run
+run: test
+	./$(TARGET)

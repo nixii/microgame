@@ -1,0 +1,20 @@
+
+#ifndef MG_RENDERER_H
+#define MG_RENDERER_H
+
+#include "microgame/util/color.h"
+
+// renderer type
+typedef struct renderer {
+    int width;
+    int height;
+    color *pixels;
+} renderer;
+
+// renderer functions
+renderer renderer_new(int width, int height);
+void renderer_clear(renderer *r);
+void renderer_render_square(renderer *r, int x, int y, int w, int h, color c);
+void renderer_destroy(renderer *r);
+
+#endif // MG_RENDERER_H
