@@ -57,8 +57,5 @@ void scene_render(scene *s, renderer *r) {
 
         // get the position
         vec3 pos = get_transform(s, id)->pos;
-
-        // render the pos
-        renderer_render_square(r, pos.x, pos.y, pos.z, pos.z, rgb(255, 0, 255));
     }
 }
