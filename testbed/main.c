@@ -30,9 +30,6 @@ int main(void)
         frame++;
 
         // move square
-        transform *t = me_scene_get_transform(s, e);
-        t->pos.y = (sin((double)frame / 30) * 150) + 150;
-        t->pos.x = frame;
 
         microgame_render(g);
     }

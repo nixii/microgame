@@ -1,6 +1,7 @@
 
 #include "microengine/component/mesh.h"
 #include "microengine/math.h"
+#include <errno.h>
 #include <stdlib.h>
 #include <stdarg.h>
 

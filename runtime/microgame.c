@@ -80,14 +80,14 @@ void microgame_render(game *g)
         if (!g->mainScene->has_transform[i]) continue;
         if (!g->mainScene->has_mesh[i]) continue;
 
-        me_mesh m = g->mainScene->mesh_components[i];
+        me_mesh *m = me_scene_get_mesh(g->mainScene, i);
 
-        for (int i = 0; i < m.vertCount; i++)
+        for (int i = 0; i < m->vertCount; i += 3)
         {
             mr_renderer_render_triangle(&g->renderer, 
-                m.verts[i * 3].x, m.verts[i * 3].y,
-                m.verts[i * 3 + 1].x, m.verts[i * 3 + 1].y,
-                m.verts[i * 3 + 2].x, m.verts[i * 3 + 2].y,
+                (int)m->verts[i * 3].x, (int)m->verts[i * 3].y,
+                (int)m->verts[i * 3 + 1].x, (int)m->verts[i * 3 + 1].y,
+                (int)m->verts[i * 3 + 2].x, (int)m->verts[i * 3 + 2].y,
                 mr_rgb(255, 0, 255)
             );
         }
