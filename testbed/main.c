@@ -16,9 +16,9 @@ int main(void)
     // make a test triangle
     entity test = scene_spawn(s);
     mesh *m = scene_attach_mesh(s, test, mesh_new(rgb_rand(), 3, (vec3[]){
-        vec3_new(0.5, 0.5, 60),
-        vec3_new(-0.5, 0.5, 60),
-        vec3_new(0.5, -0.5, 60)
+        vec3_new(8, 0.5, 5),
+        vec3_new(-0.5, 1, 5),
+        vec3_new(0.5, -2, 5)
     }));
 
     // set the scene
@@ -29,7 +29,7 @@ int main(void)
     while (game_still_running(g)) {
 
         for (int i = 0; i < m->numVerts; i++) {
-            m->verts[i].z -= (float)frame / 120;
+            // m->verts[i].z -= (float)frame / 120;
         }
 
         game_update(g);

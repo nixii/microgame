@@ -103,11 +103,8 @@ void scene_render(scene *s, renderer *r) {
             for (int i = 0; i < m->numVerts; i += 3) {
                 vec2 v1 = camera_project_point(&s->camera, vec3_add(m->verts[i], pos), r->width, r->height);
                 vec2 v2 = camera_project_point(&s->camera, vec3_add(m->verts[i+1], pos), r->width, r->height);
-                vec2 v3 = camera_project_point(&s->camera, vec3_add(m->verts[i+2], pos), r->width, r->height);
-                if ((v1.x == v1.y && v1.x == -1) ||
-                    (v2.x == v2.y && v2.x == -1) ||
-                    (v3.x == v3.y && v3.x == -1))
-                    continue;
+                vec2 v3 = camera_project_point(&s->camera, vec3_add(m->verts[i + 2], pos), r->width, r->height);
+
                 renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, m->color);
             }
         }
