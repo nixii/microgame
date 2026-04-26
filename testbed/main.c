@@ -12,11 +12,11 @@ int main(void)
     srand(time(NULL));
 
     // create the game
-    microgame *g = game_new(600, 400, 30, "hi world");
+    microgame *g = game_new(600, 400, 60, "hi world");
     scene *s = scene_new();
 
     // meshes
-    int numMeshes = 30;
+    int numMeshes = 100;
     mesh *meshes[numMeshes];
 
     for (int i = 0; i < numMeshes; i++) {
@@ -32,6 +32,13 @@ int main(void)
     int frame = 0;
 
     while (game_still_running(g)) {
+
+        for (int i = 0; i < numMeshes; i++) {
+            meshes[i]->verts[0] = vec3_new(rand() % 600, rand() % 400, 0);
+            meshes[i]->verts[1] = vec3_new(rand() % 600, rand() % 400, 0);
+            meshes[i]->verts[2] = vec3_new(rand() % 600, rand() % 400, 0);
+        }
+
         game_update(g);
         frame++;
     }
