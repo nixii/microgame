@@ -35,10 +35,27 @@ void scene_despawn(scene *s, entity e) {
         return;
     s->alive[e] = 0;
     s->freeIds[++s->lastFree] = e;
+
+    // destroy any components
+#define X(name, type)\
+    scene_detach_##name(s, e);
+    X_COMPONENTS
+#undef X
 }
 
 // destroy a whole scene
 void scene_destroy(scene *s) {
+
+    // destroy components
+    for (entity e = 0; e < MAX_ENTITIES; e++) {
+        if (!s->alive[e]) continue;
+    #define X(name, type)\
+        scene_detach_##name(s, e);
+        X_COMPONENTS
+    #undef X
+    }
+
+    // destroy the scene
     free(s);
 }
 
@@ -47,6 +64,27 @@ transform *get_transform(scene *s, entity e) {
     if (!s->alive[e]) return NULL;
     return &s->transforms[e];
 }
+
+// component functions
+#define X(name, type) \
+    int scene_has_##name(scene *s, entity e) { \
+        return s->has_##name[e]; \
+    } \
+    type *scene_get_##name(scene *s, entity e) { \
+        if (!scene_has_##name(s, e)) return NULL; \
+        return &s->name##_components[e]; \
+    } \
+    type *scene_attach_##name(scene *s, entity e, type c) { \
+        s->has_##name[e]        = 0; \
+        s->name##_components[e] = c; \
+        return &s->name##_components[e]; \
+    } \
+    void scene_detach_##name(scene *s, entity e) { \
+        s->has_##name[e] = 0; \
+        name##_destroy(&s->name##_components[e]); \
+    }
+X_COMPONENTS
+#undef X
 
 // render a scene!
 void scene_render(scene *s, renderer *r) {

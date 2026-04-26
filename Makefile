@@ -15,7 +15,7 @@ ADD_RAYLIB = -L/opt/homebrew/opt/raylib/lib -lraylib -I/opt/homebrew/opt/raylib/
 # get the source and obj files
 SRCS =  $(wildcard src/*.c)
 SRCS += $(wildcard src/**/*.c)
-SRCS += $(wildcard src/**/**/.c)
+SRCS += $(wildcard src/**/**/*.c)
 OBJS =  $(SRCS:.c=.o)
 
 # target
