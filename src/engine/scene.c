@@ -104,7 +104,7 @@ void scene_render(scene *s, renderer *r) {
                 vec3 v1 = m->verts[i];
                 vec3 v2 = m->verts[i+1];
                 vec3 v3 = m->verts[i+2];
-                renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, rgb(255, 0, 255));
+                renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, m->color);
             }
         }
     }

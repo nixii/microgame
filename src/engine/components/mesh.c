@@ -1,27 +1,17 @@
 
 #include "microgame/engine/components/mesh.h"
 #include <stdlib.h>
-#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 
-mesh mesh_new(int numVerts, ...) {
+mesh mesh_new(color c, int numVerts, vec3 *verts) {
 
     // create the mesh
     mesh m = { 0 };
     m.numVerts = numVerts;
+    m.color = c;
     m.verts = malloc(numVerts * sizeof(vec3));
-
-    // load the triangles from varargs
-    va_list args;
-    va_start(args, numVerts);
-
-    // add each point
-    for (int i = 0; i < numVerts; i++)
-    {
-        m.verts[i] = va_arg(args, vec3);
-    }
-
-    // all done!
-    va_end(args);
+    memcpy(m.verts, verts, numVerts * sizeof(vec3));
     return m;
 }
 

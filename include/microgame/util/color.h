@@ -2,6 +2,7 @@
 #ifndef MG_COLOR_H
 #define MG_COLOR_H
 
+#include <stdlib.h>
 #include <stdint.h>
 
 typedef uint32_t color;
@@ -11,6 +12,9 @@ inline static color rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 }
 inline static color rgb(uint8_t r, uint8_t g, uint8_t b) {
     return rgba(r, g, b, 0xFF);
+}
+inline static color rgb_rand() {
+    return rgb(rand() % 256, rand() % 256, rand() % 256);
 }
 
 #endif // MG_COLOR_H
