@@ -64,7 +64,8 @@ int main(void)
     // update
     while (game_still_running(g)) {
 
-        t->pos.z = 5 + sinf((float)frame / 30) * 9;
+        // just move it back and forth!
+        t->pos.z = 5 + sinf((float)frame / 30) * 10;
 
         game_update(g);
         frame++;

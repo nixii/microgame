@@ -1,6 +1,7 @@
 
 #include "microgame/renderer/renderer.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 // create a new renderer
@@ -41,10 +42,10 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int x2, int y2, int x
     int maxX = x1 > x2 ? (x1 > x3 ? x1 : x3) : (x2 > x3 ? x2 : x3);
     int minY = y1 < y2 ? (y1 < y3 ? y1 : y3) : (y2 < y3 ? y2 : y3);
     int maxY = y1 > y2 ? (y1 > y3 ? y1 : y3) : (y2 > y3 ? y2 : y3);
-    minX = minX < 0 ? minX : (minX >= r->width ? r->width - 1 : minX);
-    maxX = maxX < 0 ? maxX : (maxX >= r->width ? r->width - 1 : maxX);
-    minY = minY < 0 ? minY : (minY >= r->height ? r->height - 1 : minY);
-    maxY = maxY < 0 ? maxY : (maxY >= r->height ? r->height - 1 : maxY);
+    minX = minX < 0 ? 0 : (minX >= r->width ? r->width - 1 : minX);
+    maxX = maxX < 0 ? 0 : (maxX >= r->width ? r->width - 1 : maxX);
+    minY = minY < 0 ? 0 : (minY >= r->height ? r->height - 1 : minY);
+    maxY = maxY < 0 ? 0 : (maxY >= r->height ? r->height - 1 : maxY);
 
     // the are of the triangle
     float area = fabs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
@@ -63,6 +64,7 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int x2, int y2, int x
             // area add
             if (fabs(area - a1 - a2 - a3) < 0.5)
                 r->pixels[x + y * r->width] = c;
+            
         }
     }
 }
