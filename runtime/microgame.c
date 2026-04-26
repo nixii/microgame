@@ -6,6 +6,7 @@
 #include "microrender/renderer.h"
 #include "microengine/scene.h"
 #include "microengine/math.h"
+#include "microengine/engine.h"
 
 typedef struct game {
     int width;
@@ -70,28 +71,8 @@ int microgame_running(game *_)
 void microgame_render(game *g)
 {
 
-    // Clear the screen
-    mr_renderer_clear(&g->renderer, mr_rgb(0, 0, 0));
-
-    // Draw each entity as a square
-    for (int i = 0; i < ME_MAX_ENTITIES; i++)
-    {
-        if (!g->mainScene->alive[i]) continue;
-        if (!g->mainScene->has_transform[i]) continue;
-        if (!g->mainScene->has_mesh[i]) continue;
-
-        me_mesh *m = me_scene_get_mesh(g->mainScene, i);
-
-        for (int i = 0; i < m->vertCount; i += 3)
-        {
-            mr_renderer_render_triangle(&g->renderer, 
-                (int)m->verts[i * 3].x, (int)m->verts[i * 3].y,
-                (int)m->verts[i * 3 + 1].x, (int)m->verts[i * 3 + 1].y,
-                (int)m->verts[i * 3 + 2].x, (int)m->verts[i * 3 + 2].y,
-                mr_rgb(255, 0, 255)
-            );
-        }
-    }
+    // Render
+    microengine_render(g->mainScene, &g->renderer);
     
     // Draw the texture
     UpdateTexture(g->bufTex, g->renderer.pixels);

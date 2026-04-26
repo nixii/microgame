@@ -18,6 +18,7 @@ me_scene *me_scene_new()
 
     // the free top index is one less
     s->free_top = ME_MAX_ENTITIES - 1;
+    s->cam = me_camera_new(ME_PI / 2, me_transform_blank());
 
     // return the scene
     return s;

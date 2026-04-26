@@ -3,6 +3,7 @@
 #define MICROENGINE_SCENE_H
 
 #include "microengine/entity.h"
+#include "microengine/camera.h"
 #include "microengine/components.h"
 #include <stdint.h>
 
@@ -17,6 +18,9 @@ typedef struct me_scene {
         type name##_components[ME_MAX_ENTITIES];
         ME_COMPONENTS
     #undef X
+
+    // add the camera
+    me_camera cam;
 } me_scene;
 
 // generate the functions for attaching components
