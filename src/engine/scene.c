@@ -75,7 +75,7 @@ transform *get_transform(scene *s, entity e) {
         return &s->name##_components[e]; \
     } \
     type *scene_attach_##name(scene *s, entity e, type c) { \
-        s->has_##name[e]        = 0; \
+        s->has_##name[e] = 1; \
         s->name##_components[e] = c; \
         return &s->name##_components[e]; \
     } \
@@ -95,5 +95,17 @@ void scene_render(scene *s, renderer *r) {
 
         // get the position
         vec3 pos = get_transform(s, id)->pos;
+
+        // mesh rendering
+        if (scene_has_mesh(s, id)) {
+            mesh *m = scene_get_mesh(s, id);
+
+            for (int i = 0; i < m->numVerts; i += 3) {
+                vec3 v1 = m->verts[i];
+                vec3 v2 = m->verts[i+1];
+                vec3 v3 = m->verts[i+2];
+                renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, rgb(255, 0, 255));
+            }
+        }
     }
 }
