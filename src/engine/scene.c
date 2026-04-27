@@ -157,7 +157,6 @@ void scene_render(scene *s, renderer *r) {
 
         // render the triangle
         float lighting = (vec3_dot(t.normal, vec3_new(0, -1, 0)) + 1) / 5.0;
-        printf("light: %f\n", lighting);
         renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
 
