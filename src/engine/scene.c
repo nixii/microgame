@@ -159,40 +159,4 @@ void scene_render(scene *s, renderer *r) {
         float lighting = (vec3_dot(t.normal, vec3_new(0, -1, 0)) + 1) / 5.0;
         renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
-
-    // // render each entity
-    // for (entity id = 0; id < MAX_ENTITIES; id++) {
-    //     if (!s->alive[id]) continue;
-
-    //     // get the position
-    //     vec3 pos = get_transform(s, id)->pos;
-
-    //     // mesh rendering
-    //     if (scene_has_mesh(s, id)) {
-    //         mesh *m = scene_get_mesh(s, id);
-
-    //         // render!
-    //         for (int i = 0; i < m->numVerts; i += 3) {
-
-    //             // normal
-    //             vec3 normal = vec3_normal(vec3_cross(vec3_sub(m->verts[i + 1], m->verts[i]), vec3_sub(m->verts[i + 2], m->verts[i])));
-    //             float lighting = (-vec3_dot(normal, vec3_normal(vec3_new(1, 1, 1)))) / 2;
-    //             printf("lighting %f\n", lighting);
-
-    //             // points
-    //             vec2 v1 = camera_project_point(&s->camera, vec3_add(m->verts[i], pos), r->width, r->height);
-    //             vec2 v2 = camera_project_point(&s->camera, vec3_add(m->verts[i+1], pos), r->width, r->height);
-    //             vec2 v3 = camera_project_point(&s->camera, vec3_add(m->verts[i + 2], pos), r->width, r->height);
-
-    //             // skip behind the camera
-    //             if ((v1.x == v1.y && v1.x < -1) ||
-    //                 (v2.x == v1.y && v2.x < -1) ||
-    //                 (v3.x == v1.y && v3.x < -1))
-    //                 continue;
-
-    //             // render the triangle
-    //             renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, rgb_mix(m->color, rgb(lighting * 256, lighting * 256, lighting * 256)));
-    //         }
-    //     }
-    // }
 }
