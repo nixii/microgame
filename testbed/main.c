@@ -70,25 +70,25 @@ int main(void)
     while (game_still_running(g)) {
 
         // rotate the camera
-        float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) / 60.0;
+        float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) / 40.0;
         c->transform.rot.y += rotYaw;
-        float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) / 60.0;
+        float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) / 40.0;
         c->transform.rot.x += rotPitch;
 
         // get the cam movement
         vec3 movement = vec3_zero();
         if (key_down(M_KEY_A))
-            movement.x -= 1.0 / 30;
+            movement.x -= 1.0 / 15;
         if (key_down(M_KEY_D))
-            movement.x += 1.0 / 30;
+            movement.x += 1.0 / 15;
         if (key_down(M_KEY_W))
-            movement.z += 1.0 / 30;
+            movement.z += 1.0 / 15;
         if (key_down(M_KEY_S))
-            movement.z -= 1.0 / 30;
+            movement.z -= 1.0 / 15;
         if (key_down(M_KEY_SPACE))
-            movement.y += 1.0 / 30;
+            movement.y += 1.0 / 15;
         if (key_down(M_KEY_LSHIFT))
-            movement.y -= 1.0 / 30;
+            movement.y -= 1.0 / 15;
         
         // rotate the vector
         movement = vec3_rotY(movement, c->transform.rot.y);
