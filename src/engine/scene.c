@@ -117,24 +117,24 @@ void scene_render(scene *s, renderer *r) {
             vec3 v1 = vec3_add(m->vertices[m->indices[i]], t->pos);
             vec3 v2 = vec3_add(m->vertices[m->indices[i + 1]], t->pos);
             vec3 v3 = vec3_add(m->vertices[m->indices[i + 2]], t->pos);
+            
+            // translate and clip the triangles
+            camera_translation_result tris = camera_translate_triangle(&s->camera, v1, v2, v3);
+            if (tris.numTriangles == 0) continue;
 
-            // define the triangle
-            triangle tri;
-            tri.a = camera_transform(&s->camera, v1);
-            tri.b = camera_transform(&s->camera, v2);
-            tri.c = camera_transform(&s->camera, v3);
-            tri.normal = vec3_normal(vec3_cross(vec3_sub(v2, v1), vec3_sub(v3, v2)));
-            tri.color = m->color;
-            tri.depth = (tri.a.z + tri.b.z + tri.c.z) / 3.0;
+            // color the triangles
+            for (int i = 0; i < tris.numTriangles; i++)
+                tris.triangles[i].color = m->color;
 
-            // expand if needed
-            if (numTris >= s->triangleBufferSize) {
+            // expand if the amount of triangles to add is too many
+            if (numTris + tris.numTriangles >= s->triangleBufferSize) {
                 s->triangleBufferSize *= 2;
                 s->triangleBuffer = realloc(s->triangleBuffer, sizeof(triangle) * s->triangleBufferSize);
             }
 
             // add it in
-            s->triangleBuffer[numTris++] = tri;
+            for (int i = 0; i < tris.numTriangles; i++)
+                s->triangleBuffer[numTris++] = tris.triangles[i];
         }
     }
 
@@ -159,4 +159,4 @@ void scene_render(scene *s, renderer *r) {
         float lighting = (vec3_dot(t.normal, vec3_new(0, -1, 0)) + 1) / 5.0;
         renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
-}
+}   
