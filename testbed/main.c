@@ -75,19 +75,24 @@ int main(void)
         float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) / 60.0;
         c->transform.rot.x += rotPitch;
 
-        // move the camera
+        // get the cam movement
+        vec3 movement = vec3_zero();
         if (key_down(M_KEY_A))
-            c->transform.pos.x -= 1.0 / 30;
+            movement.x -= 1.0 / 30;
         if (key_down(M_KEY_D))
-            c->transform.pos.x += 1.0 / 30;
+            movement.x += 1.0 / 30;
         if (key_down(M_KEY_W))
-            c->transform.pos.z += 1.0 / 30;
+            movement.z += 1.0 / 30;
         if (key_down(M_KEY_S))
-            c->transform.pos.z -= 1.0 / 30;
+            movement.z -= 1.0 / 30;
         if (key_down(M_KEY_SPACE))
-            c->transform.pos.y += 1.0 / 30;
+            movement.y += 1.0 / 30;
         if (key_down(M_KEY_LSHIFT))
-            c->transform.pos.y -= 1.0 / 30;
+            movement.y -= 1.0 / 30;
+        
+        // rotate the vector
+        movement = vec3_rotY(movement, c->transform.rot.y);
+        c->transform.pos = vec3_add(c->transform.pos, movement);
 
         game_update(g);
         frame++;
