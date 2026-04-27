@@ -44,61 +44,21 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     v2 = camera_transform(c, v2);
     v3 = camera_transform(c, v3);
 
-    // how many points are in
-    int v1out = v1.z < NEAR_CLIP;
-    int v2out = v2.z < NEAR_CLIP;
-    int v3out = v3.z < NEAR_CLIP;
-
-    // if every point lies outside (0 final triangles)
-    if (v1out + v2out + v3out == 3) {
-        result.numTriangles = 0;
-        return result;
-    }
-
     // calculate the normal and depth (since each split triangle will have the same)
     vec3 normal = vec3_normal(vec3_cross(vec3_sub(v2, v1), vec3_sub(v3, v2)));
     float depth = (v1.z + v2.z + v3.z) / 3.0;
 
-    // if one point lies outside
-    if (v1out + v2out + v3out == 1) { // TODO: finish this
-        vec3 pointOut = v1out ? v1 : (v2out ? v2 : v3);
+    // define the normal triangle
+    triangle tri;
+    tri.a = v1;
+    tri.b = v2;
+    tri.c = v3;
+    tri.normal = normal;
+    tri.depth = depth;
 
-        // calculate both intersection points
-
-        // make the new triangles
-
-        // 2 triangles here
-        result.numTriangles = 2;
-    }
-    
-    // if two points lie outside
-    else if (v1out + v2out + v3out == 2) { // TODO: finish this
-        
-        // figure out which points lie ouside
-
-        // find the intersection points while heading to the other point
-
-        // make the new triangle
-
-        // only 1 triangle results
-        result.numTriangles = 1;
-    }
-
-    // normal triangle!
-    else {
-        
-        // define the normal triangle
-        triangle tri;
-        tri.a = v1;
-        tri.b = v2;
-        tri.c = v3;
-        tri.normal = normal;
-        tri.depth = depth;
-
-        // add the triangle
-        result.triangles[0] = tri;
-        result.numTriangles = 1;
-    }
+    // add the triangle
+    result.triangles[0] = tri;
+    result.numTriangles = 1;
     
     // return the result
     return result;
