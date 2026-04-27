@@ -10,7 +10,7 @@ int main(void)
 {
 
     // create the game
-    microgame *g = game_new(600, 400, 30, "hi world");
+    microgame *g = game_new(600, 400, 60, "hi world");
     scene *s = scene_new();
 
     // cube points
@@ -67,8 +67,24 @@ int main(void)
     while (game_still_running(g)) {
 
         // rotate the camera
-        c->transform.rot.y = sinf((float)frame / 30);
-        c->transform.pos.x = -sinf((float)frame / 30) * 16;
+        float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) / 60.0;
+        c->transform.rot.y += rotYaw;
+        float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) / 60.0;
+        c->transform.rot.x += rotPitch;
+
+        // move the camera
+        if (key_down(M_KEY_A))
+            c->transform.pos.x -= 1.0 / 30;
+        if (key_down(M_KEY_D))
+            c->transform.pos.x += 1.0 / 30;
+        if (key_down(M_KEY_W))
+            c->transform.pos.z += 1.0 / 30;
+        if (key_down(M_KEY_S))
+            c->transform.pos.z -= 1.0 / 30;
+        if (key_down(M_KEY_SPACE))
+            c->transform.pos.y += 1.0 / 30;
+        if (key_down(M_KEY_LSHIFT))
+            c->transform.pos.y -= 1.0 / 30;
 
         game_update(g);
         frame++;

@@ -4,7 +4,6 @@
 #include "microgame/microgame.h"
 #include "microgame/renderer/renderer.h"
 #include "microgame/engine/scene.h"
-
 // SPECIFY THE TYPE
 struct microgame {
     int width;
@@ -89,4 +88,15 @@ void game_update(microgame *g) {
 void game_destroy(microgame *g) {
     CloseWindow();
     free(g);
+}
+
+// key presses
+int key_down(key k) {
+    return IsKeyDown(key_to_rl(k));
+}
+int key_just_down(key k) {
+    return IsKeyPressed(key_to_rl(k));
+}
+int key_just_up(key k) {
+    return IsKeyReleased(key_to_rl(k));
 }
