@@ -3,6 +3,7 @@
 #define MG_SCENE_H
 
 #include "microgame/util/transform.h"
+#include "microgame/util/triangle.h"
 #include "microgame/engine/camera.h"
 #include "microgame/renderer/renderer.h"
 #include "microgame/engine/entity.h"
@@ -10,6 +11,7 @@
 #include <stdint.h>
 
 #define MAX_ENTITIES 4096
+#define INIT_TRIANGLE_COUNT 128
 
 // scene type
 typedef struct scene {
@@ -19,6 +21,10 @@ typedef struct scene {
     entity freeIds[MAX_ENTITIES];
     transform transforms[MAX_ENTITIES];
     int lastFree;
+
+    // triangles to render
+    int triangleBufferSize;
+    triangle *triangleBuffer;
 
     // for rendering
     camera camera;

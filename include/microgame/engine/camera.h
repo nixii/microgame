@@ -11,6 +11,7 @@ typedef struct camera {
 } camera;
 
 camera camera_new();
+vec3 camera_transform(camera *c, vec3 p);
 vec2 camera_project_point(camera *c, vec3 p, int width, int height);
 
 #endif // MG_CAMERA_H
