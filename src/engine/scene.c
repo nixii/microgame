@@ -105,7 +105,8 @@ void scene_render(scene *s, renderer *r) {
 
                 // normal
                 vec3 normal = vec3_normal(vec3_cross(vec3_sub(m->verts[i + 1], m->verts[i]), vec3_sub(m->verts[i + 2], m->verts[i])));
-                float lighting = (-vec3_dot(normal, vec3_new(1, 0, 0)) + 1) / 2;
+                float lighting = (-vec3_dot(normal, vec3_normal(vec3_new(1, 1, 1)))) / 2;
+                printf("lighting %f\n", lighting);
 
                 // points
                 vec2 v1 = camera_project_point(&s->camera, vec3_add(m->verts[i], pos), r->width, r->height);
