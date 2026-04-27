@@ -9,6 +9,9 @@
 int main(void)
 {
 
+    // random seed
+    srand(time(NULL));
+
     // create the game
     microgame *g = game_new(600, 400, 60, "hi world");
     scene *s = scene_new();
