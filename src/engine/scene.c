@@ -150,9 +150,9 @@ void scene_render(scene *s, renderer *r) {
         vec2 v3 = camera_project_point(&s->camera, t.c, r->width, r->height);
 
         // skip behind the camera
-        if ((v1.x == v1.y && v1.x < -1) ||
-            (v2.x == v1.y && v2.x < -1) ||
-            (v3.x == v1.y && v3.x < -1))
+        if ((v1.x == v1.y && v1.x == -1) ||
+            (v2.x == v2.y && v2.x == -1) ||
+            (v3.x == v3.y && v3.x == -1))
             continue;
 
         // render the triangle

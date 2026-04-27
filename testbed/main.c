@@ -87,7 +87,7 @@ int main(void)
             movement.z -= 1.0 / 15;
         if (key_down(M_KEY_SPACE))
             movement.y += 1.0 / 15;
-        if (key_down(M_KEY_LSHIFT))
+        if (key_down(M_KEY_LCTRL))
             movement.y -= 1.0 / 15;
         
         // rotate the vector
