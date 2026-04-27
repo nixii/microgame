@@ -19,7 +19,7 @@ vec2 camera_project_point(camera *c, vec3 p, int width, int height) {
 
     float f = c->fov / p.z;
 
-    float x = p.x * f;
+    float x = (p.x * f) / ((float)width / height);
     float y = p.y * f;
 
     vec2 out;
