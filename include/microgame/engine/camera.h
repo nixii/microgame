@@ -6,6 +6,8 @@
 #include "microgame/util/math.h"
 #include "microgame/util/triangle.h"
 
+#define NEAR_CLIP 0.1
+
 typedef struct camera {
     transform transform;
     float fov;
