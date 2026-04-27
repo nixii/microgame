@@ -30,31 +30,31 @@ int main(void)
 
     // make a test triangle
     entity test = scene_spawn(s);
-    mesh *m = scene_attach_mesh(s, test, mesh_new(rgb_rand(), 36, (vec3[]){
+    mesh *m = scene_attach_mesh(s, test, mesh_new(rgb_rand(), 8, cube, 36, (int []){
         
         // Back face (z = 6)
-        cube[1], cube[5], cube[3],
-        cube[3], cube[5], cube[7],
+        1, 5, 3,
+        3, 5, 7,
 
         // Front face (z = 5)
-        cube[0], cube[2], cube[4],
-        cube[2], cube[6], cube[4],
+        0, 2, 4,
+        2, 4, 6,
 
         // Left face (x = -0.5)
-        cube[0], cube[4], cube[1],
-        cube[1], cube[4], cube[5],
+        0, 4, 1,
+        1, 4, 5,
 
         // Right face (x = 0.5)
-        cube[2], cube[3], cube[6],
-        cube[3], cube[7], cube[6],
+        2, 3, 6,
+        3, 7, 6,
 
         // Bottom face (y = -0.5)
-        cube[0], cube[1], cube[2],
-        cube[2], cube[1], cube[3],
+        0, 1, 2,
+        2, 1, 3,
 
         // Top face (y = 0.5)
-        cube[4], cube[6], cube[5],
-        cube[5], cube[6], cube[7],
+        4, 6, 5,
+        5, 6, 7
     }));
 
     // get the transform

@@ -6,12 +6,14 @@
 #include "microgame/util/color.h"
 
 typedef struct mesh {
-    int numVerts;
-    vec3 *verts;
+    int numVertices;
+    vec3 *vertices;
+    int numIndices;
+    int *indices;
     color color;
 } mesh;
 
-mesh mesh_new(color c, int numVerts, vec3 *verts);
+mesh mesh_new(color c, int numVerts, vec3 *verts, int numIndices, int *indices);
 void mesh_destroy(mesh *m);
 
 #endif // MG_COMPONENTS_MESH_H

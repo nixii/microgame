@@ -111,12 +111,12 @@ void scene_render(scene *s, renderer *r) {
         mesh *m = scene_get_mesh(s, e);
 
         // for each triangle
-        for (int i = 0; i < m->numVerts; i += 3) {
+        for (int i = 0; i < m->numIndices; i += 3) {
 
             // global locs
-            vec3 v1 = vec3_add(m->verts[i], t->pos);
-            vec3 v2 = vec3_add(m->verts[i + 1], t->pos);
-            vec3 v3 = vec3_add(m->verts[i + 2], t->pos);
+            vec3 v1 = vec3_add(m->vertices[m->indices[i]], t->pos);
+            vec3 v2 = vec3_add(m->vertices[m->indices[i + 1]], t->pos);
+            vec3 v3 = vec3_add(m->vertices[m->indices[i + 2]], t->pos);
 
             // define the triangle
             triangle tri;
