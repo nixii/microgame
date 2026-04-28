@@ -114,9 +114,9 @@ void scene_render(scene *s, renderer *r) {
         for (int i = 0; i < m->numIndices; i += 3) {
 
             // global locs
-            vec3 v1 = vec3_add(m->vertices[m->indices[i]], t->pos);
-            vec3 v2 = vec3_add(m->vertices[m->indices[i + 1]], t->pos);
-            vec3 v3 = vec3_add(m->vertices[m->indices[i + 2]], t->pos);
+            vec3 v1 = m->vertices[m->indices[i]];//vec3_add(m->vertices[m->indices[i]], t->pos);
+            vec3 v2 = m->vertices[m->indices[i+1]];//vec3_add(m->vertices[m->indices[i + 1]], t->pos);
+            vec3 v3 = m->vertices[m->indices[i+2]];//vec3_add(m->vertices[m->indices[i + 2]], t->pos);
             
             // translate and clip the triangles
             camera_translation_result tris = camera_translate_triangle(&s->camera, v1, v2, v3);

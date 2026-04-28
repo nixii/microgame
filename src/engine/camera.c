@@ -1,6 +1,7 @@
 
 #include "microgame/engine/camera.h"
 #include "microgame/util/triangle.h"
+#include <stdio.h>
 
 camera camera_new() {
     return (camera) {
@@ -33,33 +34,114 @@ vec2 camera_project_point(camera *c, vec3 p, int width, int height) {
     return out;
 }
 
-// translate a triangle to camera location
+// intersenct a triangle with the near clipping plane
+static vec3 intersect_near(vec3 inside, vec3 outside) {
+    float t = (NEAR_CLIP - inside.z) / (outside.z - inside.z);
+
+    vec3 r;
+    r.x = inside.x + (outside.x - inside.x) * t;
+    r.y = inside.y + (outside.y - inside.y) * t;
+    r.z = NEAR_CLIP;
+    return r;
+}
+
+// translate a triangle and maybe split it
 camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2, vec3 v3) {
 
-    // create the result
     camera_translation_result result;
-    
-    // transform the points
+    result.numTriangles = 0;
+
+    vec3 normal = vec3_normal(
+        vec3_cross(vec3_sub(v2, v1), vec3_sub(v3, v1))
+    );
+
     v1 = camera_transform(c, v1);
     v2 = camera_transform(c, v2);
     v3 = camera_transform(c, v3);
 
-    // calculate the normal and depth (since each split triangle will have the same)
-    vec3 normal = vec3_normal(vec3_cross(vec3_sub(v2, v1), vec3_sub(v3, v2)));
-    float depth = (v1.z + v2.z + v3.z) / 3.0;
+    vec3 v[3] = {v1, v2, v3};
 
-    // define the normal triangle
-    triangle tri;
-    tri.a = v1;
-    tri.b = v2;
-    tri.c = v3;
-    tri.normal = normal;
-    tri.depth = depth;
+    vec3 inside[3];
+    vec3 outside[3];
+    int inCount = 0, outCount = 0;
 
-    // add the triangle
-    result.triangles[0] = tri;
-    result.numTriangles = 1;
-    
-    // return the result
+    for (int i = 0; i < 3; i++) {
+        if (v[i].z >= NEAR_CLIP)
+            inside[inCount++] = v[i];
+        else
+            outside[outCount++] = v[i];
+    }
+
+    // finally get the depth! :D
+    float depth = (v1.z + v2.z + v3.z) / 3.0f;
+
+    // all outside
+    if (inCount == 0) return result;
+
+    // 3 outside
+    if (outCount == 0) {
+        triangle tri = {
+            .a = inside[0], 
+            .b = inside[1], 
+            .c = inside[2], 
+            .normal = normal, 
+            .depth = depth
+        };
+        result.triangles[0] = tri;
+        result.numTriangles = 1;
+        return result;
+    }
+
+    // 2 outside
+    if (inCount == 1 && outCount == 2) {
+
+        vec3 i = inside[0];
+        vec3 o1 = outside[0];
+        vec3 o2 = outside[1];
+
+        triangle tri;
+        tri.a = i;
+        tri.b = intersect_near(i, o1);
+        tri.c = intersect_near(i, o2);
+        tri.normal = normal;
+        tri.depth = depth;
+
+        result.triangles[0] = tri;
+        result.numTriangles = 1;
+        return result;
+    }
+
+    // 1 outside
+    if (inCount == 2 && outCount == 1) {
+
+        vec3 i1 = inside[0];
+        vec3 i2 = inside[1];
+        vec3 o  = outside[0];
+
+        vec3 i1i = intersect_near(i1, o);
+        vec3 i2i = intersect_near(i2, o);
+
+        // triangle 1
+        result.triangles[0] = (triangle){
+            .a = i1, 
+            .b = i2, 
+            .c = i1i, 
+            .normal = normal, 
+            .depth = depth
+        };
+
+        // triangle 2
+        result.triangles[1] = (triangle){
+            .a = i2, 
+            .b = i2i, 
+            .c = i1i, 
+            .normal = normal, 
+            .depth = depth
+        };
+
+        result.numTriangles = 2;
+        return result;
+    }
+
     return result;
 }
