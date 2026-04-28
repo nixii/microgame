@@ -83,6 +83,7 @@ void game_update(microgame *g) {
     UpdateTexture(g->_bufTex, g->renderer.pixels);
     BeginDrawing();
     DrawTexture(g->_bufTex, 0, 0, WHITE);
+    DrawText(TextFormat("%d FPS", GetFPS()), 10, 10, 30, WHITE); // TODO: remove FPS counter
     EndDrawing();
 }
 
