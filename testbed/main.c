@@ -13,7 +13,7 @@ int main(void)
     srand(time(NULL));
 
     // create the game
-    microgame *g = game_new(1600, 1000, 30, "hi world");
+    microgame *g = game_new(1600, 1000, 60, "hi world");
     scene *s = scene_new();
 
     // cube points
@@ -33,28 +33,28 @@ int main(void)
     scene_attach_mesh(s, test, mesh_new(rgb_rand(), 8, cube, 36, (int []){
         
         // Front
-        2, 4, 0,
-        6, 4, 2,
+        0, 4, 2,
+        2, 4, 6,
 
         // Back
-        5, 3, 1,
-        5, 7, 3,
+        1, 3, 5,
+        3, 7, 5,
 
         // Left
-        4, 1, 0,
-        4, 5, 1,
+        0, 1, 4,
+        1, 5, 4,
 
         // Right
-        3, 6, 2,
-        7, 6, 3,
+        2, 6, 3,
+        3, 6, 7,
 
         // Bottom
-        1, 2, 0,
-        3, 2, 1,
+        0, 2, 1,
+        1, 2, 3,
 
         // Top
-        6, 5, 4,
-        6, 7, 5
+        4, 5, 6,
+        5, 7, 6
     }));
 
     // get the transform
@@ -69,9 +69,9 @@ int main(void)
     while (game_still_running(g)) {
 
         // rotate the camera
-        float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) / 20.0;
+        float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) / 40.0;
         c->transform.rot.y += rotYaw;
-        float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) / 20.0;
+        float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) / 40.0;
         c->transform.rot.x += rotPitch;
 
         // get the cam movement

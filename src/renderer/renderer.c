@@ -57,7 +57,6 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y
 
     // the are of the triangle
     float area = edge(x1, y1, x2, y2, x3, y3);
-    if (area <= 0) return; // backface cull! :>
 
     // for every point
     for (int y = minY; y <= maxY; y++) {
@@ -67,8 +66,7 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y
             float w3 = edge(x1,y1,x2,y2,x,y);
 
             if ((w1 >= 0 && w2 >= 0 && w3 >= 0) ||
-                (w1 <= 0 && w2 <= 0 && w3 <= 0))
-            {
+                (w1 <= 0 && w2 <= 0 && w3 <= 0)) {
                 float invArea = 1.0f / area;
 
                 w1 *= invArea;

@@ -137,9 +137,6 @@ void scene_render(scene *s, renderer *r) {
                 s->triangleBuffer[numTris++] = tris.triangles[i];
         }
     }
-
-    // sort the triangles
-    qsort(s->triangleBuffer, numTris, sizeof(triangle), triangle_cmp);
     
     // draw each triangle!
     for (int i = 0; i < numTris; i++) {
@@ -156,7 +153,7 @@ void scene_render(scene *s, renderer *r) {
             continue;
 
         // render the triangle
-        float lighting = (vec3_dot(t.normal, vec3_new(0, -1, 0)) + 1) / 5.0;
+        float lighting = (vec3_dot(t.normal, vec3_new(0, 1, 0)) + 1) / 5.0;
         renderer_render_triangle(r, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
 }   

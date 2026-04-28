@@ -8,7 +8,6 @@
 typedef struct triangle {
     vec3 a, b, c, normal;
     color color;
-    float depth;
 } triangle;
 
 int triangle_cmp(const void *a, const void *b);

@@ -52,29 +52,40 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     camera_translation_result result;
     result.numTriangles = 0;
 
+    // get the normal of the vertex
     vec3 normal = vec3_normal(
         vec3_cross(vec3_sub(v2, v1), vec3_sub(v3, v1))
     );
 
+    // transform the vertices to camera space
     v1 = camera_transform(c, v1);
     v2 = camera_transform(c, v2);
     v3 = camera_transform(c, v3);
 
+    // get the normal of the vertex in camera space
+    vec3 cameraNormal = vec3_normal(
+        vec3_cross(vec3_sub(v2, v1), vec3_sub(v3, v1))
+    );
+
+    // backface cull it
+    if (vec3_dot(cameraNormal, v1) >= 0)
+        return result;
+
+    // store in array for easy use
     vec3 v[3] = {v1, v2, v3};
 
+    // the amount of triangles inside or outside the view plane
     vec3 inside[3];
     vec3 outside[3];
     int inCount = 0, outCount = 0;
 
+    // sort the triangles
     for (int i = 0; i < 3; i++) {
         if (v[i].z >= NEAR_CLIP)
             inside[inCount++] = v[i];
         else
             outside[outCount++] = v[i];
     }
-
-    // finally get the depth! :D
-    float depth = (v1.z + v2.z + v3.z) / 3.0f;
 
     // all outside
     if (inCount == 0) return result;
@@ -85,8 +96,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
             .a = inside[0], 
             .b = inside[1], 
             .c = inside[2], 
-            .normal = normal, 
-            .depth = depth
+            .normal = normal
         };
         result.triangles[0] = tri;
         result.numTriangles = 1;
@@ -105,7 +115,6 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
         tri.b = intersect_near(i, o1);
         tri.c = intersect_near(i, o2);
         tri.normal = normal;
-        tri.depth = depth;
 
         result.triangles[0] = tri;
         result.numTriangles = 1;
@@ -127,8 +136,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
             .a = i1, 
             .b = i2, 
             .c = i1i, 
-            .normal = normal, 
-            .depth = depth
+            .normal = normal
         };
 
         // triangle 2
@@ -136,8 +144,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
             .a = i2, 
             .b = i2i, 
             .c = i1i, 
-            .normal = normal, 
-            .depth = depth
+            .normal = normal
         };
 
         result.numTriangles = 2;
