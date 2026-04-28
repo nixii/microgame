@@ -37,6 +37,11 @@ void renderer_render_square(renderer *r, int x, int y, int w, int h, color c) {
     }
 }
 
+// triangle rendering helper
+static inline float edge(int ax, int ay, int bx, int by, int px, int py) {
+    return (px - ax) * (by - ay) - (py - ay) * (bx - ax);
+}
+
 // render a triangle
 void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y2, int z2, int x3, int y3, int z3, color c) {
     
@@ -51,27 +56,33 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y
     maxY = maxY < 0 ? 0 : (maxY >= r->height ? r->height - 1 : maxY);
 
     // the are of the triangle
-    float area = fabs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
+    float area = edge(x1, y1, x2, y2, x3, y3);
+    if (area <= 0) return; // backface cull! :>
 
     // for every point
     for (int y = minY; y <= maxY; y++) {
         for (int x = minX; x <= maxX; x++) {
-            float a1 = fabs((x * (y2 - y3) + x2 * (y3 - y) + x3 * (y - y2)) / 2.0);
-            float a2 = fabs((x1 * (y - y3) + x * (y3 - y1) + x3 * (y1 - y)) / 2.0);
-            float a3 = fabs((x1 * (y2 - y) + x2 * (y - y1) + x * (y1 - y2)) / 2.0);
+            float w1 = edge(x2,y2,x3,y3,x,y);
+            float w2 = edge(x3,y3,x1,y1,x,y);
+            float w3 = edge(x1,y1,x2,y2,x,y);
 
-            if (fabs(area - a1 - a2 - a3) > 0.5) continue;
-            float w1 = a1 / area;
-            float w2 = a2 / area;
-            float w3 = a3 / area;
+            if ((w1 >= 0 && w2 >= 0 && w3 >= 0) ||
+                (w1 <= 0 && w2 <= 0 && w3 <= 0))
+            {
+                float invArea = 1.0f / area;
 
-            float z = w1 * z1 + w2 * z2 + w3 * z3;
+                w1 *= invArea;
+                w2 *= invArea;
+                w3 *= invArea;
 
-            int idx = x + y * r->width;
+                float z = w1*z1 + w2*z2 + w3*z3;
 
-            if (z < r->depth_buffer[idx]) {
-                r->depth_buffer[idx] = z;
-                r->pixels[idx] = c;
+                int idx = x + y * r->width;
+
+                if (z < r->depth_buffer[idx]) {
+                    r->depth_buffer[idx] = z;
+                    r->pixels[idx] = c;
+                }
             }
         }
     }

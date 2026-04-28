@@ -30,49 +30,48 @@ int main(void)
 
     // make a test triangle
     entity test = scene_spawn(s);
-    mesh *m = scene_attach_mesh(s, test, mesh_new(rgb_rand(), 8, cube, 36, (int []){
+    scene_attach_mesh(s, test, mesh_new(rgb_rand(), 8, cube, 36, (int []){
         
-        // Back face (z = 6)
-        1, 5, 3,
-        3, 5, 7,
+        // Front
+        2, 4, 0,
+        6, 4, 2,
 
-        // Front face (z = 5)
-        0, 2, 4,
-        2, 4, 6,
+        // Back
+        5, 3, 1,
+        5, 7, 3,
 
-        // Left face (x = -0.5)
-        0, 4, 1,
-        1, 4, 5,
+        // Left
+        4, 1, 0,
+        4, 5, 1,
 
-        // Right face (x = 0.5)
-        2, 3, 6,
-        3, 7, 6,
+        // Right
+        3, 6, 2,
+        7, 6, 3,
 
-        // Bottom face (y = -0.5)
-        0, 1, 2,
-        2, 1, 3,
+        // Bottom
+        1, 2, 0,
+        3, 2, 1,
 
-        // Top face (y = 0.5)
-        4, 6, 5,
-        5, 6, 7
+        // Top
+        6, 5, 4,
+        6, 7, 5
     }));
 
     // get the transform
-    transform *t = get_transform(s, test);
+    get_transform(s, test);
     camera *c = &s->camera;
     c->transform.pos = vec3_new(0, 3, -10);
 
     // set the scene
     game_set_scene(g, s);
-    int frame = 0;
 
     // update
     while (game_still_running(g)) {
 
         // rotate the camera
-        float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) / 40.0;
+        float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) / 20.0;
         c->transform.rot.y += rotYaw;
-        float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) / 40.0;
+        float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) / 20.0;
         c->transform.rot.x += rotPitch;
 
         // get the cam movement
@@ -95,7 +94,6 @@ int main(void)
         c->transform.pos = vec3_add(c->transform.pos, movement);
 
         game_update(g);
-        frame++;
     }
 
     // end

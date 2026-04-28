@@ -72,7 +72,6 @@ int game_still_running(microgame *g) {
 void game_update(microgame *g) {
 
     // clear the screen
-    printf("no clear\n");
     renderer_clear(&g->renderer);
 
     // render the scene
