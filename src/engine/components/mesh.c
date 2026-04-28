@@ -57,13 +57,17 @@ mesh mesh_from_obj(color c, char *objFilePath) {
     // read into the read bytes
     while ((endPoint = fgets(readBytes, sizeof(readBytes), objFile)) != NULL) {
 
+        // skip commented lines
+        if (readBytes[0] == '#')
+            continue;
+        
         // the partially loaded objects
         int param = 0;
         float points[4];
         
         // expect the command
         int i = 0;
-        while (i < 2 && readBytes[i] != " ") {
+        while (i < 2 && readBytes[i] != ' ') {
             command[i] = readBytes[i];
             i++;
         }
@@ -72,19 +76,21 @@ mesh mesh_from_obj(color c, char *objFilePath) {
         printf("%s, ", command);
 
         // parse vertices
-        if (strcmp(command, "v ") == 0) {
+        if (strcmp(command, "v") == 0) {
             char *next = readBytes;
             // TODO: read every float it can and store it in the points.
             // TODO: make the points get loaded into the mesh (w included)
-
-            printf("\n");
         }
 
         // TODO: parse faces
+        if (strcmp(command, "f") == 0) {
+
+        }
 
         // reset the command
         command[0] = 0;
         command[1] = 0;
+        command[2] = 0;
     }
 
     // exit
