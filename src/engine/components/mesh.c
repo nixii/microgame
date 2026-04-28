@@ -40,24 +40,50 @@ mesh mesh_from_obj(color c, char *objFilePath) {
 
     // how much is read
     char readBytes[OBJ_READ_BUFFER];
+    char numberBuffer[OBJ_READ_BUFFER];
+    int numberBufferLen = 0;
     char *endPoint;
 
     // state info
-    int isComment = 0;
-    char command[2];
+    char command[3] = {0, 0, 0};
+
+    // the arrays that will store the objects eventually
+    vec3 *vertices = malloc(64 * sizeof(vec3));
+    int numVertices = 0, verticesCap = 64;
+    int *indices = malloc(64 * sizeof(int));
+    int numIndices = 0, indicesCap = 64;
 
     // read into the read bytes
     while ((endPoint = fgets(readBytes, sizeof(readBytes), objFile)) != NULL) {
-        
-        // print out the characters
-        for (int i = 0; i < sizeof(readBytes); i++) {
 
-            // skip if comment or null
-            if (readBytes[i] == '\0') break;
-            if (readBytes[i] == '#') break;
-            
-            // TODO: find the vertices
+        // the partially loaded objects
+        int param = 0;
+        float points[4];
+        
+        // expect the command
+        int i = 0;
+        while (i < 2 && readBytes[i] != " ") {
+            command[i] = readBytes[i];
+            i++;
         }
+        
+        // print the command
+        printf("%s, ", command);
+
+        // parse vertices
+        if (strcmp(command, "v ") == 0) {
+            char *next = readBytes;
+            // TODO: read every float it can and store it in the points.
+            // TODO: make the points get loaded into the mesh (w included)
+
+            printf("\n");
+        }
+
+        // TODO: parse faces
+
+        // reset the command
+        command[0] = 0;
+        command[1] = 0;
     }
 
     // exit
