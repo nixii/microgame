@@ -57,6 +57,9 @@ int main(void)
         5, 7, 6
     }));
 
+    // jus make a mesh
+    mesh_from_obj(rgb_rand(), "assets/test.obj");
+
     // get the transform
     get_transform(s, test);
     camera *c = &s->camera;
