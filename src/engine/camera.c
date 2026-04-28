@@ -46,6 +46,7 @@ static vec3 intersect_near(vec3 inside, vec3 outside) {
     return r;
 }
 
+// FIXME: this function does too much. split it up.
 // translate a triangle and maybe split it
 camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2, vec3 v3) {
 
