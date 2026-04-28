@@ -22,6 +22,7 @@ mesh mesh_new(color c, int numVerts, vec3 *verts, int numIndices, int *indices) 
     return m;
 }
 
+// TODO: move this out into an "MeshResource" struct
 // load a mesh from a .obj file
 mesh mesh_from_obj(color c, char *objFilePath) {
 
