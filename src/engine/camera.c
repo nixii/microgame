@@ -16,20 +16,21 @@ vec3 camera_transform(camera *c, vec3 p) {
     return p;
 }
 
-vec2 camera_project_point(camera *c, vec3 p, int width, int height) {
+vec3 camera_project_point(camera *c, vec3 p, int width, int height) {
 
     // avoid divide-by-zero
-    if (p.z <= 0) return vec2_new(-1, -1);
+    if (p.z <= 0) return vec3_new(-1, -1, -1);
 
     float f = c->fov / p.z;
 
     float x = (p.x * f) / ((float)width / height);
     float y = p.y * f;
 
-    vec2 out;
+    vec3 out;
 
     out.x = (x + 1.0f) * 0.5f * width;
     out.y = (1.0f - (y + 1.0f) * 0.5f) * height;
+    out.z = p.z;
 
     return out;
 }

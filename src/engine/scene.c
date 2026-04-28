@@ -114,9 +114,9 @@ void scene_render(scene *s, renderer *r) {
         for (int i = 0; i < m->numIndices; i += 3) {
 
             // global locs
-            vec3 v1 = m->vertices[m->indices[i]];//vec3_add(m->vertices[m->indices[i]], t->pos);
-            vec3 v2 = m->vertices[m->indices[i+1]];//vec3_add(m->vertices[m->indices[i + 1]], t->pos);
-            vec3 v3 = m->vertices[m->indices[i+2]];//vec3_add(m->vertices[m->indices[i + 2]], t->pos);
+            vec3 v1 = vec3_add(m->vertices[m->indices[i]], t->pos);
+            vec3 v2 = vec3_add(m->vertices[m->indices[i + 1]], t->pos);
+            vec3 v3 = vec3_add(m->vertices[m->indices[i + 2]], t->pos);
             
             // translate and clip the triangles
             camera_translation_result tris = camera_translate_triangle(&s->camera, v1, v2, v3);
@@ -145,9 +145,9 @@ void scene_render(scene *s, renderer *r) {
     for (int i = 0; i < numTris; i++) {
         triangle t = s->triangleBuffer[i];
 
-        vec2 v1 = camera_project_point(&s->camera, t.a, r->width, r->height);
-        vec2 v2 = camera_project_point(&s->camera, t.b, r->width, r->height);
-        vec2 v3 = camera_project_point(&s->camera, t.c, r->width, r->height);
+        vec3 v1 = camera_project_point(&s->camera, t.a, r->width, r->height);
+        vec3 v2 = camera_project_point(&s->camera, t.b, r->width, r->height);
+        vec3 v3 = camera_project_point(&s->camera, t.c, r->width, r->height);
 
         // skip behind the camera
         if ((v1.x == v1.y && v1.x == -1) ||
@@ -157,6 +157,6 @@ void scene_render(scene *s, renderer *r) {
 
         // render the triangle
         float lighting = (vec3_dot(t.normal, vec3_new(0, -1, 0)) + 1) / 5.0;
-        renderer_render_triangle(r, v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
+        renderer_render_triangle(r, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
 }   

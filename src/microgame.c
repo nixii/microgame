@@ -4,6 +4,8 @@
 #include "microgame/microgame.h"
 #include "microgame/renderer/renderer.h"
 #include "microgame/engine/scene.h"
+#include <stdio.h>
+
 // SPECIFY THE TYPE
 struct microgame {
     int width;
@@ -70,6 +72,7 @@ int game_still_running(microgame *g) {
 void game_update(microgame *g) {
 
     // clear the screen
+    printf("no clear\n");
     renderer_clear(&g->renderer);
 
     // render the scene
