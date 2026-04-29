@@ -16,46 +16,8 @@ int main(void)
     microgame *g = game_new(1600, 1000, 60, "hi world");
     scene *s = scene_new();
 
-    // cube points
-    vec3 cube[8] = {
-        vec3_new(-0.5, -0.5, -0.5),
-        vec3_new(-0.5, -0.5, 0.5),
-        vec3_new(0.5, -0.5, -0.5),
-        vec3_new(0.5, -0.5, 0.5),
-        vec3_new(-0.5, 0.5, -0.5),
-        vec3_new(-0.5, 0.5, 0.5),
-        vec3_new(0.5, 0.5, -0.5),
-        vec3_new(0.5, 0.5, 0.5),
-    };
-
     // make a test monkey
     entity test = scene_spawn(s);
-    // scene_attach_mesh(s, test, mesh_new(rgb_rand(), 8, cube, 36, (int []){
-        
-    //     // Front
-    //     0, 4, 2,
-    //     2, 4, 6,
-
-    //     // Back
-    //     1, 3, 5,
-    //     3, 7, 5,
-
-    //     // Left
-    //     0, 1, 4,
-    //     1, 5, 4,
-
-    //     // Right
-    //     2, 6, 3,
-    //     3, 6, 7,
-
-    //     // Bottom
-    //     0, 2, 1,
-    //     1, 2, 3,
-
-    //     // Top
-    //     4, 5, 6,
-    //     5, 7, 6
-    // }));
     scene_attach_mesh(s, test, mesh_from_obj(rgb_rand(), "assets/test.obj"));
     transform *eTransform = get_transform(s, test);
 
