@@ -63,7 +63,8 @@ mesh mesh_from_obj(color c, char *objFilePath) {
         
         // the partially loaded objects
         int param = 0;
-        float points[4];
+        float coordinates[4];
+        int numCoordinates = 0;
         
         // expect the command
         int i = 0;
@@ -77,9 +78,40 @@ mesh mesh_from_obj(color c, char *objFilePath) {
 
         // parse vertices
         if (strcmp(command, "v") == 0) {
-            char *next = readBytes;
-            // TODO: read every float it can and store it in the points.
+
+            // pointers for traversing the string
+            char *next = readBytes + i;
+            char *end = NULL;
+
+            // repeat while there are still points
+            while (1) {
+
+                // get the next float
+                float coordinate = strtof(next, &end);
+
+                // skip if you must
+                if (end == next) break;
+
+                // add the coordinate and go to the next
+                next = end + 1;
+                coordinates[numCoordinates++] = coordinate;
+            }
+            
             // TODO: make the points get loaded into the mesh (w included)
+            if (numCoordinates < 3) break;
+
+            // add the coordinates
+            float w = numCoordinates == 4 ? coordinates[3] : 1.0;
+            vec3 v = vec3_new(coordinates[0] / w, coordinates[1] / w, coordinates[2] / w);
+
+            // make the vertex larger if needed
+            if (numVertices >= verticesCap) {
+                verticesCap *= 2;
+                vertices = realloc(vertices, sizeof(vec3) * verticesCap);
+            }
+
+            // set the vertex
+            vertices[numVertices++] = v;
         }
 
         // TODO: parse faces
@@ -93,7 +125,20 @@ mesh mesh_from_obj(color c, char *objFilePath) {
         command[2] = 0;
     }
 
-    // exit
+    // scale down the vertices
+    vertices = realloc(vertices, numVertices * sizeof(vec3));
+    m.vertices = vertices;
+    m.numVertices = numVertices;
+
+    // scale down the indices
+    indices = realloc(indices, numIndices * sizeof(int));
+    m.indices = indices;
+    m.numIndices = numIndices;
+
+    // return the model
+    return m;
+
+    // a failure
 exitnow:
 
     // close the file
