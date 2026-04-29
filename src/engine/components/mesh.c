@@ -24,7 +24,7 @@ mesh mesh_new(color c, int numVerts, vec3 *verts, int numIndices, int *indices) 
 
 // TODO: move this out into an "MeshResource" struct
 // load a mesh from a .obj file
-mesh mesh_from_obj(color c, char *objFilePath) {
+mesh mesh_from_obj(color color, char *objFilePath) {
 
     // create the mesh
     mesh m = { 0 };
@@ -49,10 +49,10 @@ mesh mesh_from_obj(color c, char *objFilePath) {
     char command[3] = {0, 0, 0};
 
     // the arrays that will store the objects eventually
-    vec3 *vertices = malloc(64 * sizeof(vec3));
     int numVertices = 0, verticesCap = 64;
-    int *indices = malloc(64 * sizeof(int));
-    int numIndices = 0, indicesCap = 64;
+    vec3 *vertices = malloc(verticesCap * sizeof(vec3));
+    int numIndices = 0, indicesCap = 64 * 3;
+    int *indices = malloc(indicesCap * sizeof(int));
 
     // read into the read bytes
     while ((endPoint = fgets(readBytes, sizeof(readBytes), objFile)) != NULL) {
@@ -83,6 +83,7 @@ mesh mesh_from_obj(color c, char *objFilePath) {
             char *next = readBytes + i;
             char *end = NULL;
 
+            // TODO: add safeguards
             // repeat while there are still points
             while (1) {
 
@@ -117,6 +118,50 @@ mesh mesh_from_obj(color c, char *objFilePath) {
         // TODO: parse faces
         if (strcmp(command, "f") == 0) {
 
+            // store the first and previous for fans
+            int idxFirst = -1;
+            int idxPrevious = -1;
+
+            // point to the first element that isn't the space
+            char *next = readBytes + i + 1;
+            char *end = NULL;
+
+            // TODO: add safeguards
+            // go through
+            while (1) {
+                int v = (int)strtol(next, &end, 10);
+                if (next == end) break;
+                next = end;
+
+                // TODO: add safeguards
+                while (*(next++) != ' ') {}
+
+                // set the first index
+                if (idxFirst == -1)
+                    idxFirst = v;
+                
+                // set the previous index
+                else if (idxPrevious == -1)
+                    idxPrevious = v;
+                
+                // actually making triangles
+                else {
+
+                    // expand the indices if needed
+                    if (numIndices + 3 >= indicesCap) {
+                        indicesCap *= 2;
+                        indices = realloc(indices, indicesCap * sizeof(int));
+                    }
+
+                    // store the indices
+                    indices[numIndices++] = idxFirst - 1;
+                    indices[numIndices++] = idxPrevious - 1;
+                    indices[numIndices++] = v - 1;
+
+                    // re-set the previous idx
+                    idxPrevious = v;
+                }
+            }
         }
 
         // reset the command
@@ -135,11 +180,8 @@ mesh mesh_from_obj(color c, char *objFilePath) {
     m.indices = indices;
     m.numIndices = numIndices;
 
-    // return the model
-    return m;
-
-    // a failure
-exitnow:
+    // set the color
+    m.color = color;
 
     // close the file
     fclose(objFile);

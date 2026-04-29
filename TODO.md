@@ -1,7 +1,10 @@
 
 ## To-Do list
 
-TODO (in order of priority):
+TODO #2 (in order of priority):
+ * `[ ]` Improve performance of rendering meshes
+
+TODO #1 (in order of priority):
  * `[x]` Depth sort the triangles
  * `[x]` Meshes now use indices and vertices to save storage space
  * `[x]` Near clipping
@@ -9,4 +12,4 @@ TODO (in order of priority):
  * * `[x]` 2 point out clipping
  * * `[x]` 3 point out clipping
  * `[x]` *correct* back face culling
- * `[ ]` Loading .obj files into a mesh
+ * `[x]` Loading .obj files into a mesh
