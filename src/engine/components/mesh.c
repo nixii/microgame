@@ -109,7 +109,6 @@ mesh mesh_from_obj(color color, char *objFilePath) {
             vertices[numVertices++] = v;
         }
 
-        // TODO: parse faces
         if (strcmp(command, "f") == 0) {
 
             // store the first and previous for fans
