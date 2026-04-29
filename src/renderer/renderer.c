@@ -89,12 +89,7 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y
 
             if (w1*sign >= 0 && w2*sign >= 0 && w3*sign >= 0) {
 
-                w1 *= invArea;
-                w2 *= invArea;
-                w3 *= invArea;
-
-                float z = w1*z1 + w2*z2 + w3*z3;
-
+                float z = w1*z1*invArea + w2*z2*invArea + w3*z3*invArea;
 
                 if (z < r->depthBuffer[idx]) {
                     r->depthBuffer[idx] = z;
