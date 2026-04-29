@@ -35,7 +35,7 @@ mesh mesh_from_obj(color color, char *objFilePath) {
     // error if it doesn't exist
     if (objFile == NULL) {
         errno = 1;
-        printf("oh nooo\n");
+        printf("file doesn't exist: %s\n", objFilePath);
         return m;
     }
 
@@ -72,9 +72,6 @@ mesh mesh_from_obj(color color, char *objFilePath) {
             command[i] = readBytes[i];
             i++;
         }
-        
-        // print the command
-        printf("%s, ", command);
 
         // parse vertices
         if (strcmp(command, "v") == 0) {
