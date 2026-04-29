@@ -8,6 +8,9 @@ IFLAGS = -Iinclude
 # add in raylib
 ADD_RAYLIB = -L/opt/homebrew/opt/raylib/lib -lraylib -I/opt/homebrew/opt/raylib/include
 
+# optimization
+# OPT = -O3 # this is perfectly fine!
+
 #############
 # build src #
 #############
@@ -23,7 +26,7 @@ TARGET = lib/libmicrogame.a
 
 # build a single obj
 src/%.o: src/%.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(ADD_RAYLIB)
+	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(ADD_RAYLIB) $(OPT)
 
 # build everything
 engine: $(OBJS)
@@ -47,11 +50,11 @@ LINK_MICROGAME = -Llib -lmicrogame
 
 # build a single obj
 testbed/%.o: testbed/%.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS)
+	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(OPT)
 
 # build everything
 test: $(T_OBJS) engine
-	$(CC) -o $(T_TARGET) $(T_OBJS) $(CFLAGS) $(LINK_MICROGAME) $(ADD_RAYLIB)
+	$(CC) -o $(T_TARGET) $(T_OBJS) $(CFLAGS) $(LINK_MICROGAME) $(ADD_RAYLIB) $(OPT)
 
 #####################
 # General functions #
