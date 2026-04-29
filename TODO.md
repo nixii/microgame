@@ -2,7 +2,8 @@
 ## To-Do list
 
 TODO #2 (in order of priority):
- * `[ ]` Improve performance of rendering meshes
+ * `[x]` Improve performance of rendering meshes
+ * `[ ]` Frustum culling
 
 TODO #1 (in order of priority):
  * `[x]` Depth sort the triangles

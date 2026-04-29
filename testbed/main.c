@@ -16,13 +16,22 @@ int main(void)
     microgame *g = game_new(1600, 1000, 60, "hi world");
     scene *s = scene_new();
 
-    // make a test monkey
-    entity test = scene_spawn(s);
-    scene_attach_mesh(s, test, mesh_from_obj(rgb_rand(), "assets/test.obj"));
-    transform *eTransform = get_transform(s, test);
+    // make the mesh
+    mesh m = mesh_from_obj(rgb_rand(), "assets/test.obj");
+    
+    // make a bunch of entities
+    for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 3; i++) {
+
+            // make a test monkey
+            entity test = scene_spawn(s);
+            scene_attach_mesh(s, test, m);
+            get_transform(s, test)->pos.y = (i - 2) * 3;
+            get_transform(s, test)->pos.x = (j - 2) * 3;
+        }
+    }
 
     // get the transform
-    get_transform(s, test);
     camera *c = &s->camera;
     c->transform.pos = vec3_new(0, 3, -10);
 
@@ -66,9 +75,6 @@ int main(void)
         // rotate the vector
         movement = vec3_rotY(movement, c->transform.rot.y);
         c->transform.pos = vec3_add(c->transform.pos, movement);
-
-        // move the thing
-        eTransform->pos.y = sin((float)frameCount / 30) * 3;
 
         game_update(g);
     }
