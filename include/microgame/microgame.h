@@ -18,5 +18,6 @@ void game_destroy(microgame *g);
 int key_down(key k);
 int key_just_down(key k);
 int key_just_up(key k);
+float get_dt();
 
 #endif // MICROGAME_H

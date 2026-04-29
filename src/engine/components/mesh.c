@@ -41,8 +41,6 @@ mesh mesh_from_obj(color color, char *objFilePath) {
 
     // how much is read
     char readBytes[OBJ_READ_BUFFER];
-    char numberBuffer[OBJ_READ_BUFFER];
-    int numberBufferLen = 0;
     char *endPoint;
 
     // state info
@@ -62,7 +60,6 @@ mesh mesh_from_obj(color color, char *objFilePath) {
             continue;
         
         // the partially loaded objects
-        int param = 0;
         float coordinates[4];
         int numCoordinates = 0;
         

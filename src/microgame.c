@@ -93,6 +93,11 @@ void game_destroy(microgame *g) {
     free(g);
 }
 
+// get the deltatime (for lag help!)
+float get_dt() {
+    return GetFrameTime();
+}
+
 // key presses
 int key_down(key k) {
     return IsKeyDown(key_to_rl(k));

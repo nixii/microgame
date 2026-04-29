@@ -91,9 +91,6 @@ transform *get_transform(scene *s, entity e) {
 X_COMPONENTS
 #undef X
 
-
-// render result for a scene
-
 // render a scene!
 void scene_render(scene *s, renderer *r) {
 
