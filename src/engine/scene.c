@@ -110,11 +110,16 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
     // get the transform
     transform childTransform = s->transforms[e];
 
+    // FIXME: rot not applied
     // get the model matrix for the child
     mat4 childMatrix = mat4_model(childTransform.pos, childTransform.rot, childTransform.scale);
 
     // no parent = no confusion
-    if (get_parent(s, e) == NIL_ENTITY) return childMatrix;
+    if (get_parent(s, e) == NIL_ENTITY) {
+        printf("skipping the empty parent\n");
+        return childMatrix;
+    }
+    printf("PARENT\n");
 
     // parent model matrix
     entity parent = get_parent(s, e);
@@ -140,9 +145,8 @@ void scene_render(scene *s, renderer *r) {
         mat4 tm = get_world_transform_mat4(s, e);
 
         // thingies
-        vec3 tPos = vec3_new(tm.m[3][0], tm.m[3][1], tm.m[3][2]);
-        printf("pos: %f, %f, %f\n", tPos.x, tPos.y, tPos.z);
-        printf("2 pos: %f, %f, %f\n", s->transforms[e].pos.x, s->transforms[e].pos.y, s->transforms[e].pos.z); // FIXME: this does nothing
+        vec3 tPos = vec3_new(tm.m[0][3], tm.m[1][3], tm.m[2][3]);
+        mat4_display(tm);
 
         // get the mesh
         mesh *m = scene_get_mesh(s, e);
