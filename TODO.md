@@ -8,7 +8,7 @@ TODO #2 (in order of priority):
  * * `[x]` Translation done
  * * `[x]` Rotation done
  * * `[x]` Scale done
- * * `[ ]` All these perform actions on the mesh too
+ * * `[x]` All these perform actions on the mesh too
  * `[ ]` Add in UI
  * `[ ]` Frustum culling
 
