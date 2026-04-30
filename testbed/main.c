@@ -25,7 +25,7 @@ int main(void)
     // parent entity
     entity parent = scene_spawn(s);
     transform *parentTransform = get_transform(s, parent);
-    parentTransform->pos.x = 3;
+    parentTransform->pos.x = 2;
 
     // make another movement
     entity superParent = scene_spawn(s);
@@ -36,7 +36,7 @@ int main(void)
     entity test = scene_spawn(s);
     scene_attach_mesh(s, test, m);
     transform *tT = get_transform(s, test);
-    tT->pos.x = 6;
+    tT->pos.x = 4;
     set_parent(s, test, parent);
 
     // make one stationary test entity
@@ -91,8 +91,8 @@ int main(void)
 
         // rotate the test
         parentTransform->rot.z += 1 * dt;
-        superTransform->rot.z += 1.25 * dt;
-        tT->rot.x += 2 * dt;
+        superTransform->rot.x += 1.25 * dt;
+        tT->rot.y += 2 * dt;
         
         game_update(g);
     }
