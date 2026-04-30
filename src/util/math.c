@@ -211,7 +211,7 @@ mat4 mat4_mul(mat4 a, mat4 b) {
 }
 
 // all the matrix operations into a model matrix
-mat4 mat3_model(vec3 t, vec3 r, vec3 s) {
+mat4 mat4_model(vec3 t, vec3 r, vec3 s) {
     return mat4_mul(
         mat4_translation(t),
         mat4_mul(

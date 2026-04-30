@@ -51,6 +51,7 @@ mat4 mat4_scale(vec3 s);
 mat4 mat4_rotationX(float a);
 mat4 mat4_rotationY(float a);
 mat4 mat4_rotationZ(float a);
-mat4 mat3_model(vec3 t, vec3 r, vec3 s);
+mat4 mat4_mul(mat4 a, mat4 b);
+mat4 mat4_model(vec3 t, vec3 r, vec3 s);
 
 #endif // MG_UTIL_H

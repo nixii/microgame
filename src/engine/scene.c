@@ -104,6 +104,28 @@ transform *get_transform(scene *s, entity e) {
 X_COMPONENTS
 #undef X
 
+// get the world transform of an entity
+static mat4 get_world_transform_mat4(scene *s, entity e) {
+
+    // get the transform
+    transform childTransform = s->transforms[e];
+
+    // get the model matrix for the child
+    mat4 childMatrix = mat4_model(childTransform.pos, childTransform.rot, childTransform.scale);
+
+    // no parent = no confusion
+    if (get_parent(s, e) == NIL_ENTITY) return childMatrix;
+
+    // parent model matrix
+    entity parent = get_parent(s, e);
+
+    // parent transform
+    mat4 parentMatrix = get_world_transform_mat4(s, parent);
+
+    // finally mulitply
+    return mat4_mul(parentMatrix, childMatrix);
+}
+
 // render a scene!
 void scene_render(scene *s, renderer *r) {
 
@@ -115,36 +137,43 @@ void scene_render(scene *s, renderer *r) {
         if (!s->alive[e]) continue;
 
         // load its transform
-        transform *t = get_transform(s, e);
+        mat4 tm = get_world_transform_mat4(s, e);
+
+        // thingies
+        vec3 tPos = vec3_new(tm.m[3][0], tm.m[3][1], tm.m[3][2]);
+        printf("pos: %f, %f, %f\n", tPos.x, tPos.y, tPos.z);
+        printf("2 pos: %f, %f, %f\n", s->transforms[e].pos.x, s->transforms[e].pos.y, s->transforms[e].pos.z); // FIXME: this does nothing
 
         // get the mesh
         mesh *m = scene_get_mesh(s, e);
 
         // for each triangle
-        for (int i = 0; i < m->numIndices; i += 3) {
+        if (m != NULL) {
+            for (int i = 0; i < m->numIndices; i += 3) {
 
-            // global locs
-            vec3 v1 = vec3_add(m->vertices[m->indices[i]], t->pos);
-            vec3 v2 = vec3_add(m->vertices[m->indices[i + 1]], t->pos);
-            vec3 v3 = vec3_add(m->vertices[m->indices[i + 2]], t->pos);
-            
-            // translate and clip the triangles
-            camera_translation_result tris = camera_translate_triangle(&s->camera, v1, v2, v3);
-            if (tris.numTriangles == 0) continue;
+                // global locs
+                vec3 v1 = vec3_add(m->vertices[m->indices[i]], tPos);
+                vec3 v2 = vec3_add(m->vertices[m->indices[i + 1]], tPos);
+                vec3 v3 = vec3_add(m->vertices[m->indices[i + 2]], tPos);
+                
+                // translate and clip the triangles
+                camera_translation_result tris = camera_translate_triangle(&s->camera, v1, v2, v3);
+                if (tris.numTriangles == 0) continue;
 
-            // color the triangles
-            for (int i = 0; i < tris.numTriangles; i++)
-                tris.triangles[i].color = m->color;
+                // color the triangles
+                for (int i = 0; i < tris.numTriangles; i++)
+                    tris.triangles[i].color = m->color;
 
-            // expand if the amount of triangles to add is too many
-            if (numTris + tris.numTriangles >= s->triangleBufferSize) {
-                s->triangleBufferSize *= 2;
-                s->triangleBuffer = realloc(s->triangleBuffer, sizeof(triangle) * s->triangleBufferSize);
+                // expand if the amount of triangles to add is too many
+                if (numTris + tris.numTriangles >= s->triangleBufferSize) {
+                    s->triangleBufferSize *= 2;
+                    s->triangleBuffer = realloc(s->triangleBuffer, sizeof(triangle) * s->triangleBufferSize);
+                }
+
+                // add it in
+                for (int i = 0; i < tris.numTriangles; i++)
+                    s->triangleBuffer[numTris++] = tris.triangles[i];
             }
-
-            // add it in
-            for (int i = 0; i < tris.numTriangles; i++)
-                s->triangleBuffer[numTris++] = tris.triangles[i];
         }
     }
     

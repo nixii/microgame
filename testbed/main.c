@@ -18,33 +18,36 @@ int main(void)
 
     // make the mesh
     mesh m = mesh_from_obj(rgb_rand(), "assets/test.obj");
-    
-    // make a bunch of entities
-    for (int j = 0; j < 3; j++) {
-        for (int i = 0; i < 3; i++) {
 
-            // make a test monkey
-            entity test = scene_spawn(s);
-            scene_attach_mesh(s, test, m);
-            get_transform(s, test)->pos.y = (i - 2) * 3;
-            get_transform(s, test)->pos.x = (j - 2) * 3;
-        }
-    }
+    // parent entity
+    entity parent = scene_spawn(s);
+    transform *parentTransform = get_transform(s, parent);
+    
+    // make one test entity to move
+    entity test = scene_spawn(s);
+    scene_attach_mesh(s, test, m);
+    get_transform(s, test)->pos.x = 3;
+    set_parent(s, test, parent);
+
+    // make one stationary test entity
+    entity stationary = scene_spawn(s);
+    scene_attach_mesh(s, stationary, m);
+    get_transform(s, stationary)->pos.x = 2;
 
     // get the transform
     camera *c = &s->camera;
     c->transform.pos = vec3_new(0, 3, -10);
-
+    
     // set the scene
     game_set_scene(g, s);
-
+    
     // speed
     float camSpeed = 1.7; // 1.7 rad a second
     float moveSpeed = 5.0; // 5 meters a second
-
+    
     // how many frames
     int frameCount = 0;
-
+    
     // update
     while (game_still_running(g)) {
         frameCount++;
@@ -75,8 +78,10 @@ int main(void)
         // rotate the vector
         movement = vec3_rotY(movement, c->transform.rot.y);
         c->transform.pos = vec3_add(c->transform.pos, movement);
-        
 
+        // rotate the test
+        parentTransform->rot.z += 3 * dt;
+        
         game_update(g);
     }
 
