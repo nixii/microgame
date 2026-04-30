@@ -66,6 +66,9 @@ entity get_parent(scene *s, entity child);
 // set the parent of an entity
 void set_parent(scene *s, entity child, entity parent);
 
+// remove the parent of an entity
+void remove_parent(scene *s, entity child);
+
 
 // component functions on the scene
 #define X(name, type)\

@@ -177,3 +177,8 @@ entity get_parent(scene *s, entity child) {
 void set_parent(scene *s, entity child, entity parent) {
     s->parents[child] = parent;
 }
+
+// remove the parent of an entity
+void remove_parent(scene *s, entity child) {
+    set_parent(s, child, NIL_ENTITY);
+}
