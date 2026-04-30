@@ -118,14 +118,12 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
     if (get_parent(s, e) == NIL_ENTITY) {
         return childMatrix;
     }
-    printf("PARENT\n");
 
     // parent model matrix
     entity parent = get_parent(s, e);
 
     // parent transform
     mat4 parentMatrix = get_world_transform_mat4(s, parent);
-    mat4_display(parentMatrix);
 
     // finally mulitply
     return mat4_mul(parentMatrix, childMatrix);
