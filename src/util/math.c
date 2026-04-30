@@ -214,9 +214,9 @@ mat4 mat4_mul(mat4 a, mat4 b) {
 // all the matrix operations into a model matrix
 mat4 mat4_model(vec3 t, vec3 r, vec3 s) {
     mat4 matTranslation = mat4_translation(t);
-    mat4 matRotY = mat4_rotationX(r.y);
+    mat4 matRotY = mat4_rotationY(r.y);
     mat4 matRotX = mat4_rotationX(r.x);
-    mat4 matRotZ = mat4_rotationX(r.z);
+    mat4 matRotZ = mat4_rotationZ(r.z);
     mat4 matScale = mat4_scale(s);
 
     return mat4_mul(matTranslation, mat4_mul(matRotY, mat4_mul(matRotX, mat4_mul(matRotZ, matScale))));

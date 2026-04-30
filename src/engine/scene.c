@@ -129,7 +129,7 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
 
     // finally mulitply
     return mat4_mul(parentMatrix, childMatrix);
-}
+}   
 
 // render a scene!
 void scene_render(scene *s, renderer *r) {

@@ -23,6 +23,11 @@ int main(void)
     // parent entity
     entity parent = scene_spawn(s);
     transform *parentTransform = get_transform(s, parent);
+
+    // make another movement
+    entity superParent = scene_spawn(s);
+    transform *superTransform = get_transform(s, superParent);
+    set_parent(s, parent, superParent);
     
     // make one test entity to move
     entity test = scene_spawn(s);
@@ -81,7 +86,8 @@ int main(void)
         c->transform.pos = vec3_add(c->transform.pos, movement);
 
         // rotate the test
-        parentTransform->rot.z += 3 * dt;
+        parentTransform->rot.z += 1 * dt;
+        superTransform->rot.x -= 2 * dt;
         
         game_update(g);
     }
