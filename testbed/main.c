@@ -2,6 +2,7 @@
 #include "microgame/microgame.h"
 #include "microgame/engine/components/mesh.h"
 #include "microgame/util/math.h"
+#include "microgame/util/color.h"
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
@@ -31,8 +32,8 @@ int main(void)
 
     // make one stationary test entity
     entity stationary = scene_spawn(s);
-    scene_attach_mesh(s, stationary, m);
-    get_transform(s, stationary)->pos.x = 2;
+    mesh *m2 = scene_attach_mesh(s, stationary, m);
+    m2->color = rgb(255, 0,  255);
 
     // get the transform
     camera *c = &s->camera;

@@ -116,7 +116,6 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
 
     // no parent = no confusion
     if (get_parent(s, e) == NIL_ENTITY) {
-        printf("skipping the empty parent\n");
         return childMatrix;
     }
     printf("PARENT\n");
@@ -126,6 +125,7 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
 
     // parent transform
     mat4 parentMatrix = get_world_transform_mat4(s, parent);
+    mat4_display(parentMatrix);
 
     // finally mulitply
     return mat4_mul(parentMatrix, childMatrix);
@@ -146,7 +146,6 @@ void scene_render(scene *s, renderer *r) {
 
         // thingies
         vec3 tPos = vec3_new(tm.m[0][3], tm.m[1][3], tm.m[2][3]);
-        mat4_display(tm);
 
         // get the mesh
         mesh *m = scene_get_mesh(s, e);
