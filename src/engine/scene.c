@@ -17,6 +17,7 @@ scene *scene_new() {
     // load the free IDs
     for (s->lastFree = 0; s->lastFree < MAX_ENTITIES; s->lastFree++) {
         s->freeIds[s->lastFree] = s->lastFree;
+        s->parents[s->lastFree] = NIL_ENTITY;
     }
     s->lastFree = MAX_ENTITIES - 1;
 
@@ -25,11 +26,22 @@ scene *scene_new() {
 
 // spawn an entity
 entity scene_spawn(scene *s) {
+
+    // if there is no room then don't spawn a new entity
     if (s->lastFree < 0)
         return NIL_ENTITY;
+
+    // get the next id and decrement the amount free
     entity id = s->freeIds[s->lastFree--];
+
+    // alive is true
     s->alive[id] = 1;
+
+    // create the base objects
     s->transforms[id] = transform_blank();
+    s->parents[id] = NIL_ENTITY;
+
+    // return the entity's ID
     return id;
 }
 
@@ -39,6 +51,7 @@ void scene_despawn(scene *s, entity e) {
         return;
     s->alive[e] = 0;
     s->freeIds[++s->lastFree] = e;
+    s->parents[s->lastFree] = NIL_ENTITY;
 
     // destroy any components
 #define X(name, type)\
@@ -154,3 +167,13 @@ void scene_render(scene *s, renderer *r) {
         renderer_render_triangle(r, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
 }   
+
+// get the parent of an entity
+entity get_parent(scene *s, entity child) {
+    return s->parents[child];
+}
+
+// set the parent of an entity
+void set_parent(scene *s, entity child, entity parent) {
+    s->parents[child] = parent;
+}

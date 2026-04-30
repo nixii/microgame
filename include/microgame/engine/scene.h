@@ -6,8 +6,8 @@
 #include "microgame/util/triangle.h"
 #include "microgame/engine/camera.h"
 #include "microgame/renderer/renderer.h"
-#include "microgame/engine/entity.h"
 #include "microgame/engine/components/x.h"
+#include "microgame/engine/entity.h"
 #include <stdint.h>
 
 #define MAX_ENTITIES 4096
@@ -19,8 +19,9 @@ typedef struct scene {
     // entity stuff
     uint8_t alive[MAX_ENTITIES];
     entity freeIds[MAX_ENTITIES];
-    transform transforms[MAX_ENTITIES];
+    entity parents[MAX_ENTITIES];
     int lastFree;
+    transform transforms[MAX_ENTITIES];
 
     // triangles to render
     int triangleBufferSize;
@@ -37,13 +38,34 @@ typedef struct scene {
 #undef X
 } scene;
 
-// scene functions
+/*
+ * scene functions
+*/
+
+// allocate a brand new scene. this sets all the arrays to default values.
 scene *scene_new();
+
+// spawn a new entity. if there is no space this returns NIL_ENTITY
 entity scene_spawn(scene *s);
+
+// render the scene fully! (not sure if the scene should own this but it does!)
 void scene_render(scene *s, renderer *r);
+
+// despawn an entity when you are done with it; frees all the components
 void scene_despawn(scene *s, entity e);
+
+// destroy the entire scene, despawning entities as well.
 void scene_destroy(scene *s);
+
+// get the transform of an entity
 transform *get_transform(scene *s, entity e);
+
+// get the parent of an entity
+entity get_parent(scene *s, entity child);
+
+// set the parent of an entity
+void set_parent(scene *s, entity child, entity parent);
+
 
 // component functions on the scene
 #define X(name, type)\

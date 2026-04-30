@@ -75,6 +75,7 @@ int main(void)
         // rotate the vector
         movement = vec3_rotY(movement, c->transform.rot.y);
         c->transform.pos = vec3_add(c->transform.pos, movement);
+        
 
         game_update(g);
     }
