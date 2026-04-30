@@ -3,11 +3,12 @@
 
 TODO #2 (in order of priority):
  * `[x]` Improve performance of rendering meshes
- * `[ ]` Modify the entity system to allow for parent/child relationships
- * `[ ]` Apply translation, rotation, and scale down the tree
- * * `[ ]` Translation done
- * * `[ ]` Rotation done
- * * `[ ]` Scale done
+ * `[x]` Modify the entity system to allow for parent/child relationships
+ * `[x]` Apply translation, rotation, and scale down the tree
+ * * `[x]` Translation done
+ * * `[x]` Rotation done
+ * * `[x]` Scale done
+ * * `[ ]` All these perform actions on the mesh too
  * `[ ]` Add in UI
  * `[ ]` Frustum culling
 
