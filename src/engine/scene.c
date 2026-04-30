@@ -144,9 +144,6 @@ void scene_render(scene *s, renderer *r) {
         // load its transform
         mat4 tm = get_world_transform_mat4(s, e);
 
-        // thingies
-        vec3 tPos = vec3_new(tm.m[0][3], tm.m[1][3], tm.m[2][3]);
-
         // get the mesh
         mesh *m = scene_get_mesh(s, e);
 

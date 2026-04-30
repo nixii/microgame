@@ -26,7 +26,7 @@ TARGET = lib/libmicrogame.a
 
 # build a single obj
 src/%.o: src/%.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(ADD_RAYLIB) $(OPT)
+	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(OPT) $(ADD_RAYLIB)
 
 # build everything
 engine: $(OBJS)

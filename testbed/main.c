@@ -55,13 +55,10 @@ int main(void)
     float camSpeed = 1.7; // 1.7 rad a second
     float moveSpeed = 5.0; // 5 meters a second
     
-    // how many frames
-    int frameCount = 0;
-    
     // update
     while (game_still_running(g)) {
-        frameCount++;
 
+        // get deltatime
         float dt = get_dt();
 
         // rotate the camera
