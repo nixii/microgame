@@ -154,10 +154,15 @@ void scene_render(scene *s, renderer *r) {
         if (m != NULL) {
             for (int i = 0; i < m->numIndices; i += 3) {
 
+                // transform the vertex positions
+                mat4 m1 = mat4_mul(tm, mat4_translation(m->vertices[m->indices[i]]));
+                mat4 m2 = mat4_mul(tm, mat4_translation(m->vertices[m->indices[i + 1]]));
+                mat4 m3 = mat4_mul(tm, mat4_translation(m->vertices[m->indices[i + 2]]));
+
                 // global locs
-                vec3 v1 = vec3_add(m->vertices[m->indices[i]], tPos);
-                vec3 v2 = vec3_add(m->vertices[m->indices[i + 1]], tPos);
-                vec3 v3 = vec3_add(m->vertices[m->indices[i + 2]], tPos);
+                vec3 v1 = vec3_new(m1.m[0][3], m1.m[1][3], m1.m[2][3]);
+                vec3 v2 = vec3_new(m2.m[0][3], m2.m[1][3], m2.m[2][3]);
+                vec3 v3 = vec3_new(m3.m[0][3], m3.m[1][3], m3.m[2][3]);
                 
                 // translate and clip the triangles
                 camera_translation_result tris = camera_translate_triangle(&s->camera, v1, v2, v3);
