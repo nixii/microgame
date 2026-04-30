@@ -1,6 +1,7 @@
 
 #include "microgame/microgame.h"
 #include "microgame/engine/components/mesh.h"
+#include "microgame/engine/resource/mesh.h"
 #include "microgame/util/math.h"
 #include "microgame/util/color.h"
 #include <stdio.h>
@@ -17,8 +18,9 @@ int main(void)
     microgame *g = game_new(1600, 1000, 60, "hi world");
     scene *s = scene_new();
 
-    // make the mesh
-    mesh m = mesh_from_obj(rgb_rand(), "assets/test.obj");
+    // make the mesh resource
+    mesh_resource mr = mesh_resource_from_obj("assets/test.obj");
+    mesh m = mesh_from_resource(rgb_rand(), mr);
 
     // parent entity
     entity parent = scene_spawn(s);

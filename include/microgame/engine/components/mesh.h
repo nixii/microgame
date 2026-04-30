@@ -4,8 +4,7 @@
 
 #include "microgame/util/math.h"
 #include "microgame/util/color.h"
-
-#define OBJ_READ_BUFFER 4096
+#include "microgame/engine/resource/mesh.h"
 
 typedef struct mesh {
     int numVertices;
@@ -13,10 +12,11 @@ typedef struct mesh {
     int numIndices;
     int *indices;
     color color;
+    int fromResource;
 } mesh;
 
 mesh mesh_new(color c, int numVerts, vec3 *verts, int numIndices, int *indices);
-mesh mesh_from_obj(color c, char *objFile);
+mesh mesh_from_resource(color color, mesh_resource r);
 void mesh_destroy(mesh *m);
 
 #endif // MG_COMPONENTS_MESH_H
