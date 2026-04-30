@@ -9,6 +9,7 @@ TODO #2 (in order of priority):
  * * `[x]` Rotation done
  * * `[x]` Scale done
  * * `[x]` All these perform actions on the mesh too
+ * `[ ]` Load file meshes into a "resource", not into a mesh (literal meshes are still stored)
  * `[ ]` Add in UI
  * `[ ]` Frustum culling
 
