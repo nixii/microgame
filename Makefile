@@ -9,7 +9,7 @@ IFLAGS = -Iinclude
 ADD_RAYLIB = -L/opt/homebrew/opt/raylib/lib -lraylib -I/opt/homebrew/opt/raylib/include
 
 # optimization
-# OPT = -O3 # this is perfectly fine!
+OPT = -O3 # this is perfectly fine!
 
 #############
 # build src #

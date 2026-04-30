@@ -3,6 +3,8 @@
 
 TODO #2 (in order of priority):
  * `[x]` Improve performance of rendering meshes
+ * `[ ]` Modify the entity system to allow for parent/child relationships
+ * `[ ]` Add in UI
  * `[ ]` Frustum culling
 
 TODO #1 (in order of priority):
