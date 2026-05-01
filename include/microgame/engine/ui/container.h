@@ -62,4 +62,7 @@ void ui_container_render(
     int parentWidth, 
     int parentHeight);
 
+// delete a ui TREE
+void ui_container_destroy_tree(ui_container *c);
+
 #endif // MG_UI_CONTAINER_H

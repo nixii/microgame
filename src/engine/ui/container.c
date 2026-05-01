@@ -124,3 +124,19 @@ void ui_container_render(ui_container *c, renderer *r, int parentX, int parentY,
         }
     }
 }
+
+// delete a ui TREE
+void ui_container_destroy_tree(ui_container *c) {
+
+    // delete children
+    ui_container *child = c->firstChild;
+    while (child != NULL) {
+        ui_container_destroy_tree(child);
+        child = child->nextSibling;
+    }
+
+    // delete any ui data types stored
+
+    // delete self
+    free(c);
+}
