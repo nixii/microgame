@@ -38,6 +38,14 @@ typedef struct ui_container {
     // store its own data
     ui_object_type selfType;
     void *self;
+
+    // button events
+    void (*onHover)(struct ui_container *self, int hoverActivated);
+    void (*onClick)(struct ui_container *self, int button, int down);
+
+    // is it hovered
+    int hovered;
+    int pressed;
 } ui_container;
 
 /*
@@ -52,6 +60,17 @@ void ui_container_add_child(ui_container *child, ui_container *parent);
 
 // remove a ui contianer as a child
 void ui_container_remove_parent(ui_container *child);
+
+// update the ui container
+void ui_container_update(
+    ui_container *container, 
+    vec2 mousePos, 
+    int leftPress, 
+    int rightPress,
+    int parentX,
+    int parentY,
+    int parentWidth,
+    int parentHeight);
 
 // bind data
 void ui_container_bind_type(

@@ -87,6 +87,73 @@ void ui_container_remove_parent(ui_container *child) {
     child->parent = NULL;
 }
 
+// update a ui container
+void ui_container_update(
+    ui_container *container, 
+    vec2 mousePos, 
+    int leftPress, 
+    int rightPress,
+    int parentX,
+    int parentY,
+    int parentWidth,
+    int parentHeight)
+{
+
+    // Calculate self width and height
+    int selfWidth = (container->size.scaleX * parentWidth) + container->size.pixelsX;
+    int selfHeight = (container->size.scaleY * parentHeight) + container->size.pixelsY;
+    int selfX = (container->pos.scaleX * parentWidth) + container->pos.pixelsX + parentX;
+    int selfY = (container->pos.scaleY * parentHeight) + container->pos.pixelsY + parentY;
+
+    // check if the mouse is inside
+    if (mousePos.x >= selfX &&
+        mousePos.x <= selfX + selfWidth &&
+        mousePos.y >= selfY &&
+        mousePos.y <= selfY + selfHeight) {
+
+        // hovering is true
+        container->hovered = 1;
+
+        // hover
+        if (container->onHover != NULL)
+            container->onHover(container, 1);
+
+        // press
+        if (leftPress || rightPress) {
+            container->pressed = leftPress ? 1 : 2;
+            if (container->onClick != NULL)
+                container->onClick(container, leftPress ? 1 : 2, 1);
+        }
+    } else {
+
+        // disable hover
+        if (container->hovered && container->onHover != NULL)
+            container->onHover(container, 0);
+        container->hovered = 0;
+
+        // disable press
+        if (container->pressed != 0 && container->onClick != NULL)
+            container->onClick(container, container->pressed, 0);
+        container->pressed = 0;
+    }
+
+    // update the children
+    child *c = container->firstChild;
+    while (c != NULL) {
+
+        // update this child
+        ui_container_update(
+            c,
+            mousePos, 
+            leftPress, rightPress, 
+            selfX, selfY, 
+            selfWidth, selfHeight);
+        
+        // go to the next child
+        c = c->nextSibling;
+    }
+}
+
 // bind data
 void ui_container_bind_type(
     ui_container *container, 
@@ -104,7 +171,14 @@ void ui_container_bind_type(
 }
 
 // render a ui element
-void ui_container_render(ui_container *c, renderer *r, int parentX, int parentY, int parentWidth, int parentHeight) {
+void ui_container_render(
+    ui_container *c,
+    renderer *r, 
+    int parentX, 
+    int parentY, 
+    int parentWidth, 
+    int parentHeight)
+{
 
     // Calculate self width and height
     int selfWidth = (c->size.scaleX * parentWidth) + c->size.pixelsX;

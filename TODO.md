@@ -10,7 +10,7 @@ TODO #3 - UI (in order of priority):
  * * `[x]` ui_container
  * * `[x]` ui_rect
  * * `[x]` ui_image
- * * `[ ]` ui_image_button
+ * * `[ ]` ui_button
  * `[ ]` Load text from a small font file (just a png image cut up)
  * `[ ]` More UI types
  * * `[ ]` ui_text
