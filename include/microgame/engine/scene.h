@@ -2,11 +2,12 @@
 #ifndef MG_SCENE_H
 #define MG_SCENE_H
 
+#include "microgame/engine/ui/container.h"
+#include "microgame/engine/components/x.h"
+#include "microgame/renderer/renderer.h"
 #include "microgame/util/transform.h"
 #include "microgame/util/triangle.h"
 #include "microgame/engine/camera.h"
-#include "microgame/renderer/renderer.h"
-#include "microgame/engine/components/x.h"
 #include "microgame/engine/entity.h"
 #include <stdint.h>
 
@@ -33,6 +34,9 @@ typedef struct scene {
 
     // for rendering
     camera camera;
+
+    // the entire UI tree
+    ui_container *uiRoot;
 
     // load different component data
 #define X(name, type)\
@@ -73,6 +77,11 @@ void set_parent(scene *s, entity child, entity parent);
 // remove the parent of an entity
 void remove_parent(scene *s, entity child);
 
+// set the ui root of the scene
+void scene_set_ui_root(scene *s, ui_container *c);
+
+// get the ui root of the scene, maybe NULL
+ui_container *scene_get_ui_root(scene *s);
 
 // component functions on the scene
 #define X(name, type)\

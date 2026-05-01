@@ -7,8 +7,15 @@
 
 // create a new scene
 scene *scene_new() {
+
+    // allocate the entire scene to 0
     scene *s = calloc(1, sizeof(scene));
+
+    // create a new camera
     s->camera = camera_new();
+
+    // clear the root
+    s->uiRoot = NULL;
 
     // vertices ready to render
     s->triangleBufferSize = INIT_TRIANGLE_COUNT;
@@ -19,8 +26,11 @@ scene *scene_new() {
         s->freeIds[s->lastFree] = s->lastFree;
         s->parents[s->lastFree] = NIL_ENTITY;
     }
+
+    // correct index for the last free ID
     s->lastFree = MAX_ENTITIES - 1;
 
+    // return the heap-allocated scene
     return s;
 }
 
@@ -65,7 +75,11 @@ void scene_destroy(scene *s) {
 
     // destroy components
     for (entity e = 0; e < MAX_ENTITIES; e++) {
+
+        // if the entity is not alive then ignore it
         if (!s->alive[e]) continue;
+
+        // destroy each component (X-macro)
     #define X(name, type)\
         scene_detach_##name(s, e);
         X_COMPONENTS
@@ -229,4 +243,24 @@ void set_parent(scene *s, entity child, entity parent) {
 // remove the parent of an entity
 void remove_parent(scene *s, entity child) {
     set_parent(s, child, NIL_ENTITY);
+}
+
+// set the ui root of the scene
+void scene_set_ui_root(scene *s, ui_container *c) {
+    
+    // if you are setting the root to null, remove the UI
+    if (c == NULL) {
+        s->uiRoot == NULL;
+        return;
+    }
+
+    // set the UI root
+    s->uiRoot = c;
+}
+
+// get the ui root, maybe NULL
+ui_container *scene_get_ui_root(scene *s) {
+
+    // simply return the root!
+    return s->uiRoot;
 }
