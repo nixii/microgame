@@ -1,5 +1,6 @@
 
 #include "microgame/engine/components/mesh.h"
+#include "microgame/engine/resource/image.h"
 #include "microgame/engine/resource/mesh.h"
 #include "microgame/engine/ui/container.h"
 #include "microgame/util/color.h"
@@ -22,6 +23,9 @@ int main(void)
     // make the mesh resource
     mesh_resource mr = mesh_resource_from_obj("assets/test.obj");
     mesh m = mesh_from_resource(rgb_rand(), mr);
+
+    // make image resource
+    image_resource ir = image_resource_from("assets/overflow.png");
 
     // parent entity
     entity parent = scene_spawn(s);
@@ -105,6 +109,10 @@ int main(void)
         // update the game
         game_update(g);
     }
+    
+    // destroy resources
+    mesh_resource_destroy(&mr);
+    image_resource_destroy(&ir);
 
     // end
     game_destroy(g);
