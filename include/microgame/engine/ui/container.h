@@ -23,9 +23,9 @@ typedef struct ui_container {
     ui_vec pos;
 
     // store the other objects
-    ui_container *parent;
-    ui_container *firstChild;
-    ui_container *nextSibling;
+    struct ui_container *parent;
+    struct ui_container *firstChild;
+    struct ui_container *nextSibling;
 
     // store its own data
     ui_object_type selfType;

@@ -1,5 +1,6 @@
 
-#include "microgame/ui/container.h"
+#include "microgame/engine/ui/container.h"
+#include <stdlib.h>
 
 /*
  * ui_container methods
@@ -15,7 +16,7 @@ ui_container ui_container_empty() {
         .firstChild = NULL,
         .nextSibling = NULL,
 
-        .ui_object_type = UI_TYPE_EMPTY,
+        .selfType = UI_TYPE_EMPTY,
         .self = NULL
     };
 }
@@ -24,7 +25,7 @@ ui_container ui_container_empty() {
 void ui_container_add_child(ui_container *child, ui_container *parent) {
 
     // remove the child from any parent
-    ui_container_remove_parent(child)
+    ui_container_remove_parent(child);
 
     // make sure parent isn't null
     if (parent == NULL)
