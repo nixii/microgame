@@ -2,7 +2,7 @@
 ## To-Do list
 
 TODO #3 - UI (in order of priority):
- * `[ ]` UI vectors
+ * `[x]` UI vectors
  * `[ ]` Custom UI layer
  * `[ ]` UI transforms work (no rotation here)
  * `[ ]` Image loading into 2d arrays
