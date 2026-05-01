@@ -31,7 +31,7 @@ image_resource image_resource_from(const char *path) {
     
     // load the colors in
     for (int i = 0; i < r.width * r.height * 4 * sizeof(unsigned char); i += 4) {
-        pixels[i / 4] = rgba(pixelBytes[0], pixelBytes[1], pixelBytes[2], pixelBytes[3]);
+        pixels[i / 4] = rgba(pixelBytes[i], pixelBytes[i + 1], pixelBytes[i + 2], pixelBytes[i + 3]);
     }
 
     // free the image from stb_image
