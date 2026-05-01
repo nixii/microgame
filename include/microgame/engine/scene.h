@@ -57,7 +57,12 @@ scene *scene_new();
 entity scene_spawn(scene *s);
 
 // render the scene fully! (not sure if the scene should own this but it does!)
-void scene_render(scene *s, renderer *r);
+void scene_render(
+    scene *s, 
+    renderer *r, 
+    vec2 mousePos, 
+    int mouseLeft, 
+    int mouseRight);
 
 // despawn an entity when you are done with it; frees all the components
 void scene_despawn(scene *s, entity e);

@@ -124,6 +124,8 @@ void ui_container_update(
             if (container->onClick != NULL)
                 container->onClick(container, leftPress ? 1 : 2, 1);
         }
+    
+    // FIXME: only detects up when you move mouse out
     } else {
 
         // disable hover
@@ -138,7 +140,7 @@ void ui_container_update(
     }
 
     // update the children
-    child *c = container->firstChild;
+    ui_container *c = container->firstChild;
     while (c != NULL) {
 
         // update this child

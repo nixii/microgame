@@ -10,6 +10,14 @@
 #include <math.h>
 #include <time.h>
 
+void imgPressed(ui_container *c, int btn, int down) {
+    if (down) {
+        printf("DOWN\n");
+    } else {
+        printf("UP!!!!!!!!!!!!!!!!!!\n");
+    }
+}
+
 int main(void)
 {
 
@@ -62,6 +70,9 @@ int main(void)
     // add the image
     ui_image *imgui = ui_image_new(&ir);
     ui_container_bind_type(ui, UI_TYPE_IMAGE, imgui);
+
+    // add the function
+    ui->onClick = imgPressed;
     
     // set the scene
     game_set_scene(g, s);

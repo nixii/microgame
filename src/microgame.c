@@ -74,9 +74,16 @@ void game_update(microgame *g) {
     // clear the screen
     renderer_clear(&g->renderer);
 
+    // mouse pos
+
     // render the scene
     if (g->mainScene) {
-        scene_render(g->mainScene, &g->renderer);
+        scene_render(
+            g->mainScene, 
+            &g->renderer, 
+            vec2_new(GetMouseX(), GetMouseY()), 
+            IsMouseButtonPressed(MOUSE_LEFT_BUTTON), 
+            IsMouseButtonPressed(MOUSE_RIGHT_BUTTON));
     }
 
     // update the texture
