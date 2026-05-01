@@ -2,6 +2,7 @@
 #include "microgame/engine/ui/container.h"
 #include "microgame/util/color.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /*
  * ui_container methods
@@ -13,6 +14,7 @@ ui_container *ui_container_empty() {
 
     c->anchor = vec2_zero();
     c->pos = ui_vec_empty();
+    c->size = ui_vec_empty();
 
     c->parent = NULL;
     c->firstChild = NULL;
@@ -102,6 +104,23 @@ void ui_container_bind_type(
 }
 
 // render a ui element
-void ui_container_render(ui_container *c, renderer *r) {
-    renderer_render_rectangle(r, 10, 10, 100, 100, rgb(0, 255, 0));
+void ui_container_render(ui_container *c, renderer *r, int parentX, int parentY, int parentWidth, int parentHeight) {
+
+    // Calculate self width and height
+    int selfWidth = (c->size.scaleX * parentWidth) + c->size.pixelsX;
+    int selfHeight = (c->size.scaleY * parentHeight) + c->size.pixelsY;
+    int selfX = (c->pos.scaleX * parentWidth) + c->pos.pixelsX + parentX;
+    int selfY = (c->pos.scaleY * parentHeight) + c->pos.pixelsY + parentY;
+
+    // Render self
+    renderer_render_rectangle(r, selfX, selfY, selfWidth, selfHeight, rgb(selfX, selfY, selfWidth));
+
+    // If there are children, render them all
+    if (c->firstChild) {
+        ui_container *child = c->firstChild;
+        while (child != NULL) {
+            ui_container_render(child, r, selfX, selfY, selfWidth, selfHeight);
+            child = child->nextSibling;
+        }
+    }
 }

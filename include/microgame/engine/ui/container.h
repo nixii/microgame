@@ -22,6 +22,7 @@ typedef struct ui_container {
     // anchor, position
     vec2 anchor;
     ui_vec pos;
+    ui_vec size;
 
     // store the other objects
     struct ui_container *parent;
@@ -53,6 +54,12 @@ void ui_container_bind_type(
     void *data);
 
 // render a ui element
-void ui_container_render(ui_container *c, renderer *r);
+void ui_container_render(
+    ui_container *c, 
+    renderer *r, 
+    int parentX, 
+    int parentY, 
+    int parentWidth, 
+    int parentHeight);
 
 #endif // MG_UI_CONTAINER_H

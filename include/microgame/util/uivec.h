@@ -3,7 +3,7 @@
 #define MG_UIVEC_H
 
 typedef struct ui_vec {
-    int scaleX, scaleY;
+    float scaleX, scaleY;
     int pixelsX, pixelsY;
 } ui_vec;
 
@@ -13,5 +13,8 @@ typedef struct ui_vec {
 
 // create a new empty ui_vec
 ui_vec ui_vec_empty();
+
+// ui vec with sX, pX, sY, pY
+ui_vec ui_vec_new(float sX, int pX, float sY, int pY);
 
 #endif // MG_UIVEC_H

@@ -226,7 +226,7 @@ void scene_render(scene *s, renderer *r) {
 
     // render the ui
     if (s->uiRoot != NULL)
-        ui_container_render(s->uiRoot, r);
+        ui_container_render(s->uiRoot, r, 0, 0, r->width, r->height);
 
     // reset the global matrix per-frame cache
     for (entity i = 0; i < MAX_ENTITIES; i++) {
