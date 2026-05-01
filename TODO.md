@@ -25,7 +25,7 @@ TODO #2 (in order of priority):
  * * `[x]` Scale done
  * * `[x]` All these perform actions on the mesh too
  * `[x]` Load file meshes into a "resource", not into a mesh (literal meshes are still stored)
- * `[ ]` Optimize 3d rendering by storing global matrices each frame
+ * `[x]` Optimize 3d rendering by storing global matrices each frame
 
 TODO #1 (in order of priority):
  * `[x]` Depth sort the triangles

@@ -23,6 +23,10 @@ typedef struct scene {
     int lastFree;
     transform transforms[MAX_ENTITIES];
 
+    // optimize by storing global matrices
+    uint8_t hasGlobalMat[MAX_ENTITIES];
+    mat4 globalMats[MAX_ENTITIES];
+
     // triangles to render
     int triangleBufferSize;
     triangle *triangleBuffer;

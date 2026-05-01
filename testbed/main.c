@@ -91,6 +91,7 @@ int main(void)
         superTransform->rot.x += 1.25 * dt;
         tT->rot.y += 2 * dt;
         
+        // update the game
         game_update(g);
     }
 

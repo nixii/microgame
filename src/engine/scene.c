@@ -107,6 +107,10 @@ X_COMPONENTS
 // get the world transform of an entity
 static mat4 get_world_transform_mat4(scene *s, entity e) {
 
+    // if there is a global matrix then return it
+    if (s->hasGlobalMat[e])
+        return s->globalMats[e];
+
     // get the transform
     transform childTransform = s->transforms[e];
 
@@ -125,8 +129,12 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
     // parent transform
     mat4 parentMatrix = get_world_transform_mat4(s, parent);
 
-    // finally mulitply
-    return mat4_mul(parentMatrix, childMatrix);
+    // set the global matrix and perform the operation
+    s->hasGlobalMat[e] = 1;
+    s->globalMats[e] = mat4_mul(parentMatrix, childMatrix);
+
+    // return the matrix
+    return s->globalMats[e];
 }   
 
 // render a scene!
@@ -182,8 +190,11 @@ void scene_render(scene *s, renderer *r) {
     
     // draw each triangle!
     for (int i = 0; i < numTris; i++) {
+
+        // get the triangle
         triangle t = s->triangleBuffer[i];
 
+        // project the points to 2d (but keep the z)
         vec3 v1 = camera_project_point(&s->camera, t.a, r->width, r->height);
         vec3 v2 = camera_project_point(&s->camera, t.b, r->width, r->height);
         vec3 v3 = camera_project_point(&s->camera, t.c, r->width, r->height);
@@ -197,6 +208,11 @@ void scene_render(scene *s, renderer *r) {
         // render the triangle
         float lighting = (vec3_dot(t.normal, vec3_new(0, 1, 0)) + 1) / 5.0;
         renderer_render_triangle(r, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
+    }
+
+    // reset the global matrix per-frame cache
+    for (entity i = 0; i < MAX_ENTITIES; i++) {
+        s->hasGlobalMat[i] = 0;
     }
 }   
 
