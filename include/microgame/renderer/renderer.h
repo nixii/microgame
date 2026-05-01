@@ -12,11 +12,26 @@ typedef struct renderer {
     float *depthBuffer;
 } renderer;
 
-// renderer functions
+/*
+ * renderer functions
+*/
+
+// create a brand-new renderer
 renderer renderer_new(int width, int height);
+
+// clear the whole screen
 void renderer_clear(renderer *r);
+
+// render a simple rectangle of color
 void renderer_render_rectangle(renderer *r, int x, int y, int w, int h, color c);
+
+// render a simple triangle of color
 void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y2, int z2, int x3, int y3, int z3, color c);
+
+// destroy the renderer instance
 void renderer_destroy(renderer *r);
+
+// render an image as a rectangle to the screen
+void renderer_render_image(renderer *r, int x, int y, int w, int h, int imgX, int imgY, color *pixels);
 
 #endif // MG_RENDERER_H

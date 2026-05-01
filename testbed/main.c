@@ -59,9 +59,15 @@ int main(void)
     ui->pos = ui_vec_new(0, 5, 0, 5);
     scene_set_ui_root(s, ui);
 
-    // Create the rect
-    ui_rect *rect = ui_rect_new(rgb(230, 230, 255));
-    ui_container_bind_type(ui, UI_TYPE_RECT, rect);
+    // create an element for the image
+    ui_container *imgContainer = ui_container_empty();
+    imgContainer->size = ui_vec_new(1, 0, 1, 0);
+    imgContainer->pos = ui_vec_new(1, 5, 0, 0);
+    ui_container_add_child(imgContainer, ui);
+
+    // add the image
+    ui_image *imgui = ui_image_new(&ir);
+    ui_container_bind_type(imgContainer, UI_TYPE_IMAGE, imgui);
     
     // set the scene
     game_set_scene(g, s);

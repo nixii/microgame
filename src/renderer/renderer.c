@@ -117,3 +117,21 @@ void renderer_destroy(renderer *r) {
     r->width = 0;
     r->height = 0;
 }
+
+// render an image
+void renderer_render_image(
+    renderer *r, 
+    int x, 
+    int y, 
+    int w, 
+    int h, 
+    int imgX, 
+    int imgY, 
+    color *pixels)
+{
+    for (int yy = imgY; yy < h - imgY; yy++) {
+        for (int xx = imgX; xx < w - imgX; xx++) {
+            r->pixels[(y + yy) * r->width + x + xx] = pixels[yy * w + xx];
+        }
+    }
+}
