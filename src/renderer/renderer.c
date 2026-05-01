@@ -28,7 +28,7 @@ void renderer_clear(renderer *r) {
 }
 
 // render a square
-void renderer_render_square(renderer *r, int x, int y, int w, int h, color c) {
+void renderer_render_rectangle(renderer *r, int x, int y, int w, int h, color c) {
 
     // blit
     for (int yy = y; yy < y + h; yy++) {

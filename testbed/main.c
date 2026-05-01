@@ -1,9 +1,10 @@
 
-#include "microgame/microgame.h"
 #include "microgame/engine/components/mesh.h"
 #include "microgame/engine/resource/mesh.h"
-#include "microgame/util/math.h"
+#include "microgame/engine/ui/container.h"
 #include "microgame/util/color.h"
+#include "microgame/util/math.h"
+#include "microgame/microgame.h"
 #include <stdio.h>
 #include <math.h>
 #include <time.h>
@@ -47,6 +48,10 @@ int main(void)
     // get the transform
     camera *c = &s->camera;
     c->transform.pos = vec3_new(0, 3, -10);
+
+    // create the UI
+    ui_container *ui = ui_container_empty();
+    scene_set_ui_root(s, ui);
     
     // set the scene
     game_set_scene(g, s);

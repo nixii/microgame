@@ -4,6 +4,7 @@
 
 #include "microgame/util/uivec.h"
 #include "microgame/util/math.h"
+#include "microgame/renderer/renderer.h"
 
 // the different kinds of UI objects
 typedef enum ui_object_type {
@@ -37,7 +38,7 @@ typedef struct ui_container {
 */
 
 // create a new ui container w/o data
-ui_container ui_container_empty();
+ui_container *ui_container_empty();
 
 // add a ui container as a child
 void ui_container_add_child(ui_container *child, ui_container *parent);
@@ -46,10 +47,12 @@ void ui_container_add_child(ui_container *child, ui_container *parent);
 void ui_container_remove_parent(ui_container *child);
 
 // bind data
-void ui_container_bind_type(ui_container *container, 
-                            ui_object_type type, 
-                            void *data);
+void ui_container_bind_type(
+    ui_container *container, 
+    ui_object_type type, 
+    void *data);
 
-
+// render a ui element
+void ui_container_render(ui_container *c, renderer *r);
 
 #endif // MG_UI_CONTAINER_H

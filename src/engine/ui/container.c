@@ -1,5 +1,6 @@
 
 #include "microgame/engine/ui/container.h"
+#include "microgame/util/color.h"
 #include <stdlib.h>
 
 /*
@@ -7,18 +8,20 @@
 */
 
 // create a new ui container w/o data
-ui_container ui_container_empty() {
-    return (ui_container){
-        .anchor = vec2_zero(),
-        .pos = ui_vec_empty(),
-        
-        .parent = NULL,
-        .firstChild = NULL,
-        .nextSibling = NULL,
+ui_container *ui_container_empty() {
+    ui_container *c = malloc(sizeof(ui_container));
 
-        .selfType = UI_TYPE_EMPTY,
-        .self = NULL
-    };
+    c->anchor = vec2_zero();
+    c->pos = ui_vec_empty();
+
+    c->parent = NULL;
+    c->firstChild = NULL;
+    c->nextSibling = NULL;
+
+    c->selfType = UI_TYPE_EMPTY;
+    c->self = NULL;
+
+    return c;
 }
 
 // add a ui container as a child
@@ -96,4 +99,9 @@ void ui_container_bind_type(
     // store the new object
     container->selfType = type;
     container->self = data;
+}
+
+// render a ui element
+void ui_container_render(ui_container *c, renderer *r) {
+    renderer_render_rectangle(r, 10, 10, 100, 100, rgb(0, 255, 0));
 }

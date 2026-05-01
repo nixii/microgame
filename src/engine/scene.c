@@ -224,6 +224,10 @@ void scene_render(scene *s, renderer *r) {
         renderer_render_triangle(r, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
 
+    // render the ui
+    if (s->uiRoot != NULL)
+        ui_container_render(s->uiRoot, r);
+
     // reset the global matrix per-frame cache
     for (entity i = 0; i < MAX_ENTITIES; i++) {
         s->hasGlobalMat[i] = 0;
@@ -250,7 +254,7 @@ void scene_set_ui_root(scene *s, ui_container *c) {
     
     // if you are setting the root to null, remove the UI
     if (c == NULL) {
-        s->uiRoot == NULL;
+        s->uiRoot = NULL;
         return;
     }
 
