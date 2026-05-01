@@ -5,11 +5,11 @@ TODO #3 - UI (in order of priority):
  * `[x]` UI vectors
  * `[x]` Custom UI layer
  * `[x]` UI transforms work (no rotation here)
- * `[ ]` Image loading into 2d arrays & a resource
+ * `[x]` Image loading into 2d arrays & a resource
  * `[ ]` Base UI objects
  * * `[x]` ui_container
  * * `[x]` ui_rect
- * * `[ ]` ui_image
+ * * `[x]` ui_image
  * * `[ ]` ui_image_button
  * `[ ]` Load text from a small font file (just a png image cut up)
  * `[ ]` More UI types
