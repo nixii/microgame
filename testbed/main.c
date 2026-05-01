@@ -56,18 +56,12 @@ int main(void)
     // create the UI
     ui_container *ui = ui_container_empty();
     ui->size = ui_vec_new(0.3, -10, 1, -10);
-    ui->pos = ui_vec_new(0, 5, 0, 5);
+    ui->pos = ui_vec_new(1, -50, 0, -10);
     scene_set_ui_root(s, ui);
-
-    // create an element for the image
-    ui_container *imgContainer = ui_container_empty();
-    imgContainer->size = ui_vec_new(1, 0, 1, 0);
-    imgContainer->pos = ui_vec_new(1, 5, 0, 0);
-    ui_container_add_child(imgContainer, ui);
 
     // add the image
     ui_image *imgui = ui_image_new(&ir);
-    ui_container_bind_type(imgContainer, UI_TYPE_IMAGE, imgui);
+    ui_container_bind_type(ui, UI_TYPE_IMAGE, imgui);
     
     // set the scene
     game_set_scene(g, s);

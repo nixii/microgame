@@ -129,8 +129,22 @@ void renderer_render_image(
     int imgY, 
     color *pixels)
 {
-    for (int yy = imgY; yy < h - imgY; yy++) {
-        for (int xx = imgX; xx < w - imgX; xx++) {
+
+    // base start/end positions
+    int startX = imgX;
+    int startY = imgY;
+    int endX = w - imgX;
+    int endY = h - imgY;
+
+    // clip positions
+    if (x + startX < 0) startX = -x;
+    if (y + startY < 0) startY = -y;
+    if (x + endX > r->width) endX = r->width - x;
+    if (y + endY > r->height) endY = r->height - y;
+
+    // draw the pixels
+    for (int yy = startY; yy < endY; yy++) {
+        for (int xx = startX; xx < endX; xx++) {
             r->pixels[(y + yy) * r->width + x + xx] = pixels[yy * w + xx];
         }
     }
