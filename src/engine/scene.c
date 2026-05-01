@@ -128,7 +128,6 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
     // get the transform
     transform childTransform = s->transforms[e];
 
-    // FIXME: rot not applied
     // get the model matrix for the child
     mat4 childMatrix = mat4_model(childTransform.pos, childTransform.rot, childTransform.scale);
 
