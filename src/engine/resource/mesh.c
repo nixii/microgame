@@ -160,3 +160,13 @@ mesh_resource mesh_resource_from_obj(const char *objFilePath) {
     // return the mesh
     return m;
 }
+
+// destroy a mesh resource
+void mesh_resource_destroy(mesh_resource *r) {
+    free(r->vertices);
+    free(r->indices);
+    r->vertices = NULL;
+    r->indices = NULL;
+    r->numVertices = 0;
+    r->numIndices = 0;
+}
