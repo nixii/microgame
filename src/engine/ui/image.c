@@ -19,7 +19,6 @@ void ui_image_destroy(ui_image *i) {
 void ui_image_render(ui_image *i, renderer *r, int x, int y, int w, int h) {
     int trueWidth = i->image->width > w ? w : i->image->width;
     int trueHeight = i->image->height > h ? h : i->image->height;
-    printf("image\n");
 
     renderer_render_image(r, x, y, trueWidth, trueHeight, 0, 0, i->image->pixels);
 }
