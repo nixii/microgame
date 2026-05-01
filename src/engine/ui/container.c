@@ -112,8 +112,17 @@ void ui_container_render(ui_container *c, renderer *r, int parentX, int parentY,
     int selfX = (c->pos.scaleX * parentWidth) + c->pos.pixelsX + parentX;
     int selfY = (c->pos.scaleY * parentHeight) + c->pos.pixelsY + parentY;
 
-    // Render self
-    renderer_render_rectangle(r, selfX, selfY, selfWidth, selfHeight, rgb(selfX, selfY, selfWidth));
+    // Render self based on the type
+    switch (c->selfType) {
+        case UI_TYPE_EMPTY:
+            break;
+    #define X_UI(type, name)\
+        case type:\
+            name##_render(c->self, r, selfX, selfY, selfWidth, selfHeight);\
+            break;
+        UI_TYPES
+    #undef X_UI
+    }
 
     // If there are children, render them all
     if (c->firstChild) {
@@ -136,6 +145,16 @@ void ui_container_destroy_tree(ui_container *c) {
     }
 
     // delete any ui data types stored
+    switch (c->selfType) {
+        case UI_TYPE_EMPTY:
+            break;
+    #define X_UI(type, name)\
+        case type:\
+            name##_destroy(c->self);\
+            break;
+        UI_TYPES
+    #undef X_UI
+    }
 
     // delete self
     free(c);

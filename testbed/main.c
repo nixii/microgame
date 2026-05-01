@@ -51,9 +51,13 @@ int main(void)
 
     // create the UI
     ui_container *ui = ui_container_empty();
-    ui->size = ui_vec_new(1, -10, 1, -10);
+    ui->size = ui_vec_new(0.3, -10, 1, -10);
     ui->pos = ui_vec_new(0, 5, 0, 5);
     scene_set_ui_root(s, ui);
+
+    // Create the rect
+    ui_rect *rect = ui_rect_new(rgb(230, 230, 255));
+    ui_container_bind_type(ui, UI_TYPE_RECT, rect);
     
     // set the scene
     game_set_scene(g, s);

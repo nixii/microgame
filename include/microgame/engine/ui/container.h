@@ -5,16 +5,20 @@
 #include "microgame/util/uivec.h"
 #include "microgame/util/math.h"
 #include "microgame/renderer/renderer.h"
+#include "microgame/engine/ui/rect.h"
 
 // the different kinds of UI objects
 typedef enum ui_object_type {
     UI_TYPE_EMPTY,
-    UI_TYPE_CONTAINER,
     UI_TYPE_RECT,
-    UI_TYPE_IMAGE,
-    UI_TYPE_RECT_BUTTON,
-    UI_TYPE_IMAGE_BUTTON,
+    // UI_TYPE_IMAGE,
+    // UI_TYPE_RECT_BUTTON,
+    // UI_TYPE_IMAGE_BUTTON,
 } ui_object_type;
+
+// X macro for each ui type
+#define UI_TYPES\
+    X_UI(UI_TYPE_RECT, ui_rect)
 
 // the container
 typedef struct ui_container {
