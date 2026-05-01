@@ -1,6 +1,21 @@
 
 ## To-Do list
 
+TODO #3 - UI (in order of priority):
+ * `[ ]` UI vectors
+ * `[ ]` Custom UI layer
+ * `[ ]` UI transforms work (no rotation here)
+ * `[ ]` Image loading into 2d arrays
+ * `[ ]` Base UI objects
+ * * `[ ]` ui_container
+ * * `[ ]` ui_rect
+ * * `[ ]` ui_image
+ * * `[ ]` ui_image_button
+ * `[ ]` Load text from a small font file (just a png image cut up)
+ * `[ ]` More UI types
+ * * `[ ]` ui_text
+ * * `[ ]` ui_text_button
+
 TODO #2 (in order of priority):
  * `[x]` Improve performance of rendering meshes
  * `[x]` Modify the entity system to allow for parent/child relationships
@@ -10,7 +25,6 @@ TODO #2 (in order of priority):
  * * `[x]` Scale done
  * * `[x]` All these perform actions on the mesh too
  * `[x]` Load file meshes into a "resource", not into a mesh (literal meshes are still stored)
- * `[ ]` Add in UI
  * `[ ]` Optimize 3d rendering by storing global matrices each frame
 
 TODO #1 (in order of priority):
