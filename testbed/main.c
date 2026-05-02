@@ -9,6 +9,14 @@
 #include <stdio.h>
 #include <math.h>
 
+void toggleHover(ui_container *c, int hovered) {
+    if (hovered) {
+        c->overlay = rgba(0, 0, 0, 100);
+    } else {
+        c->overlay = rgba(0, 0, 0, 0);
+    }
+}
+
 int main(void)
 {
 
@@ -46,6 +54,7 @@ int main(void)
     textContainer->size = ui_vec_new(1, -8, 1, -8);
     textContainer->pos = ui_vec_new(0.5, 0, 0.5, 0);
     textContainer->anchor = vec2_new(0.5, 0.5);
+    textContainer->onHover = toggleHover;
     ui_container_set_parent(textContainer, root);
     
     // add text

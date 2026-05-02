@@ -206,11 +206,11 @@ void renderer_render_image_slice(
                 continue;
             }
 
-            // the destination
-            color dst = r->pixels[y * r->width + x];
+            // destination
+            color dest = r->pixels[y * r->width + x];
 
             // mix the colors
-            color mixed = rgb_overlay(dst, rgb_overlay(src, overlay));
+            color mixed = rgb_composite(dest, rgb_overlay(src, overlay));
 
             // blit the color
             r->pixels[y * r->width + x] = mixed;

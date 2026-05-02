@@ -4,13 +4,13 @@
 TODO #4 - various improvements:
  * `[x]` UI anchor
  * `[x]` UI text auto-wrapping
- * `[ ]` UI tint
- * * `[ ]` Stop it randomly going transparent for some reason
+ * `[x]` UI tint
+ * * `[x]` Stop it randomly going transparent for some reason
  * `[x]` Alpha for text working better than a firm cutoff
  * * `[x]` Alpha mix function
  * * `[x]` Alpha mix whenever changing any 
+ * `[x]` Text can be colored (the entire thing)
  * `[ ]` 3d box collider (doesn't rotate)
- * `[ ]` Text can be colored (the entire thing)
  * `[ ]` Text can be colored (individual parts)
 
 TODO #3 - UI (in order of priority):

@@ -35,4 +35,6 @@ inline static uint8_t alpha(color c) {
 
 color rgb_overlay(color base, color overlay);
 
+color rgb_composite(color dest, color src);
+
 #endif // MG_COLOR_H
