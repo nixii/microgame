@@ -40,7 +40,6 @@ void ui_text_destroy(ui_text *txt) {
     free(txt);
 }
 
-// TODO: automatic line breaking
 // render ui text
 void ui_text_render(ui_text *t, renderer *r, int x, int y, int w, int h) {
 
@@ -60,7 +59,6 @@ void ui_text_render(ui_text *t, renderer *r, int x, int y, int w, int h) {
             targetY += t->font->charHeight + t->font->verticalSpacing;
         }
 
-        // TODO: bounds safely
         // Render the character
         else {
 

@@ -3,7 +3,7 @@
 
 TODO #4 - various improvements:
  * `[x]` UI anchor
- * `[ ]` UI text auto-wrapping
+ * `[x]` UI text auto-wrapping
  * `[ ]` UI tint
  * `[ ]` Alpha for text working better than a firm cutoff
  * * `[ ]` Alpha mix function
