@@ -13,7 +13,7 @@ void toggleHover(ui_container *c, int hovered) {
     if (hovered) {
         c->overlay = rgba(0, 0, 0, 100);
     } else {
-        c->overlay = rgba(0, 0, 0, 0);
+        c->overlay = rgba(0,255,0,255);
     }
 }
 
