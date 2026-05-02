@@ -2,7 +2,8 @@
 ## To-Do list
 
 TODO #4 - various improvements:
- * `[ ]` UI anchor
+ * `[x]` UI anchor
+ * `[ ]` UI text auto-wrapping
  * `[ ]` UI tint
  * `[ ]` Alpha for text working better than a firm cutoff
  * * `[ ]` Alpha mix function
