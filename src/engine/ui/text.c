@@ -2,6 +2,7 @@
 #include "microgame/engine/ui/text.h"
 #include "microgame/util/color.h"
 #include <string.h>
+#include <stdio.h>
 
 /*
  * ui_text functions
@@ -39,6 +40,26 @@ void ui_text_destroy(ui_text *txt) {
 }
 
 // render ui text
-void ui_text_render(ui_text *txt, renderer *r, int x, int y, int w, int h) {
-    renderer_render_rectangle(r, 10, 10, 50, 50, rgb(255, 0, 255));
+void ui_text_render(ui_text *t, renderer *r, int x, int y, int w, int h) {
+
+    int targetX = x;
+    int targetY = y;
+    for (int i = 0; i < t->textLength; i++) {
+        char c = t->text[i];
+
+        if (c == '\n') {
+            targetX = x;
+            targetY += t->font->charHeight + t->font->verticalSpacing;
+        }
+
+        else {
+            font_bounds bounds = font_resource_get_bounds(t->font, c);
+            printf("%d %d\n", bounds.x, bounds.y);
+            renderer_render_image_slice(r, targetX, targetY, bounds.w, bounds.h, bounds.x, bounds.y, t->font->source.width, t->font->source.pixels);
+            targetX += t->font->charWidth + t->font->horizontalSpacing;
+        }
+    }
+    printf("\n");
+
+    // renderer_render_rectangle(r, 10, 10, 50, 50, rgb(255, 0, 255));
 }

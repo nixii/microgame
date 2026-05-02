@@ -150,6 +150,36 @@ void renderer_render_image(
     }
 }
 
+// render an image
+void renderer_render_image_slice(
+    renderer *r, 
+    int xx, 
+    int yy, 
+    int w,
+    int h,
+    int imgX, 
+    int imgY, 
+    int imgW,
+    color *pixels)
+{
+
+    int endX = xx + w;
+    int endY = yy + h;
+
+    int imgXStart = imgX;
+
+    for (int y = yy; y < endY; y++) {
+        for (int x = xx; x < endX; x++) {
+            color c = pixels[imgY * imgW + imgX];
+            if (alpha(c) != 0)
+                r->pixels[y * r->width + x] = c;
+            imgX++;
+        }
+        imgY++;
+        imgX = imgXStart;
+    }
+}
+
 // render an image and stretch it like uv
 void renderer_render_image_stretch(
     renderer *r, 

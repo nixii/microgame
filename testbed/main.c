@@ -34,6 +34,7 @@ int main(void)
     // make UI
     ui_container *root = ui_container_empty();
     root->size = ui_vec_new(1, 0, 1, 0);
+    root->pos = ui_vec_new(0.5, 0, 0.5, 0);
     
     // add text
     ui_text *ut = ui_text_new(&fr, "%%$#@!");

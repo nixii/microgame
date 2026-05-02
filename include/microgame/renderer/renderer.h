@@ -34,6 +34,18 @@ void renderer_destroy(renderer *r);
 // render an image as a rectangle to the screen
 void renderer_render_image(renderer *r, int x, int y, int w, int h, int imgX, int imgY, color *pixels);
 
+// render part of an image to the screen (a slice)
+void renderer_render_image_slice(
+    renderer *r, 
+    int xx, 
+    int yy, 
+    int w,
+    int h,
+    int imgX, 
+    int imgY, 
+    int imgW,
+    color *pixels);
+
 // draw an image to fill a rectangle (dumb sampling)
 void renderer_render_image_stretch(
     renderer *r, 
