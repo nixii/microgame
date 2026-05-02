@@ -3,6 +3,7 @@
 #include "microgame/engine/resource/image.h"
 #include "microgame/engine/resource/mesh.h"
 #include "microgame/engine/ui/container.h"
+#include "microgame/engine/scene.h"
 #include "microgame/util/color.h"
 #include "microgame/util/math.h"
 #include "microgame/microgame.h"
@@ -46,6 +47,12 @@ int main(void)
     // bind text to the root
     ui_text *t = ui_text_new(&fr, "000 FPS");
     ui_container_bind_type(root, UI_TYPE_TEXT, t);
+
+    // add colliders
+    entity e1 = scene_spawn(s);
+    entity e2 = scene_spawn(s);
+    scene_attach_collider(s, e1, collider_new(vec3_new(1, 1, 1)));
+    scene_attach_collider(s, e2, collider_new(vec3_new(1, 1, 1)));
 
     // set the UI
     scene_set_ui_root(s, root);

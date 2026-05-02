@@ -161,7 +161,7 @@ void scene_render(
 {
 
     // update the systems
-    collision_system_update(s, dt);
+    collision_system_update(s, MAX_ENTITIES, dt);
 
     // update ui first
     if (s->uiRoot)

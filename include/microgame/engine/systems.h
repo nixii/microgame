@@ -6,6 +6,6 @@
 typedef struct scene scene;
 
 // handle collision system
-void collision_system_update(scene *s, float dt);
+void collision_system_update(scene *s, int maxEntities, float dt);
 
 #endif // MG_SYSTEMS_H
