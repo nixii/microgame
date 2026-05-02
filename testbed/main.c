@@ -66,7 +66,6 @@ int main(void)
         // update fps
         char buf[16];
         snprintf(buf, sizeof(buf), "%d FPS", get_fps());
-        printf("%s\n", buf);
         ui_text_set_text(t, buf);
 
         // rotate the camera
