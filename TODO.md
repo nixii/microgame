@@ -11,11 +11,10 @@ TODO #3 - UI (in order of priority):
  * * `[x]` ui_rect
  * * `[x]` ui_image
  * * `[x]` ui_button
- * `[ ]` make the ui image scale based on element scale
+ * `[x]` make the ui image scale based on element scale
  * `[ ]` Load text from a small font file (just a png image cut up)
  * `[ ]` More UI types
  * * `[ ]` ui_text
- * * `[ ]` ui_text_button
 
 TODO #2 (in order of priority):
  * `[x]` Improve performance of rendering meshes
