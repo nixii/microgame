@@ -61,7 +61,8 @@ void scene_render(
     scene *s, 
     renderer *r, 
     vec2 mousePos, 
-    int mouseLeftDown);
+    int mouseLeftDown,
+    float dt);
 
 // despawn an entity when you are done with it; frees all the components
 void scene_despawn(scene *s, entity e);

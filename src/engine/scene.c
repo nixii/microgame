@@ -1,5 +1,6 @@
 
 #include "microgame/renderer/renderer.h"
+#include "microgame/engine/systems.h"
 #include "microgame/engine/scene.h"
 #include "microgame/util/color.h"
 #include <stdlib.h>
@@ -151,9 +152,18 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
 }   
 
 // render a scene!
-void scene_render(scene *s, renderer *r, vec2 mousePos, int mouseLeftDown) {
+void scene_render(
+    scene *s, 
+    renderer *r, 
+    vec2 mousePos, 
+    int mouseLeftDown, 
+    float dt)
+{
 
-    // update first
+    // update the systems
+    collision_system_update(s, dt);
+
+    // update ui first
     if (s->uiRoot)
         ui_container_update(s->uiRoot, mousePos, mouseLeftDown, 0, 0, r->width, r->height);
 
