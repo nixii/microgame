@@ -51,7 +51,8 @@ int main(void)
     scene_attach_collider(s, e2, collider_new(vec3_new(1, 1, 1)));
     scene_attach_mesh(s, e1, m);
     scene_attach_mesh(s, e2, m);
-    get_transform(s, e1)->pos.x = 1;
+    transform *fT = get_transform(s, e1);
+    fT->pos.x = 1;
     get_transform(s, e2)->pos.x = -1;
     get_transform(s, e1)->scale = vec3_new(0.8, 0.8, 0.8);
     get_transform(s, e2)->scale = vec3_new(0.8, 0.8, 0.8);
@@ -65,6 +66,7 @@ int main(void)
     // speed
     float camSpeed = 1.7; // 1.7 rad a second
     float moveSpeed = 5.0; // 5 meters a second
+    int frameCount = 0;
     
     // update
     while (game_still_running(g)) {
@@ -101,6 +103,10 @@ int main(void)
         // rotate the vector
         movement = vec3_rotY(movement, c->transform.rot.y);
         c->transform.pos = vec3_add(c->transform.pos, movement);
+        
+        // frame count!
+        fT->pos.x = sinf((float)frameCount / 60);
+        frameCount++;
         
         // update the game
         game_update(g);

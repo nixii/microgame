@@ -151,6 +151,30 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
     return s->globalMats[e];
 }   
 
+// get world transform
+transform get_global_transform(scene *s, entity e) {
+    mat4 m = get_world_transform_mat4(s, e);
+
+    vec3 pos = vec3_new(
+        m.m[0][3],
+        m.m[1][3],
+        m.m[2][3]
+    );
+
+    vec3 scale = vec3_new(
+        vec3_len(vec3_new(m.m[0][0], m.m[1][0], m.m[2][0])),
+        vec3_len(vec3_new(m.m[0][1], m.m[1][1], m.m[2][1])),
+        vec3_len(vec3_new(m.m[0][2], m.m[1][2], m.m[2][2]))
+    );
+
+    // TODO: detect rotation
+    return transform_new(
+        pos,
+        vec3_zero(),
+        scale
+    );
+}
+
 // render a scene!
 void scene_render(
     scene *s, 
@@ -160,8 +184,14 @@ void scene_render(
     float dt)
 {
 
+    // load global transform matrices
+    for (entity e = 0; e < MAX_ENTITIES; e++) {
+        if (!s->alive[e]) continue;
+        get_world_transform_mat4(s, e);
+    }
+
     // update the systems
-    collision_system_update(s, MAX_ENTITIES, dt);
+    collision_system_update(s, dt);
 
     // update ui first
     if (s->uiRoot)

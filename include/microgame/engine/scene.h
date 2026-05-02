@@ -88,6 +88,9 @@ void scene_set_ui_root(scene *s, ui_container *c);
 // get the ui root of the scene, maybe NULL
 ui_container *scene_get_ui_root(scene *s);
 
+// get global transform
+transform get_global_transform(scene *s, entity e);
+
 // component functions on the scene
 #define X(name, type)\
     int scene_has_##name(scene *s, entity e);\

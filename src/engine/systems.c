@@ -1,4 +1,5 @@
 
+#include "microgame/engine/components/collider.h"
 #include "microgame/engine/systems.h"
 #include "microgame/engine/entity.h"
 #include "microgame/engine/scene.h"
@@ -6,25 +7,38 @@
 #include <stdio.h>
 
 // handle collision system
-void collision_system_update(scene *s, int maxEntities, float dt) {
+void collision_system_update(scene *s, float dt) {
 
     // for all entities
-    for (entity first = 0; first < maxEntities; first++) {
+    for (entity first = 0; first < MAX_ENTITIES; first++) {
 
         // skip if no collider or not alive
         if (!s->alive[first] || !s->has_collider[first]) continue;
 
         // get the vec3 pos and bounds
-        vec3 globalPos, globalBounds;
+        collider *firstCol = s->collider_components + first;
+        transform firstTrans = get_global_transform(s, first);
+        vec3 a = vec3_sub(firstTrans.pos, vec3_mul(firstCol->size, 2)); // a minimum
+        vec3 A = vec3_add(a, firstCol->size); // a maximum
 
         // for the other entities
-        for (entity second = first + 1; second < maxEntities; second++) {
+        for (entity second = first + 1; second < MAX_ENTITIES; second++) {
 
             // skip if no collider or not alive
             if (!s->alive[second] || !s->has_collider[second]) continue;
 
-            // two have colliders
-            printf("possible collision\n");
+            // get the bounds
+            collider *secondCol = s->collider_components + second;
+            transform secondTrans = get_global_transform(s, second);
+            vec3 b = vec3_sub(secondTrans.pos, vec3_mul(secondCol->size, 2)); // b minimum
+            vec3 B = vec3_add(b, secondCol->size); // b maximum
+
+            // check the bounds
+            if ((a.x <= B.x && A.x >= b.x) &&
+                (a.y <= B.y && A.y >= b.y) &&
+                (a.z <= B.z && A.z >= b.z)) {
+                printf("collide!\n");
+            }
         }
     }
 }
