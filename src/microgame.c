@@ -74,8 +74,6 @@ void game_update(microgame *g) {
     // clear the screen
     renderer_clear(&g->renderer);
 
-    // mouse pos
-
     // render the scene
     if (g->mainScene) {
         scene_render(

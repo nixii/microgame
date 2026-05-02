@@ -1,6 +1,7 @@
 
 #include "microgame/engine/resource/font.h"
 #include <string.h>
+#include <stddef.h>
 
 /*
  * font resource functions
@@ -37,10 +38,9 @@ font_resource font_resource_from(
 void font_resource_destroy(font_resource *r) {
 
     // destroy the image
-    image_resource_destroy(r->source);
+    image_resource_destroy(&r->source);
 
     // set everything to zero
-    r->source = NULL;
     r->charWidth = -1;
     r->charHeight = -1;
     r->horizontalSpacing = -1;
@@ -66,7 +66,7 @@ font_bounds font_resource_get_bounds(font_resource *r, char c) {
 int font_resource_get_width(font_resource *r, const char *text) {
 
     // longest line so far
-    int longest, current = 0, 0;
+    int longest = 0, current = 0;
     
     // continue for each char
     for (const char *c = text; *c != '\0'; c++) {
@@ -95,13 +95,13 @@ int font_resource_get_height(font_resource *r, const char *text) {
     int lines = 0;
 
     // while there are characters
-    while (const char *character = text; *character != '\0'; character++) {
-        if (character == '\n')
+    for (const char *character = text; *character != '\0'; character++) {
+        if (*character == '\n')
             lines++;
     }
 
     // return the new height
-    return lines * (r->charHeight + r->verticalSpacing) - verticalSpacing;
+    return lines * (r->charHeight + r->verticalSpacing) - r->verticalSpacing;
 }
 
 // get the amount of characters that fit in a line of specified width
