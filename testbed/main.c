@@ -43,13 +43,14 @@ int main(void)
 
     // make the text part
     ui_container *textContainer = ui_container_empty();
-    textContainer->size = ui_vec_new(0.5, -8, 1, -8);
-    textContainer->pos = ui_vec_new(0, 4, 0, 4);
-    textContainer->anchor = vec2_new(0, 0);
+    textContainer->size = ui_vec_new(1, -8, 1, -8);
+    textContainer->pos = ui_vec_new(0.5, 0, 0.5, 0);
+    textContainer->anchor = vec2_new(0.5, 0.5);
     ui_container_set_parent(textContainer, root);
     
     // add text
     ui_text *ut = ui_text_new(&fr, "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.\nthe quick brown fox jumps over the very lazy dog.");
+    ut->autoWrap = 1;
     ui_container_bind_type(textContainer, UI_TYPE_TEXT, ut);
 
     // set the UI

@@ -13,6 +13,7 @@ ui_text *ui_text_new(font_resource *font, const char *text) {
 
     // create the text
     ui_text *t = malloc(sizeof(ui_text));
+    t->autoWrap = 0;
 
     // load the data
     t->font = font;
@@ -62,7 +63,21 @@ void ui_text_render(ui_text *t, renderer *r, int x, int y, int w, int h) {
         // TODO: bounds safely
         // Render the character
         else {
+
+            // if auto wrap is enabled
+            if (t->autoWrap) {
+                
+                // if you are out of space (at least one char a line)
+                if (targetX - x > w) {
+                    targetX = x;
+                    targetY += t->font->charHeight + t->font->verticalSpacing;
+                }
+            }
+
+            // get the image bounds
             font_bounds bounds = font_resource_get_bounds(t->font, c);
+
+            // draw the character
             renderer_render_image_slice(r, targetX, targetY, bounds.w, bounds.h, bounds.x, bounds.y, t->font->source.width, t->font->source.pixels);
             targetX += t->font->charWidth + t->font->horizontalSpacing;
         }

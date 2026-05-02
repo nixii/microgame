@@ -11,6 +11,7 @@ typedef struct ui_text {
     font_resource *font;
     char *text;
     int textLength;
+    int autoWrap;
 } ui_text;
 
 /*

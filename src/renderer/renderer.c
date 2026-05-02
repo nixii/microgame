@@ -185,8 +185,8 @@ void renderer_render_image_slice(
     int imgXStart = imgX;
 
     // for every pixel
-    for (int y = yy; y < endY; y++) {
-        for (int x = xx; x < endX; x++) {
+    for (int y = startY; y < endY; y++) {
+        for (int x = startX; x < endX; x++) {
 
             // get the color
             color c = pixels[imgY * imgW + imgX];

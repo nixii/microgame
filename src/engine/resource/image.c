@@ -30,7 +30,7 @@ image_resource image_resource_from(const char *path) {
     color *pixels = malloc(sizeof(color) * r.width * r.height);
     
     // load the colors in
-    for (int i = 0; i < r.width * r.height * 4 * sizeof(unsigned char); i += 4) {
+    for (unsigned long i = 0; i < r.width * r.height * 4 * sizeof(unsigned char); i += 4) {
         pixels[i / 4] = rgba(pixelBytes[i], pixelBytes[i + 1], pixelBytes[i + 2], pixelBytes[i + 3]);
     }
 
