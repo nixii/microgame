@@ -33,4 +33,6 @@ inline static uint8_t alpha(color c) {
     return (uint8_t)((c >> 24) & 0xFF);
 }
 
+color rgb_overlay(color base, color overlay);
+
 #endif // MG_COLOR_H
