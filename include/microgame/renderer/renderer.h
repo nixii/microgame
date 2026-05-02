@@ -34,4 +34,12 @@ void renderer_destroy(renderer *r);
 // render an image as a rectangle to the screen
 void renderer_render_image(renderer *r, int x, int y, int w, int h, int imgX, int imgY, color *pixels);
 
+// draw an image to fill a rectangle (dumb sampling)
+void renderer_render_image_stretch(
+    renderer *r, 
+    int x, int y, 
+    int w, int h, 
+    int imgW, int imgH,
+    color *pixels);
+
 #endif // MG_RENDERER_H

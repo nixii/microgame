@@ -70,7 +70,7 @@ int main(void)
 
     // create the UI
     ui_container *ui = ui_container_empty();
-    ui->size = ui_vec_new(0.3, -10, 1, -10);
+    ui->size = ui_vec_new(0.3, -10, 0.5, -10);
     ui->pos = ui_vec_new(0.5, 0, 0.5, 0);
     scene_set_ui_root(s, ui);
 

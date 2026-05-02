@@ -149,3 +149,37 @@ void renderer_render_image(
         }
     }
 }
+
+// render an image and stretch it like uv
+void renderer_render_image_stretch(
+    renderer *r, 
+    int x, int y, 
+    int w, int h, 
+    int imgW, int imgH,
+    color *pixels) 
+{
+
+    // clip the image
+    int startX = x < 0 ? 0 : x;
+    int startY = y < 0 ? 0 : y;
+    int endX = (x + w > r->width) ? r->width : (x + w);
+    int endY = (y + h > r->height) ? r->height : (y + h);
+
+    // scale
+    float xScale = (float)imgW / (float)w;
+    float yScale = (float)imgH / (float)h;
+    
+    // render the pixels
+    for (int yy = startY; yy < endY; yy++) {
+        for (int xx = startX; xx < endX; xx++) {
+            
+            // get the source location
+            int srcX = (int)((xx - x) * xScale);
+            int srcY = (int)((yy - y) * yScale);
+
+            // draw
+            r->pixels[yy * r->width + xx] = pixels[srcY * imgW + srcX];
+
+        }
+    }
+}
