@@ -101,8 +101,8 @@ void ui_container_update(
     // Calculate self width and height
     int selfWidth = (container->size.scaleX * parentWidth) + container->size.pixelsX;
     int selfHeight = (container->size.scaleY * parentHeight) + container->size.pixelsY;
-    int selfX = (container->pos.scaleX * parentWidth) + container->pos.pixelsX + parentX;
-    int selfY = (container->pos.scaleY * parentHeight) + container->pos.pixelsY + parentY;
+    int selfX = (container->pos.scaleX * parentWidth) + container->pos.pixelsX + parentX - (selfWidth * container->anchor.x);
+    int selfY = (container->pos.scaleY * parentHeight) + container->pos.pixelsY + parentY - (selfHeight * container->anchor.y);
 
     // check if the mouse is inside
     if (mousePos.x >= selfX &&
@@ -190,8 +190,8 @@ void ui_container_render(
     // Calculate self width and height
     int selfWidth = (c->size.scaleX * parentWidth) + c->size.pixelsX;
     int selfHeight = (c->size.scaleY * parentHeight) + c->size.pixelsY;
-    int selfX = (c->pos.scaleX * parentWidth) + c->pos.pixelsX + parentX;
-    int selfY = (c->pos.scaleY * parentHeight) + c->pos.pixelsY + parentY;
+    int selfX = (c->pos.scaleX * parentWidth) + c->pos.pixelsX + parentX - (selfWidth * c->anchor.x);
+    int selfY = (c->pos.scaleY * parentHeight) + c->pos.pixelsY + parentY - (selfHeight * c->anchor.y);
 
     // Render self based on the type
     switch (c->selfType) {

@@ -163,18 +163,44 @@ void renderer_render_image_slice(
     color *pixels)
 {
 
+    // starting x positions
+    int startX = xx, startY = yy;
+    if (xx < 0) {
+        startX = 0;
+        imgX -= xx;
+    }
+    if (yy < 0) {
+        startY = 0;
+    }
+
+    // calculate the end position on the screen
     int endX = xx + w;
     int endY = yy + h;
 
+    // cutoff
+    endX = endX > r->width ? r->width : endX;
+    endY = endY > r->height ? r->height : endY;
+
+    // the starting position on the image
     int imgXStart = imgX;
 
+    // for every pixel
     for (int y = yy; y < endY; y++) {
         for (int x = xx; x < endX; x++) {
+
+            // get the color
             color c = pixels[imgY * imgW + imgX];
+
+            // alpha check
+            // TODO: make this mix instead of cut off
             if (alpha(c) != 0)
                 r->pixels[y * r->width + x] = c;
+            
+            // increment the image index
             imgX++;
         }
+
+        // go to the next row of the image
         imgY++;
         imgX = imgXStart;
     }
