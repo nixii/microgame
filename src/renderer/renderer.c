@@ -28,12 +28,20 @@ void renderer_clear(renderer *r) {
 }
 
 // render a square
-void renderer_render_rectangle(renderer *r, int x, int y, int w, int h, color c) {
+void renderer_render_rectangle(renderer *r, int x, int y, int w, int h, color c, color overlay) {
+
+    // auto-overlay
+    color mixed = rgb_overlay(c, overlay);
 
     // blit
     for (int yy = y; yy < y + h; yy++) {
         for (int xx = x; xx <= x + w; xx++) {
-            r->pixels[xx + yy * r->width] = c;
+
+            // color mix
+            color cc = rgb_overlay(r->pixels[xx + yy * r->width], mixed);
+
+            // set the pixel
+            r->pixels[xx + yy * r->width] = cc;
         }
     }
 }
@@ -191,6 +199,14 @@ void renderer_render_image_slice(
 
             // get the colors
             color src = pixels[imgY * imgW + imgX];
+
+            // skip if invisible (since fonts have a lot of empty this is worth it)
+            if (alpha(src) == 0) {
+                imgX++; 
+                continue;
+            }
+
+            // the destination
             color dst = r->pixels[y * r->width + x];
 
             // mix the colors
@@ -213,7 +229,8 @@ void renderer_render_image_stretch(
     int x, int y, 
     int w, int h, 
     int imgW, int imgH,
-    color *pixels) 
+    color *pixels,
+    color overlay) 
 {
 
     // clip the image
@@ -234,9 +251,11 @@ void renderer_render_image_stretch(
             int srcX = (int)((xx - x) * xScale);
             int srcY = (int)((yy - y) * yScale);
 
-            // draw
-            r->pixels[yy * r->width + xx] = pixels[srcY * imgW + srcX];
+            // get the color
+            color mixed = rgb_overlay(r->pixels[yy * r->width + xx], rgb_overlay(pixels[srcY * imgW + srcX], overlay));
 
+            // draw
+            r->pixels[yy * r->width + xx] = mixed;
         }
     }
 }

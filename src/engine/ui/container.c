@@ -15,7 +15,7 @@ ui_container *ui_container_empty() {
     c->anchor = vec2_zero();
     c->pos = ui_vec_empty();
     c->size = ui_vec_empty();
-    c->overlay = rgb(255, 255, 255);
+    c->overlay = rgba(255, 255, 255, 0);
 
     c->parent = NULL;
     c->firstChild = NULL;

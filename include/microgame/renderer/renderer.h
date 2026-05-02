@@ -23,7 +23,7 @@ renderer renderer_new(int width, int height);
 void renderer_clear(renderer *r);
 
 // render a simple rectangle of color
-void renderer_render_rectangle(renderer *r, int x, int y, int w, int h, color c);
+void renderer_render_rectangle(renderer *r, int x, int y, int w, int h, color c, color overlay);
 
 // render a simple triangle of color
 void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y2, int z2, int x3, int y3, int z3, color c);
@@ -53,6 +53,7 @@ void renderer_render_image_stretch(
     int x, int y, 
     int w, int h, 
     int imgW, int imgH,
-    color *pixels);
+    color *pixels,
+    color overlay);
 
 #endif // MG_RENDERER_H
