@@ -20,6 +20,9 @@ int main(void)
     mesh_resource mr = mesh_resource_from_obj("assets/test.obj");
     mesh m = mesh_from_resource(rgb(255, 255, 255), mr);
 
+    // load the text
+    font_resource fr = font_resource_from("assets/simplefont.png", 24, 24, 1, 3);
+
     // make one stationary test entity
     entity stationary = scene_spawn(s);
     scene_attach_mesh(s, stationary, m);
@@ -27,6 +30,17 @@ int main(void)
     // get the transform
     camera *c = &s->camera;
     c->transform.pos = vec3_new(0, 3, -10);
+
+    // make UI
+    ui_container *root = ui_container_empty();
+    root->size = ui_vec_new(1, 0, 1, 0);
+    
+    // add text
+    ui_text *ut = ui_text_new(&fr, "%%$#@!");
+    ui_container_bind_type(root, UI_TYPE_TEXT, ut);
+
+    // set the UI
+    scene_set_ui_root(s, root);
 
     // set the scene
     game_set_scene(g, s);
