@@ -151,10 +151,10 @@ static mat4 get_world_transform_mat4(scene *s, entity e) {
 }   
 
 // render a scene!
-void scene_render(scene *s, renderer *r, vec2 mousePos, int mouseLeft, int mouseRight) {
+void scene_render(scene *s, renderer *r, vec2 mousePos, int mouseLeftDown) {
 
     // update first
-    ui_container_update(s->uiRoot, mousePos, mouseLeft, mouseRight, 0, 0, r->width, r->height);
+    ui_container_update(s->uiRoot, mousePos, mouseLeftDown, 0, 0, r->width, r->height);
 
     // list of all triangles
     int numTris = 0;

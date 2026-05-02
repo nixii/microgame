@@ -92,7 +92,6 @@ void ui_container_update(
     ui_container *container, 
     vec2 mousePos, 
     int leftPress, 
-    int rightPress,
     int parentX,
     int parentY,
     int parentWidth,
@@ -107,36 +106,42 @@ void ui_container_update(
 
     // check if the mouse is inside
     if (mousePos.x >= selfX &&
-        mousePos.x <= selfX + selfWidth &&
+        mousePos.x < selfX + selfWidth &&
         mousePos.y >= selfY &&
-        mousePos.y <= selfY + selfHeight) {
+        mousePos.y < selfY + selfHeight) {
+        
+        // skip if already hovered
+        if (!container->hovered) {
 
-        // hovering is true
-        container->hovered = 1;
+            // hovering is true
+            container->hovered = 1;
 
-        // hover
-        if (container->onHover != NULL)
-            container->onHover(container, 1);
+            // hover
+            if (container->onHover != NULL)
+                container->onHover(container, 1);
+        }
 
         // press
-        if (leftPress || rightPress) {
-            container->pressed = leftPress ? 1 : 2;
+        if (leftPress && !container->pressed) {
+            container->pressed = 1;
             if (container->onClick != NULL)
-                container->onClick(container, leftPress ? 1 : 2, 1);
+                container->onClick(container, 1);
         }
     
-    // FIXME: only detects up when you move mouse out
-    } else {
+    // turn off hovering!
+    } else if (container->hovered) {
 
         // disable hover
-        if (container->hovered && container->onHover != NULL)
-            container->onHover(container, 0);
         container->hovered = 0;
+        if (container->onHover != NULL)
+            container->onHover(container, 0);
+    }
 
-        // disable press
-        if (container->pressed != 0 && container->onClick != NULL)
-            container->onClick(container, container->pressed, 0);
+    // disable the press
+    if (container->pressed && (!leftPress || !container->hovered)) {
         container->pressed = 0;
+        if (container->onClick != NULL)
+            container->onClick(container, 0);
     }
 
     // update the children
@@ -147,7 +152,7 @@ void ui_container_update(
         ui_container_update(
             c,
             mousePos, 
-            leftPress, rightPress, 
+            leftPress, 
             selfX, selfY, 
             selfWidth, selfHeight);
         

@@ -41,7 +41,7 @@ typedef struct ui_container {
 
     // button events
     void (*onHover)(struct ui_container *self, int hoverActivated);
-    void (*onClick)(struct ui_container *self, int button, int down);
+    void (*onClick)(struct ui_container *self, int down);
 
     // is it hovered
     int hovered;
@@ -66,7 +66,6 @@ void ui_container_update(
     ui_container *container, 
     vec2 mousePos, 
     int leftPress, 
-    int rightPress,
     int parentX,
     int parentY,
     int parentWidth,

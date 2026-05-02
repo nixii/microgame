@@ -10,12 +10,19 @@
 #include <math.h>
 #include <time.h>
 
-void imgPressed(ui_container *c, int btn, int down) {
+void imgPressed(ui_container *c, int down) {
     if (down) {
         printf("DOWN\n");
     } else {
         printf("UP!!!!!!!!!!!!!!!!!!\n");
     }
+}
+
+void hover(ui_container *c, int in) {
+    if (in)
+        printf("in.\n");
+    else
+        printf("out.\n");
 }
 
 int main(void)
@@ -64,7 +71,7 @@ int main(void)
     // create the UI
     ui_container *ui = ui_container_empty();
     ui->size = ui_vec_new(0.3, -10, 1, -10);
-    ui->pos = ui_vec_new(1, -50, 0, -10);
+    ui->pos = ui_vec_new(0.5, 0, 0.5, 0);
     scene_set_ui_root(s, ui);
 
     // add the image
@@ -73,6 +80,7 @@ int main(void)
 
     // add the function
     ui->onClick = imgPressed;
+    ui->onHover = hover;
     
     // set the scene
     game_set_scene(g, s);
