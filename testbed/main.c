@@ -33,7 +33,7 @@ int main(void)
 
     // make UI
     ui_container *root = ui_container_empty();
-    root->size = ui_vec_new(0.5, 0, 0.4, 0);
+    root->size = ui_vec_new(0.3, 0, 0.8, 0);
     root->pos = ui_vec_new(0.5, 0, 0.5, 0);
     root->anchor = vec2_new(0.5, 0.5);
 
@@ -44,7 +44,7 @@ int main(void)
     // make the text part
     ui_container *textContainer = ui_container_empty();
     textContainer->size = ui_vec_new(0.5, -8, 1, -8);
-    textContainer->pos = ui_vec_new(1, 0, 0, 4);
+    textContainer->pos = ui_vec_new(0, 4, 0, 4);
     textContainer->anchor = vec2_new(0, 0);
     ui_container_set_parent(textContainer, root);
     
