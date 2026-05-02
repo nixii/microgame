@@ -15,6 +15,7 @@ ui_container *ui_container_empty() {
     c->anchor = vec2_zero();
     c->pos = ui_vec_empty();
     c->size = ui_vec_empty();
+    c->overlay = rgb(255, 255, 255);
 
     c->parent = NULL;
     c->firstChild = NULL;
@@ -199,7 +200,7 @@ void ui_container_render(
             break;
     #define X_UI(type, name)\
         case type:\
-            name##_render(c->self, r, selfX, selfY, selfWidth, selfHeight);\
+            name##_render(c->self, r, selfX, selfY, selfWidth, selfHeight, c->overlay);\
             break;
         UI_TYPES
     #undef X_UI

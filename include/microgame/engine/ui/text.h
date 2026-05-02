@@ -25,6 +25,13 @@ ui_text *ui_text_new(font_resource *font, const char *text);
 void ui_text_destroy(ui_text *txt);
 
 // render ui text
-void ui_text_render(ui_text *txt, renderer *r, int x, int y, int w, int h);
+void ui_text_render(
+    ui_text *txt, 
+    renderer *r, 
+    int x, 
+    int y, 
+    int w, 
+    int h, 
+    color overlay);
 
 #endif // MG_UI_TEXT_H

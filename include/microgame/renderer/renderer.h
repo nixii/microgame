@@ -44,7 +44,8 @@ void renderer_render_image_slice(
     int imgX, 
     int imgY, 
     int imgW,
-    color *pixels);
+    color *pixels,
+    color overlay);
 
 // draw an image to fill a rectangle (dumb sampling)
 void renderer_render_image_stretch(

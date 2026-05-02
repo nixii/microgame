@@ -14,6 +14,6 @@ void ui_rect_destroy(ui_rect *r) {
 }
 
 // render a ui_rect
-void ui_rect_render(ui_rect *rect, renderer *r, int x, int y, int w, int h) {
+void ui_rect_render(ui_rect *rect, renderer *r, int x, int y, int w, int h, color overlay) {
     renderer_render_rectangle(r, x, y, w, h, rect->c);
 }

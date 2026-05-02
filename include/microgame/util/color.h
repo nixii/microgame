@@ -19,6 +19,16 @@ inline static color rgb_rand() {
 inline static color rgb_mix(color a, color b) {
     return (((a & 0xFEFEFEFE) >> 1) + ((b & 0xFEFEFEFE) >> 1));
 }
+
+inline static uint8_t red(color c) {
+    return (uint8_t)((c) & 0xFF);
+}
+inline static uint8_t green(color c) {
+    return (uint8_t)((c >> 8) & 0xFF);
+}
+inline static uint8_t blue(color c) {
+    return (uint8_t)((c >> 16) & 0xFF);
+}
 inline static uint8_t alpha(color c) {
     return (uint8_t)((c >> 24) & 0xFF);
 }

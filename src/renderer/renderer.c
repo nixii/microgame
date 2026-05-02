@@ -160,7 +160,8 @@ void renderer_render_image_slice(
     int imgX, 
     int imgY, 
     int imgW,
-    color *pixels)
+    color *pixels,
+    color overlay)
 {
 
     // starting x positions
@@ -184,19 +185,49 @@ void renderer_render_image_slice(
     // the starting position on the image
     int imgXStart = imgX;
 
+    // overlay tint
+    float tr = red(overlay) / 255.0f;
+    float tg = green(overlay) / 255.0f;
+    float tb = blue(overlay) / 255.0f;
+    float ta = alpha(overlay) / 255.0f;
+
     // for every pixel
     for (int y = startY; y < endY; y++) {
         for (int x = startX; x < endX; x++) {
 
-            // get the color
-            color c = pixels[imgY * imgW + imgX];
+            color src = pixels[imgY * imgW + imgX];
 
-            // alpha check
-            // TODO: make this mix instead of cut off
-            if (alpha(c) != 0)
-                r->pixels[y * r->width + x] = c;
-            
-            // increment the image index
+            // split the source color
+            float sr = red(src) / 255.0f;
+            float sg = green(src) / 255.0f;
+            float sb = blue(src) / 255.0f;
+            float sa = alpha(src) / 255.0f;
+
+            // tint the rgb
+            float rr = sr * (1.0f - ta + tr * ta);
+            float gg = sg * (1.0f - ta + tg * ta);
+            float bb = sb * (1.0f - ta + tb * ta);
+
+            // the color it is going to be blitted on to
+            color dst = r->pixels[y * r->width + x];
+
+            // split the destination into channels
+            float dr = red(dst) / 255.0f;
+            float dg = green(dst) / 255.0f;
+            float db = blue(dst) / 255.0f;
+
+            // final color
+            float outR = rr * sa + dr * (1.0f - sa);
+            float outG = gg * sa + dg * (1.0f - sa);
+            float outB = bb * sa + db * (1.0f - sa);
+
+            // blit the color
+            r->pixels[y * r->width + x] = rgb(
+                (int)(outR * 255.0f),
+                (int)(outG * 255.0f),
+                (int)(outB * 255.0f)
+            );
+
             imgX++;
         }
 

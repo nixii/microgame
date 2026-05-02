@@ -41,7 +41,7 @@ void ui_text_destroy(ui_text *txt) {
 }
 
 // render ui text
-void ui_text_render(ui_text *t, renderer *r, int x, int y, int w, int h) {
+void ui_text_render(ui_text *t, renderer *r, int x, int y, int w, int h, color overlay) {
 
     // The target X and Y positions
     int targetX = x;
@@ -66,7 +66,7 @@ void ui_text_render(ui_text *t, renderer *r, int x, int y, int w, int h) {
             font_bounds bounds = font_resource_get_bounds(t->font, c);
 
             // draw the character
-            renderer_render_image_slice(r, targetX, targetY, bounds.w, bounds.h, bounds.x, bounds.y, t->font->source.width, t->font->source.pixels);
+            renderer_render_image_slice(r, targetX, targetY, bounds.w, bounds.h, bounds.x, bounds.y, t->font->source.width, t->font->source.pixels, overlay);
             targetX += t->font->charWidth + t->font->horizontalSpacing;
 
             // if auto wrap is enabled

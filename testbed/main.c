@@ -51,6 +51,7 @@ int main(void)
     // add text
     ui_text *ut = ui_text_new(&fr, "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.\nthe quick brown fox jumps over the very lazy dog.");
     ut->autoWrap = 1;
+    textContainer->overlay = rgba(0, 255, 0, 50);
     ui_container_bind_type(textContainer, UI_TYPE_TEXT, ut);
 
     // set the UI

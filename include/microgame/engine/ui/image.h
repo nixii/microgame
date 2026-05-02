@@ -21,6 +21,13 @@ ui_image *ui_image_new(image_resource *r);
 void ui_image_destroy(ui_image *i);
 
 // render a ui image
-void ui_image_render(ui_image *i, renderer *r, int x, int y, int w, int h);
+void ui_image_render(
+    ui_image *i, 
+    renderer *r, 
+    int x, 
+    int y, 
+    int w, 
+    int h, 
+    color overlay);
 
 #endif // MG_UI_IMAGE_H

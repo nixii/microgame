@@ -40,6 +40,9 @@ typedef struct ui_container {
     ui_object_type selfType;
     void *self;
 
+    // tint the ui
+    color overlay;
+
     // button events
     void (*onHover)(struct ui_container *self, int hoverActivated);
     void (*onClick)(struct ui_container *self, int down);
