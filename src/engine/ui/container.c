@@ -27,7 +27,7 @@ ui_container *ui_container_empty() {
 }
 
 // add a ui container as a child
-void ui_container_add_child(ui_container *child, ui_container *parent) {
+void ui_container_set_parent(ui_container *child, ui_container *parent) {
 
     // remove the child from any parent
     ui_container_remove_parent(child);

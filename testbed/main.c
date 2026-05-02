@@ -33,12 +33,22 @@ int main(void)
 
     // make UI
     ui_container *root = ui_container_empty();
-    root->size = ui_vec_new(1, 0, 1, 0);
-    root->pos = ui_vec_new(0.5, 0, 0.5, 0);
+    root->size = ui_vec_new(1, -8, 0, 59);
+    root->pos = ui_vec_new(0, 4, 1, -63);
+
+    // color
+    ui_rect *rootRect = ui_rect_new(rgb(46, 46, 49));
+    ui_container_bind_type(root, UI_TYPE_RECT, rootRect);
+
+    // make the text part
+    ui_container *textContainer = ui_container_empty();
+    textContainer->size = ui_vec_new(1, -8, 1, -8);
+    textContainer->pos = ui_vec_new(0, 4, 0, 4);
+    ui_container_set_parent(textContainer, root);
     
     // add text
-    ui_text *ut = ui_text_new(&fr, "150%");
-    ui_container_bind_type(root, UI_TYPE_TEXT, ut);
+    ui_text *ut = ui_text_new(&fr, "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.\nthe quick brown fox jumps over the very lazy dog.");
+    ui_container_bind_type(textContainer, UI_TYPE_TEXT, ut);
 
     // set the UI
     scene_set_ui_root(s, root);
