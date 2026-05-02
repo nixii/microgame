@@ -80,14 +80,14 @@ void game_update(microgame *g) {
             g->mainScene, 
             &g->renderer, 
             vec2_new(GetMouseX(), GetMouseY()), 
-            IsMouseButtonDown(MOUSE_LEFT_BUTTON));
+            IsMouseButtonDown(MOUSE_LEFT_BUTTON),
+            get_dt());
     }
 
     // update the texture
     UpdateTexture(g->_bufTex, g->renderer.pixels);
     BeginDrawing();
     DrawTexture(g->_bufTex, 0, 0, WHITE);
-    DrawText(TextFormat("%d FPS", GetFPS()), 10, 10, 30, WHITE); // TODO: remove FPS counter
     EndDrawing();
 }
 
@@ -100,6 +100,11 @@ void game_destroy(microgame *g) {
 // get the deltatime (for lag help!)
 float get_dt() {
     return GetFrameTime();
+}
+
+// get the fps
+int get_fps() {
+    return GetFPS();
 }
 
 // key presses

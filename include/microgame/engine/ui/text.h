@@ -21,8 +21,11 @@ typedef struct ui_text {
 // create a new text instance. text can be null.
 ui_text *ui_text_new(font_resource *font, const char *text);
 
-// destory a ui text
+// destroy a ui text
 void ui_text_destroy(ui_text *txt);
+
+// set the text
+void ui_text_set_text(ui_text *txt, const char *chars);
 
 // render ui text
 void ui_text_render(

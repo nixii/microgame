@@ -19,5 +19,6 @@ int key_down(key k);
 int key_just_down(key k);
 int key_just_up(key k);
 float get_dt();
+int get_fps();
 
 #endif // MICROGAME_H

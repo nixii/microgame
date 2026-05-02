@@ -34,6 +34,13 @@ ui_text *ui_text_new(font_resource *font, const char *text) {
     return t;
 }
 
+// copy text
+void ui_text_set_text(ui_text *txt, const char *chars) {
+    free(txt->text);
+    txt->text = strdup(chars);
+    txt->textLength = strlen(chars);
+}
+
 // destory a ui text
 void ui_text_destroy(ui_text *txt) {
     free(txt->text);
