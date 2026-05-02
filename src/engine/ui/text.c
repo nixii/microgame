@@ -39,27 +39,32 @@ void ui_text_destroy(ui_text *txt) {
     free(txt);
 }
 
+// TODO: automatic line breaking
 // render ui text
 void ui_text_render(ui_text *t, renderer *r, int x, int y, int w, int h) {
 
+    // The target X and Y positions
     int targetX = x;
     int targetY = y;
+
+    // For every character
     for (int i = 0; i < t->textLength; i++) {
+
+        // Get the current character
         char c = t->text[i];
 
+        // Go to the next line
         if (c == '\n') {
             targetX = x;
             targetY += t->font->charHeight + t->font->verticalSpacing;
         }
 
+        // TODO: bounds safely
+        // Render the character
         else {
             font_bounds bounds = font_resource_get_bounds(t->font, c);
-            printf("%d %d\n", bounds.x, bounds.y);
             renderer_render_image_slice(r, targetX, targetY, bounds.w, bounds.h, bounds.x, bounds.y, t->font->source.width, t->font->source.pixels);
             targetX += t->font->charWidth + t->font->horizontalSpacing;
         }
     }
-    printf("\n");
-
-    // renderer_render_rectangle(r, 10, 10, 50, 50, rgb(255, 0, 255));
 }

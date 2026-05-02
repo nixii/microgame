@@ -21,7 +21,7 @@ int main(void)
     mesh m = mesh_from_resource(rgb(255, 255, 255), mr);
 
     // load the text
-    font_resource fr = font_resource_from("assets/simplefont.png", 24, 24, 1, 3);
+    font_resource fr = font_resource_from("assets/simplefont.png", 16, 24, 1, 3);
 
     // make one stationary test entity
     entity stationary = scene_spawn(s);
@@ -37,7 +37,7 @@ int main(void)
     root->pos = ui_vec_new(0.5, 0, 0.5, 0);
     
     // add text
-    ui_text *ut = ui_text_new(&fr, "%%$#@!");
+    ui_text *ut = ui_text_new(&fr, "150%");
     ui_container_bind_type(root, UI_TYPE_TEXT, ut);
 
     // set the UI
