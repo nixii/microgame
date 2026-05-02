@@ -73,7 +73,6 @@ mesh_resource mesh_resource_from_obj(const char *objFilePath) {
                 coordinates[numCoordinates++] = coordinate;
             }
             
-            // TODO: make the points get loaded into the mesh (w included)
             if (numCoordinates < 3) break;
 
             // add the coordinates
