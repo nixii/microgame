@@ -11,6 +11,10 @@ TODO #4 - various improvements:
  * * `[x]` Alpha mix whenever changing any 
  * `[x]` Text can be colored (the entire thing)
  * `[ ]` 3d box collider (doesn't rotate)
+ * * `[x]` Detect 3d collision
+ * * `[ ]` Run on-collide function
+ * * `[ ]` Debug visualization
+ * * `[ ]` Get certain faces of the collider's Y position (for alignment)
  * `[ ]` Text can be colored (individual parts)
 
 TODO #3 - UI (in order of priority):
