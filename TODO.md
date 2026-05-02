@@ -1,6 +1,16 @@
 
 ## To-Do list
 
+TODO #4 - various improvements:
+ * `[ ]` UI anchor
+ * `[ ]` UI tint
+ * `[ ]` Alpha for text working better than a firm cutoff
+ * * `[ ]` Alpha mix function
+ * * `[ ]` Alpha mix whenever changing any 
+ * `[ ]` 3d box collider (doesn't rotate)
+ * `[ ]` Text can be colored (the entire thing)
+ * `[ ]` Text can be colored (individual parts)
+
 TODO #3 - UI (in order of priority):
  * `[x]` UI vectors
  * `[x]` Custom UI layer
