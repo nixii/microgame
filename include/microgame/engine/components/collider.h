@@ -6,7 +6,7 @@
 #include "microgame/util/math.h"
 
 // different sides
-typedef struct collider_side {
+typedef enum collider_side {
     COLLIDER_SIDE_NORTH,  // +z
     COLLIDER_SIDE_SOUTH,  // -z
     COLLIDER_SIDE_EAST,   // +x

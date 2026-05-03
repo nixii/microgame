@@ -34,5 +34,5 @@ float collider_get_offset(collider *c, collider_side s) {
     return 0;
 }
 
-// destroy a region colldier
+// destroy a region colldier (does nothing)
 void collider_destroy(collider *_) {}
