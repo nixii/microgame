@@ -191,7 +191,10 @@ void scene_render(
     }
 
     // update the systems
-    collision_system_update(s, dt);
+    for (entity e = 0; e < MAX_ENTITIES; e++) {
+        collision_system_update(s, e, dt);
+        velocity_system_update(s, e, dt);
+    }
 
     // update ui first
     if (s->uiRoot)
