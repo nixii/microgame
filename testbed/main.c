@@ -10,12 +10,8 @@
 #include <stdio.h>
 #include <math.h>
 
-void toggleHover(ui_container *c, int hovered) {
-    if (hovered) {
-        c->overlay = rgba(0, 0, 0, 100);
-    } else {
-        c->overlay = rgba(0,255,0,255);
-    }
+void warning(entity e, entity hitBy) {
+    printf("Oh no %d hit me!\n", hitBy);
 }
 
 int main(void)
@@ -47,7 +43,7 @@ int main(void)
     // add colliders
     entity e1 = scene_spawn(s);
     entity e2 = scene_spawn(s);
-    scene_attach_collider(s, e1, collider_new(vec3_new(1, 1, 1)));
+    collider *a = scene_attach_collider(s, e1, collider_new(vec3_new(1, 1, 1)));
     scene_attach_collider(s, e2, collider_new(vec3_new(1, 1, 1)));
     scene_attach_mesh(s, e1, m);
     scene_attach_mesh(s, e2, m);
@@ -56,6 +52,9 @@ int main(void)
     get_transform(s, e2)->pos.x = -1;
     get_transform(s, e1)->scale = vec3_new(0.8, 0.8, 0.8);
     get_transform(s, e2)->scale = vec3_new(0.8, 0.8, 0.8);
+
+    // set functions
+    a->onCollision = warning;
 
     // set the UI
     scene_set_ui_root(s, root);
