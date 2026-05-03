@@ -10,10 +10,6 @@
 #include <stdio.h>
 #include <math.h>
 
-void warning(entity e, entity hitBy) {
-    printf("Oh no %d hit me!\n", hitBy);
-}
-
 int main(void)
 {
 
@@ -52,9 +48,7 @@ int main(void)
     get_transform(s, e2)->pos.x = -1;
     get_transform(s, e1)->scale = vec3_new(0.8, 0.8, 0.8);
     get_transform(s, e2)->scale = vec3_new(0.8, 0.8, 0.8);
-
-    // set functions
-    a->onCollision = warning;
+    velocity *v = attach_velocity(s, e2, velocity_new(vec3_new(0, 0, 0)));
 
     // set the UI
     scene_set_ui_root(s, root);
@@ -104,8 +98,7 @@ int main(void)
         c->transform.pos = vec3_add(c->transform.pos, movement);
         
         // frame count!
-        fT->pos.x = sinf((float)frameCount / 60);
-        frameCount++;
+        v->velocity.x = floor(sinf(frameCount++  /  60));
         
         // update the game
         game_update(g);

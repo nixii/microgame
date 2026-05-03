@@ -45,7 +45,45 @@ void collision_system_update(scene *s, entity first, float dt) {
     }
 }
 
+// get the first hit object
+static void velocity_system_first_collided(scene *s, entity e) {
+
+    // skip without collider
+    if (!has_collider(s, e)) return;
+
+    // get the collider
+    collider *c = get_collider(s, e);
+
+    // loop through other entities
+    for (entity e2 = 0; e2 < MAX_ENTITIES; e2++) {
+
+        // skip without collider
+        if (!s->alive[e2] || e2 == e || !has_collider(s, e2)) continue;
+
+        // get the collider
+        collder *c2 = get_collider(s, e2);
+    }
+}
+
 // update the velocity
-void velocity_system_update(scene *s, entity e, float dt) {
-    printf("veloicty update ooo!\n");
+void velocity_system_update(scene *s, entity e, float _) {
+
+    // skip if it does not have a velocity
+    if (!has_velocity(s, e)) return;
+    velocity *v = get_velocity(s, e);
+    transform global = get_global_transform(s, e);
+
+    // move on the x axis
+    global.pos.x += v->velocity.x;
+    entity firstHit = velocity_system_first_collided(s, e);
+
+    // move on the y axis
+    global.pos.y += v->velocity.y;
+    firstHit = velocity_system_first_collided(s, e);
+
+    // move on the z axis
+    global.pos.z += v->velocity.z;
+    firstHit = velocity_system_first_collided(s, e);
+
+    // global transform after everything
 }
