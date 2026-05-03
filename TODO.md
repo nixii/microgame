@@ -14,7 +14,7 @@ TODO #4 - various improvements:
  * * `[x]` Detect 3d collision
  * * `[x]` Run on-collide functions
  * * `[ ]` Debug visualization
- * * `[ ]` Get certain faces of the collider's Y position (for alignment)
+ * * `[ ]` Get certain faces of the collider's position (for alignment)
  * `[ ]` Text can be colored (individual parts)
 
 TODO #3 - UI (in order of priority):
