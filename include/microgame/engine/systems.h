@@ -2,6 +2,8 @@
 #ifndef MG_SYSTEMS_H
 #define MG_SYSTEMS_H
 
+#include "microgame/engine/entity.h"
+
 // just forward-declare the scene
 typedef struct scene scene;
 

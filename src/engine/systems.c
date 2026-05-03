@@ -11,7 +11,7 @@
 void collision_system_update(scene *s, entity first, float dt) {
 
     // skip if no collider or not alive
-    if (!s->alive[first] || !has_collider(s, first)) continue;
+    if (!s->alive[first] || !has_collider(s, first)) return;
 
     // get the vec3 pos and bounds
     collider *firstCol = get_collider(s, first);
