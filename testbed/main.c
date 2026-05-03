@@ -43,10 +43,10 @@ int main(void)
     // add colliders
     entity e1 = scene_spawn(s);
     entity e2 = scene_spawn(s);
-    collider *a = scene_attach_collider(s, e1, collider_new(vec3_new(1, 1, 1)));
-    scene_attach_collider(s, e2, collider_new(vec3_new(1, 1, 1)));
-    scene_attach_mesh(s, e1, m);
-    scene_attach_mesh(s, e2, m);
+    collider *a = attach_collider(s, e1, collider_new(vec3_new(1, 1, 1)));
+    attach_collider(s, e2, collider_new(vec3_new(1, 1, 1)));
+    attach_mesh(s, e1, m);
+    attach_mesh(s, e2, m);
     transform *fT = get_transform(s, e1);
     fT->pos.x = 1;
     get_transform(s, e2)->pos.x = -1;

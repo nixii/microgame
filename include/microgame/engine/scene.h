@@ -93,10 +93,10 @@ transform get_global_transform(scene *s, entity e);
 
 // component functions on the scene
 #define X(name, type)\
-    int scene_has_##name(scene *s, entity e);\
-    type *scene_get_##name(scene *s, entity e);\
-    type *scene_attach_##name(scene *s, entity e, type c);\
-    void scene_detach_##name(scene *s, entity e);
+    int has_##name(scene *s, entity e);\
+    type *get_##name(scene *s, entity e);\
+    type *attach_##name(scene *s, entity e, type c);\
+    void detach_##name(scene *s, entity e);
 X_COMPONENTS
 #undef X
 

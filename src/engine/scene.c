@@ -66,7 +66,7 @@ void scene_despawn(scene *s, entity e) {
 
     // destroy any components
 #define X(name, type)\
-    scene_detach_##name(s, e);
+    detach_##name(s, e);
     X_COMPONENTS
 #undef X
 }
@@ -82,7 +82,7 @@ void scene_destroy(scene *s) {
 
         // destroy each component (X-macro)
     #define X(name, type)\
-        scene_detach_##name(s, e);
+        detach_##name(s, e);
         X_COMPONENTS
     #undef X
     }
@@ -100,19 +100,19 @@ transform *get_transform(scene *s, entity e) {
 
 // component functions
 #define X(name, type) \
-    int scene_has_##name(scene *s, entity e) { \
+    int has_##name(scene *s, entity e) { \
         return s->has_##name[e]; \
     } \
-    type *scene_get_##name(scene *s, entity e) { \
-        if (!scene_has_##name(s, e)) return NULL; \
+    type *get_##name(scene *s, entity e) { \
+        if (!has_##name(s, e)) return NULL; \
         return &s->name##_components[e]; \
     } \
-    type *scene_attach_##name(scene *s, entity e, type c) { \
+    type *attach_##name(scene *s, entity e, type c) { \
         s->has_##name[e] = 1; \
         s->name##_components[e] = c; \
         return &s->name##_components[e]; \
     } \
-    void scene_detach_##name(scene *s, entity e) { \
+    void detach_##name(scene *s, entity e) { \
         s->has_##name[e] = 0; \
         name##_destroy(&s->name##_components[e]); \
     }
@@ -208,7 +208,7 @@ void scene_render(
         mat4 tm = get_world_transform_mat4(s, e);
 
         // get the mesh
-        mesh *m = scene_get_mesh(s, e);
+        mesh *m = get_mesh(s, e);
 
         // for each triangle
         if (m != NULL) {
