@@ -1,5 +1,6 @@
 
 #include "microgame/microgame.h"
+#include <stdio.h>
 
 // width height
 #define WIDTH 1600
@@ -19,6 +20,7 @@ scene *mainScene;
 // camera information
 entity cameraEntity;
 transform *cameraTransform;
+velocity *cameraVelocity;
 
 // basic mesh stuff
 mesh_resource testMesh;
@@ -29,6 +31,7 @@ void loadPlayer() {
     cameraEntity = scene_spawn(mainScene);
     cameraTransform = get_transform(mainScene, cameraEntity);
     attach_collider(mainScene, cameraEntity, collider_new(vec3_new(1, 1, 1)));
+    cameraVelocity = attach_velocity(mainScene, cameraEntity, velocity_new(vec3_zero()));
 }
 
 // load meshes
@@ -52,24 +55,26 @@ void handleMovement(float dt) {
 
     vec3 movement = vec3_zero();
     if (key_down(M_KEY_A))
-        movement.x -= MOVE_SPEED * dt;
+        movement.x -= MOVE_SPEED;
     if (key_down(M_KEY_D))
-        movement.x += MOVE_SPEED * dt;
+        movement.x += MOVE_SPEED;
     if (key_down(M_KEY_W))
-        movement.z += MOVE_SPEED * dt;
+        movement.z += MOVE_SPEED;
     if (key_down(M_KEY_S))
-        movement.z -= MOVE_SPEED * dt;
+        movement.z -= MOVE_SPEED;
     if (key_down(M_KEY_SPACE))
-        movement.y += MOVE_SPEED * dt;
+        movement.y += MOVE_SPEED;
     if (key_down(M_KEY_LCTRL))
-        movement.y -= MOVE_SPEED * dt;
+        movement.y -= MOVE_SPEED;
 
     float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) * CAM_SPEED * dt;
     float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) * CAM_SPEED * dt;
+    printf("%f\n", rotYaw); // TODO: fix rotation
+                            // TODO: make collision not snap to wrong side
     
     cameraTransform->rot.y += rotYaw;
     cameraTransform->rot.x += rotPitch;
-    cameraTransform->pos = vec3_add(cameraTransform->pos, vec3_rotY(movement, cameraTransform->rot.y));
+    cameraVelocity->velocity = vec3_rotY(movement, cameraTransform->rot.y);
 }
 
 // run the game
@@ -88,7 +93,7 @@ int main(void) {
     loadPlayer();
 
     // load the static entity
-    spawnTestEntity(vec3_zero());
+    spawnTestEntity(vec3_new(2, 0, 0));
 
     // set the scene
     game_set_scene(game, mainScene);
