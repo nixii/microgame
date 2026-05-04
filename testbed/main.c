@@ -1,108 +1,108 @@
 
-#include "microgame/engine/components/mesh.h"
-#include "microgame/engine/resource/image.h"
-#include "microgame/engine/resource/mesh.h"
-#include "microgame/engine/ui/container.h"
-#include "microgame/engine/scene.h"
-#include "microgame/util/color.h"
-#include "microgame/util/math.h"
 #include "microgame/microgame.h"
-#include <stdio.h>
-#include <math.h>
 
-int main(void)
-{
+// width height
+#define WIDTH 1600
+#define HEIGHT 1000
+#define FPS 60
+#define TITLE "Movement Test"
+
+#define MOVE_SPEED 5.0
+#define CAM_SPEED 1.7
+
+// the game
+microgame *game;
+
+// scene info
+scene *mainScene;
+
+// camera information
+entity cameraEntity;
+transform *cameraTransform;
+
+// basic mesh stuff
+mesh_resource testMesh;
+mesh meshComponent;
+
+// load the player
+void loadPlayer() {
+    cameraEntity = scene_spawn(mainScene);
+    cameraTransform = get_transform(mainScene, cameraEntity);
+    attach_collider(mainScene, cameraEntity, collider_new(vec3_new(1, 1, 1)));
+}
+
+// load meshes
+void loadMeshes() {
+    testMesh = mesh_resource_from_obj("assets/test.obj");
+    meshComponent = mesh_from_resource(rgb_rand(), testMesh);
+}
+
+// spawn a test entity
+void spawnTestEntity(vec3 pos) {
+    entity e = scene_spawn(mainScene);
+    attach_mesh(mainScene, e, meshComponent);
+    get_transform(mainScene, e)->pos = pos;
+    get_transform(mainScene, e)->scale = vec3_new(0.5, 0.5, 0.5);
+    attach_collider(mainScene, e, collider_new(vec3_new(1, 1, 1)));
+}
+
+// allow movement
+void handleMovement(float dt) {
+    mainScene->camera.transform = *cameraTransform;
+
+    vec3 movement = vec3_zero();
+    if (key_down(M_KEY_A))
+        movement.x -= MOVE_SPEED * dt;
+    if (key_down(M_KEY_D))
+        movement.x += MOVE_SPEED * dt;
+    if (key_down(M_KEY_W))
+        movement.z += MOVE_SPEED * dt;
+    if (key_down(M_KEY_S))
+        movement.z -= MOVE_SPEED * dt;
+    if (key_down(M_KEY_SPACE))
+        movement.y += MOVE_SPEED * dt;
+    if (key_down(M_KEY_LCTRL))
+        movement.y -= MOVE_SPEED * dt;
+
+    float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) * CAM_SPEED * dt;
+    float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) * CAM_SPEED * dt;
+    
+    cameraTransform->rot.y += rotYaw;
+    cameraTransform->rot.x += rotPitch;
+    cameraTransform->pos = vec3_add(cameraTransform->pos, vec3_rotY(movement, cameraTransform->rot.y));
+}
+
+// run the game
+int main(void) {
 
     // create the game
-    microgame *g = game_new(1600, 1000, 60, "hi world");
-    scene *s = scene_new();
+    game = game_new(WIDTH, HEIGHT, FPS, TITLE);
 
-    // load the mesh
-    mesh_resource mr = mesh_resource_from_obj("assets/test.obj");
-    mesh m = mesh_from_resource(rgb(255, 255, 255), mr);
+    // create the scene
+    mainScene = scene_new();
 
-    // load the text
-    font_resource fr = font_resource_from("assets/simplefont.png", 16, 24, -1, 3);
+    // load resources
+    loadMeshes();
 
-    // get the transform
-    camera *c = &s->camera;
-    c->transform.pos = vec3_new(0, 3, -10);
+    // laod the player
+    loadPlayer();
 
-    // make UI
-    ui_container *root = ui_container_empty();
-    root->pos = ui_vec_new(0, 10, 0, 10);
-
-    // bind text to the root
-    ui_text *t = ui_text_new(&fr, "000 FPS");
-    ui_container_bind_type(root, UI_TYPE_TEXT, t);
-
-    // add colliders
-    entity e1 = scene_spawn(s);
-    entity e2 = scene_spawn(s);
-    collider *a = attach_collider(s, e1, collider_new(vec3_new(1, 1, 1)));
-    attach_collider(s, e2, collider_new(vec3_new(1, 1, 1)));
-    attach_mesh(s, e1, m);
-    attach_mesh(s, e2, m);
-    transform *fT = get_transform(s, e1);
-    fT->pos.x = 1;
-    get_transform(s, e2)->pos.x = -3;
-    get_transform(s, e1)->scale = vec3_new(0.8, 0.8, 0.8);
-    get_transform(s, e2)->scale = vec3_new(0.8, 0.8, 0.8);
-    velocity *v = attach_velocity(s, e2, velocity_new(vec3_new(1, 0, 0)));
-
-    // set the UI
-    scene_set_ui_root(s, root);
+    // load the static entity
+    spawnTestEntity(vec3_zero());
 
     // set the scene
-    game_set_scene(g, s);
-    
-    // speed
-    float camSpeed = 1.7; // 1.7 rad a second
-    float moveSpeed = 5.0; // 5 meters a second
-    int frameCount = 0;
-    
-    // update
-    while (game_still_running(g)) {
+    game_set_scene(game, mainScene);
 
-        // dt
+    // run the game
+    while (game_still_running(game)) {
+
+        // get deltatime
         float dt = get_dt();
 
-        // update fps
-        char buf[16];
-        snprintf(buf, sizeof(buf), "%d FPS", get_fps());
-        ui_text_set_text(t, buf);
+        // update movement
+        handleMovement(dt);
 
-        // rotate the camera
-        float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) * camSpeed * dt;
-        c->transform.rot.y += rotYaw;
-        float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) * camSpeed * dt;
-        c->transform.rot.x += rotPitch;
-
-        // get the cam movement
-        vec3 movement = vec3_zero();
-        if (key_down(M_KEY_A))
-            movement.x -= moveSpeed * dt;
-        if (key_down(M_KEY_D))
-            movement.x += moveSpeed * dt;
-        if (key_down(M_KEY_W))
-            movement.z += moveSpeed * dt;
-        if (key_down(M_KEY_S))
-            movement.z -= moveSpeed * dt;
-        if (key_down(M_KEY_SPACE))
-            movement.y += moveSpeed * dt;
-        if (key_down(M_KEY_LCTRL))
-            movement.y -= moveSpeed * dt;
-        
-        // rotate the vector
-        movement = vec3_rotY(movement, c->transform.rot.y);
-        c->transform.pos = vec3_add(c->transform.pos, movement);
-        
-        // frame count!
-        
         // update the game
-        game_update(g);
+        game_update(game);
     }
-
-    // end
-    game_destroy(g);
 }
