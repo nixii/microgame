@@ -88,6 +88,9 @@ void scene_set_ui_root(scene *s, ui_container *c);
 // get the ui root of the scene, maybe NULL
 ui_container *scene_get_ui_root(scene *s);
 
+// get mat4 for world transform
+mat4 get_world_transform_mat4(scene *s, entity e);
+
 // get global transform
 transform get_global_transform(scene *s, entity e);
 

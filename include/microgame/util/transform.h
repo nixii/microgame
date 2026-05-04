@@ -13,6 +13,7 @@ typedef struct transform {
 
 // transform functions
 transform transform_new(vec3 pos, vec3 rot, vec3 scale);
+transform transform_from_mat(mat4 m);
 transform transform_blank();
 
 #endif // MG_TRANSFORM_H

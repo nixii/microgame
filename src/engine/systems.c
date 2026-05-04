@@ -111,7 +111,7 @@ static collider_side velocity_system_dir(enum _axis a, int dir) {
 }
 
 // update the velocity
-void velocity_system_update(scene *s, entity e, float _) {
+void velocity_system_update(scene *s, entity e, float dt) {
 
     // skip if it does not have a velocity
     if (!has_velocity(s, e)) return;
@@ -123,7 +123,7 @@ void velocity_system_update(scene *s, entity e, float _) {
     entity firstHit;
 
     // move on the x axis
-    global.pos.x += v->velocity.x;
+    global.pos.x += v->velocity.x * dt;
     if (v->velocity.x != 0) {
         firstHit = velocity_system_first_collided(s, e, global.pos);
         if (firstHit != NIL_ENTITY) {
@@ -133,14 +133,37 @@ void velocity_system_update(scene *s, entity e, float _) {
     }
 
     // move on the y axis
-    global.pos.y += v->velocity.y;
-    firstHit = velocity_system_first_collided(s, e, global.pos);
-    dir = velocity_system_dir(Y, v->velocity.y);
+    global.pos.y += v->velocity.y * dt;
+    if (v->velocity.y != 0) {
+        firstHit = velocity_system_first_collided(s, e, global.pos);
+        if (firstHit != NIL_ENTITY) {
+            dir = velocity_system_dir(Y, v->velocity.y);
+            printf("dir: %d\n", (int)dir);
+        }
+    }
 
     // move on the z axis
-    global.pos.z += v->velocity.z;
-    firstHit = velocity_system_first_collided(s, e, global.pos);
-    dir = velocity_system_dir(Z, v->velocity.z);
+    global.pos.z += v->velocity.z * dt;
+    if (v->velocity.z != 0) {
+        firstHit = velocity_system_first_collided(s, e, global.pos);
+        if (firstHit != NIL_ENTITY) {
+            dir = velocity_system_dir(Z, v->velocity.z);
+            printf("dir: %d\n", (int)dir);
+        }
+    }
 
-    // global transform after everything
+    // global transform after all movement
+    // TODO: store inverse matrices
+    mat4 newGlobal = mat4_model(global.pos, global.rot, global.scale);
+
+    // if parent
+    entity parent = get_parent(s, e);
+    if (parent != NIL_ENTITY) {
+        mat4 inv = mat4_fast_inverse(get_world_transform_mat4(s, parent));
+        newGlobal = mat4_mul(inv, newGlobal);
+    }
+    
+    // move
+    transform local = transform_from_mat(newGlobal);
+    s->transforms[e] = local;
 }

@@ -120,7 +120,7 @@ X_COMPONENTS
 #undef X
 
 // get the world transform of an entity
-static mat4 get_world_transform_mat4(scene *s, entity e) {
+mat4 get_world_transform_mat4(scene *s, entity e) {
 
     // if there is a global matrix then return it
     if (s->hasGlobalMat[e])
