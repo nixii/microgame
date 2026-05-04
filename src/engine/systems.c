@@ -138,8 +138,10 @@ static int velocity_system_move_axis(
 // handle collisions
 static void velocity_system_resolve_axis(scene *s, entity e, vec3 *pos, enum _axis axis, int sn) {
 
+    // get the first entity you woulda hit
     entity firstCollided = velocity_system_first_collided(s, e, *pos, velocity_system_dir(axis, sn));
 
+    // snap to that entity if it exists
     if (firstCollided != NIL_ENTITY) {
         printf("collided.\n");
     }
@@ -164,10 +166,9 @@ void velocity_system_update(scene *s, entity e, float dt) {
         velocity_system_resolve_axis(s, e, &global.pos, Y, sign(v->velocity.y));
     if (velocity_system_move_axis(dt, v->velocity.z, &global.pos.z))
         velocity_system_resolve_axis(s, e, &global.pos, Z, sign(v->velocity.z));
-    global.pos.x += v->velocity.x * dt;
 
     // global transform after all movement
-    // TODO: store inverse matrices
+    // TODO: cache inverse matrices
     mat4 newGlobal = mat4_model(global.pos, global.rot, global.scale);
 
     // if parent
