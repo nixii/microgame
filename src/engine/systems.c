@@ -139,11 +139,17 @@ static int velocity_system_move_axis(
 static void velocity_system_resolve_axis(scene *s, entity e, vec3 *pos, enum _axis axis, int sn) {
 
     // get the first entity you woulda hit
-    entity firstCollided = velocity_system_first_collided(s, e, *pos, velocity_system_dir(axis, sn));
+    collider_side side = velocity_system_dir(axis, sn);
+    entity firstCollided = velocity_system_first_collided(s, e, *pos, side);
 
     // snap to that entity if it exists
     if (firstCollided != NIL_ENTITY) {
-        printf("collided.\n");
+        
+        // get the side collided on
+        // TODO: make it get the object based on the relational position
+        float dist = collider_get_offset(get_collider(s, firstCollided), side);
+        vec3 dir = vec3_mul(axis == X ? vec3_x() : (axis == Y ? vec3_y() : vec3_z()), -dist);
+        *pos = vec3_sub(*pos, dir);
     }
 }
 
