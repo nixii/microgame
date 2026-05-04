@@ -45,10 +45,10 @@ int main(void)
     attach_mesh(s, e2, m);
     transform *fT = get_transform(s, e1);
     fT->pos.x = 1;
-    get_transform(s, e2)->pos.x = 0;
+    get_transform(s, e2)->pos.x = -3;
     get_transform(s, e1)->scale = vec3_new(0.8, 0.8, 0.8);
     get_transform(s, e2)->scale = vec3_new(0.8, 0.8, 0.8);
-    velocity *v = attach_velocity(s, e2, velocity_new(vec3_new(0, 0, 0)));
+    velocity *v = attach_velocity(s, e2, velocity_new(vec3_new(1, 0, 0)));
 
     // set the UI
     scene_set_ui_root(s, root);
@@ -98,8 +98,6 @@ int main(void)
         c->transform.pos = vec3_add(c->transform.pos, movement);
         
         // frame count!
-        v->velocity.x = -
-        sinf((float)frameCount++ / 60) * 6;
         
         // update the game
         game_update(g);
