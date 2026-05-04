@@ -17,6 +17,21 @@ vec3 vec3_zero() {
     return vec3_new(0, 0, 0);
 }
 
+// <1, 0, 0>
+vec3 vec3_x() {
+    return vec3_new(1, 0, 0);
+}
+
+// <0, 1, 0>
+vec3 vec3_y() {
+    return vec3_new(0, 1, 0);
+}
+
+// <0, 0, 1>
+vec3 vec3_z() {
+    return vec3_new(0, 0, 1);
+}
+
 // add two vec3s together
 vec3 vec3_add(vec3 a, vec3 b) {
     return vec3_new(a.x + b.x, a.y + b.y, a.z + b.z);
