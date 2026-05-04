@@ -85,7 +85,6 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
             (a.z <= B.z && A.z >= b.z)) {
 
             // run functions for collision
-            printf("hit.\n");
             // float dist = collider_get_offset(c2, side);
             // just return the first hit entity now for testing
             // TODO: find first hit entity (furthest away of given side)
@@ -136,20 +135,53 @@ static int velocity_system_move_axis(
 }
 
 // handle collisions
-static void velocity_system_resolve_axis(scene *s, entity e, vec3 *pos, enum _axis axis, int sn) {
+static void velocity_system_resolve_axis(scene *s, entity e, vec3 *outpos, enum _axis axis, int sn) {
 
     // get the first entity you woulda hit
     collider_side side = velocity_system_dir(axis, sn);
-    entity firstCollided = velocity_system_first_collided(s, e, *pos, side);
+    entity firstCollided = velocity_system_first_collided(s, e, *outpos, side);
 
     // snap to that entity if it exists
     if (firstCollided != NIL_ENTITY) {
         
         // get the side collided on
-        // TODO: make it get the object based on the relational position
-        float dist = collider_get_offset(get_collider(s, firstCollided), side);
-        vec3 dir = vec3_mul(axis == X ? vec3_x() : (axis == Y ? vec3_y() : vec3_z()), -dist);
-        *pos = vec3_sub(*pos, dir);
+        collider *col = get_collider(s, e);
+        collider *col2 = get_collider(s, firstCollided);
+
+        // get positions
+        vec3 pos = *outpos;
+        vec3 pos2 = get_global_transform(s, firstCollided).pos;
+
+        // get the half axes
+        vec3 half = vec3_mul(col->size, 0.5);
+        vec3 half2 = vec3_mul(col2->size, 0.5);
+
+        // check cases
+        if (axis == X) {
+            if (sn > 0) {
+                outpos->x = pos2.x - half2.x - half.x;
+            } else if (sn < 0) {
+                outpos->x = pos2.x + half2.x + half.x;
+            }
+        }
+
+        // check the y axis
+        else if (axis == X) {
+            if (sn > 0) {
+                outpos->y = pos2.y - half2.y - half.y;
+            } else if (sn < 0) {
+                outpos->y = pos2.y + half2.y + half.y;
+            }
+        }
+
+        // check the z axis
+        else {
+            if (sn > 0) {
+                outpos->z = pos2.z - half2.z - half.z;
+            } else if (sn < 0) {
+                outpos->z = pos2.z + half2.z + half.z;
+            }
+        }
     }
 }
 
