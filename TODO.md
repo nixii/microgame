@@ -1,6 +1,13 @@
 
 ## To-Do list
 
+TODO #5 - preperation for test platformer:
+ * `[ ]` Mouse delta detection
+ * `[ ]` Mouse click detection
+ * `[ ]` Collider gets scaled
+ * `[ ]` Closest hit collider only is counted
+ * `[ ]` Design the scripting language
+
 TODO #4 - various improvements:
  * `[x]` UI anchor
  * `[x]` UI text auto-wrapping
@@ -10,12 +17,10 @@ TODO #4 - various improvements:
  * * `[x]` Alpha mix function
  * * `[x]` Alpha mix whenever changing any 
  * `[x]` Text can be colored (the entire thing)
- * `[ ]` 3d box collider (doesn't rotate)
+ * `[x]` 3d box collider (doesn't rotate)
  * * `[x]` Detect 3d collision
  * * `[x]` Run on-collide functions
- * * `[ ]` Debug visualization
- * * `[ ]` Get certain faces of the collider's position (for alignment)
- * `[ ]` Text can be colored (individual parts)
+ * * `[x]` Get certain faces of the collider's position (for alignment)
 
 TODO #3 - UI (in order of priority):
  * `[x]` UI vectors
