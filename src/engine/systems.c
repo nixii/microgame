@@ -166,7 +166,7 @@ static void velocity_system_resolve_axis(scene *s, entity e, vec3 *outpos, enum 
         }
 
         // check the y axis
-        else if (axis == X) {
+        else if (axis == Y) {
             if (sn > 0) {
                 outpos->y = pos2.y - half2.y - half.y;
             } else if (sn < 0) {
@@ -192,31 +192,46 @@ void velocity_system_update(scene *s, entity e, float dt) {
     if (!has_velocity(s, e)) return;
     velocity *v = get_velocity(s, e);
     transform global = get_global_transform(s, e);
+    printf("rot 0: %f %f %f\n", global.rot.x, global.rot.y, global.rot.z);
 
     // vars
     collider_side dir;
     entity firstHit;
 
     // move on the axes
-    if (velocity_system_move_axis(dt, v->velocity.x, &global.pos.x))
+    int collided = 0;
+    if (velocity_system_move_axis(dt, v->velocity.x, &global.pos.x)) {
         velocity_system_resolve_axis(s, e, &global.pos, X, sign(v->velocity.x));
-    if (velocity_system_move_axis(dt, v->velocity.y, &global.pos.y))
-        velocity_system_resolve_axis(s, e, &global.pos, Y, sign(v->velocity.y));
-    if (velocity_system_move_axis(dt, v->velocity.z, &global.pos.z))
-        velocity_system_resolve_axis(s, e, &global.pos, Z, sign(v->velocity.z));
-
-    // global transform after all movement
-    // TODO: cache inverse matrices
-    mat4 newGlobal = mat4_model(global.pos, global.rot, global.scale);
-
-    // if parent
-    entity parent = get_parent(s, e);
-    if (parent != NIL_ENTITY) {
-        mat4 inv = mat4_fast_inverse(get_world_transform_mat4(s, parent));
-        newGlobal = mat4_mul(inv, newGlobal);
+        collided = 1;
     }
-    
-    // move
-    transform local = transform_from_mat(newGlobal);
-    s->transforms[e] = local;
+    if (velocity_system_move_axis(dt, v->velocity.y, &global.pos.y)) {
+        velocity_system_resolve_axis(s, e, &global.pos, Y, sign(v->velocity.y));
+        collided = 1;
+    }
+    if (velocity_system_move_axis(dt, v->velocity.z, &global.pos.z)) {
+        velocity_system_resolve_axis(s, e, &global.pos, Z, sign(v->velocity.z));
+        collided = 1;
+    }
+
+    printf("rot 1: %f %f %f\n", global.rot.x, global.rot.y, global.rot.z);
+
+    // if any collision
+    if (collided) {
+
+        // global transform after all movement
+        // TODO: cache inverse matrices
+        mat4 newGlobal = mat4_model(global.pos, global.rot, global.scale);
+
+        // if parent
+        entity parent = get_parent(s, e);
+        if (parent != NIL_ENTITY) {
+            mat4 inv = mat4_fast_inverse(get_world_transform_mat4(s, parent));
+            newGlobal = mat4_mul(inv, newGlobal);
+        }
+        
+        // move
+        transform local = transform_from_mat(newGlobal);
+        mat4_display(newGlobal);
+        s->transforms[e] = local;
+    }
 }

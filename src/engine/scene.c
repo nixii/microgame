@@ -5,6 +5,7 @@
 #include "microgame/util/color.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 // create a new scene
 scene *scene_new() {
@@ -155,24 +156,50 @@ mat4 get_world_transform_mat4(scene *s, entity e) {
 transform get_global_transform(scene *s, entity e) {
     mat4 m = get_world_transform_mat4(s, e);
 
+    // position
     vec3 pos = vec3_new(
         m.m[0][3],
         m.m[1][3],
         m.m[2][3]
     );
 
+    // [0, 0] to [2, 2]
+    vec3 r0 = vec3_new(m.m[0][0], m.m[0][1], m.m[0][2]);
+    vec3 r1 = vec3_new(m.m[1][0], m.m[1][1], m.m[1][2]);
+    vec3 r2 = vec3_new(m.m[2][0], m.m[2][1], m.m[2][2]);
+
+    // scale
     vec3 scale = vec3_new(
-        vec3_len(vec3_new(m.m[0][0], m.m[1][0], m.m[2][0])),
-        vec3_len(vec3_new(m.m[0][1], m.m[1][1], m.m[2][1])),
-        vec3_len(vec3_new(m.m[0][2], m.m[1][2], m.m[2][2]))
+        vec3_len(r0),
+        vec3_len(r1),
+        vec3_len(r2)
     );
 
-    // TODO: detect rotation
-    return transform_new(
-        pos,
-        vec3_zero(),
-        scale
-    );
+    // normalize rot vectors
+    if (scale.x != 0) r0 = vec3_div(r0, scale.x);
+    if (scale.y != 0) r1 = vec3_div(r1, scale.y);
+    if (scale.z != 0) r2 = vec3_div(r2, scale.z);
+
+    // rot matrix elements
+    float r00 = r0.x, r01 = r0.y, r02 = r0.z;
+    float r10 = r1.x, r11 = r1.y, r12 = r1.z;
+    float r20 = r2.x, r21 = r2.y, r22 = r2.z;
+
+    // rotation
+    float pitch = asinf(-r21);
+    float yaw, roll;
+    if (fabsf(r21) < 0.9999f) {
+        yaw  = atan2f(r20, r22);
+        roll = atan2f(r01, r11);
+    } else {
+        // gimbal lock
+        yaw  = atan2f(-r02, r00);
+        roll = 0.0f;
+    }
+
+    vec3 rot = vec3_new(pitch, yaw, roll);
+
+    return transform_new(pos, rot, scale);
 }
 
 // render a scene!
