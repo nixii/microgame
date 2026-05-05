@@ -80,9 +80,9 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
         vec3 B = vec3_add(b, c2->size); // b maximum
 
         // check the bounds
-        if ((a.x <= B.x && A.x >= b.x) &&
-            (a.y <= B.y && A.y >= b.y) &&
-            (a.z <= B.z && A.z >= b.z)) {
+        if ((a.x < B.x && A.x > b.x) &&
+            (a.y < B.y && A.y > b.y) &&
+            (a.z < B.z && A.z > b.z)) {
 
             // run functions for collision
             // float dist = collider_get_offset(c2, side);
@@ -136,6 +136,8 @@ static int velocity_system_move_axis(
 
 // handle collisions
 static void velocity_system_resolve_axis(scene *s, entity e, vec3 *outpos, enum _axis axis, int sn) {
+
+    if (sn == 0) return;
 
     // get the first entity you woulda hit
     collider_side side = velocity_system_dir(axis, sn);
