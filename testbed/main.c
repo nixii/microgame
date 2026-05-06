@@ -10,6 +10,7 @@
 
 #define MOVE_SPEED 2.0
 #define CAM_SPEED 0.25
+#define GRAVITY 1
 
 // the game
 microgame *game;
@@ -21,6 +22,8 @@ scene *mainScene;
 entity cameraEntity;
 transform *cameraTransform;
 velocity *cameraVelocity;
+collider *camCollider;
+float negYVel = 0;
 
 // basic mesh stuff
 mesh_resource testMesh;
@@ -30,7 +33,7 @@ mesh meshComponent;
 void loadPlayer() {
     cameraEntity = scene_spawn(mainScene);
     cameraTransform = get_transform(mainScene, cameraEntity);
-    attach_collider(mainScene, cameraEntity, collider_new(vec3_new(1, 1, 1)));
+    camCollider = attach_collider(mainScene, cameraEntity, collider_new(vec3_new(3, 3, 3)));
     cameraVelocity = attach_velocity(mainScene, cameraEntity, velocity_new(vec3_zero()));
 }
 
@@ -81,6 +84,16 @@ void handleMovement(float dt) {
     cameraTransform->rot.x = cameraTransform->rot.x > PI / 3 ? PI / 3 : cameraTransform->rot.x;
     cameraTransform->rot.x = cameraTransform->rot.x < -PI / 3 ? -PI / 3 : cameraTransform->rot.x;
     cameraVelocity->velocity = vec3_rotY(movement, cameraTransform->rot.y);
+
+    // -y vel
+    negYVel -= GRAVITY * dt;
+    cameraVelocity->velocity.y = negYVel;
+
+    // did it collide
+    if (camCollider->collided) {
+        cameraVelocity->velocity.y = 0;
+        negYVel = 0;
+    }
 }
 
 // floor
@@ -90,7 +103,7 @@ void spawnFloor() {
 
     floorCube = mesh_resource_from_obj("assets/cube.obj");
     attach_mesh(mainScene, e, mesh_from_resource(rgb(100, 0, 100), floorCube));
-    attach_collider(mainScene, e, collider_new(vec3_new(1, 1, 1)));
+    attach_collider(mainScene, e, collider_new(vec3_new(5, 1, 5)));
 
     get_transform(mainScene, e)->scale = vec3_new(5, 1, 5);
     get_transform(mainScene, e)->pos.y = -2;

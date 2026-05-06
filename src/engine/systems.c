@@ -88,6 +88,8 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
             // float dist = collider_get_offset(c2, side);
             // just return the first hit entity now for testing
             // TODO: find first hit entity (furthest away of given side)
+            c->collided = 1;
+            c2->collided = 1;
             return e2;
         }
     }

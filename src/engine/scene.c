@@ -215,6 +215,9 @@ void scene_render(
     for (entity e = 0; e < MAX_ENTITIES; e++) {
         if (!s->alive[e]) continue;
         get_world_transform_mat4(s, e);
+
+        if (has_collider(s, e))
+            get_collider(s, e)->collided = 0;
     }
 
     // update the systems

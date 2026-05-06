@@ -11,7 +11,8 @@ collider collider_new(vec3 size) {
     return (collider){
         .size = size,
         .centered = 1,
-        .onCollision = NULL
+        .onCollision = NULL,
+        .collided = 0
     };
 }
 

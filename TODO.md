@@ -2,9 +2,10 @@
 ## To-Do list
 
 TODO #5 - preperation for test platformer:
- * `[ ]` Mouse delta detection
- * `[ ]` Mouse click detection
+ * `[x]` Mouse delta detection
  * `[ ]` Collider gets scaled
+ * `[ ]` Fix rendering flickers
+ * `[ ]` Mouse click detection
  * `[ ]` Closest hit collider only is counted
  * `[ ]` Design the scripting language
 
