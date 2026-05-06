@@ -103,9 +103,9 @@ void spawnFloor() {
 
     floorCube = mesh_resource_from_obj("assets/cube.obj");
     attach_mesh(mainScene, e, mesh_from_resource(rgb(100, 0, 100), floorCube));
-    attach_collider(mainScene, e, collider_new(vec3_new(5, 1, 5)));
+    attach_collider(mainScene, e, collider_new(vec3_new(10, 1, 10)));
 
-    get_transform(mainScene, e)->scale = vec3_new(5, 1, 5);
+    get_transform(mainScene, e)->scale = vec3_new(10, 1, 10);
     get_transform(mainScene, e)->pos.y = -2;
 }
 
@@ -129,7 +129,7 @@ int main(void) {
     spawnFloor();
 
     // load the static entity
-    // spawnTestEntity(vec3_new(2, 0, 0));
+    spawnTestEntity(vec3_new(2, 0, 0));
 
     // set the scene
     game_set_scene(game, mainScene);
