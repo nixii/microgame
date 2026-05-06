@@ -32,9 +32,9 @@ void collision_system_update(scene *s, entity first, float _) {
         vec3 B = vec3_add(b, secondCol->size); // b maximum
 
         // check the bounds
-        if ((a.x <= B.x && A.x >= b.x) &&
-            (a.y <= B.y && A.y >= b.y) &&
-            (a.z <= B.z && A.z >= b.z)) {
+        if ((a.x < B.x && A.x > b.x) &&
+            (a.y < B.y && A.y > b.y) &&
+            (a.z < B.z && A.z > b.z)) {
 
             // run functions for collision
             if (firstCol->onCollision != NULL)
@@ -46,7 +46,7 @@ void collision_system_update(scene *s, entity first, float _) {
 }
 
 // get the sign of a number
-static inline int sign(int a) {
+static inline int sign(float a) {
     return a < 0 ? -1 : (a == 0 ? 0 : 1);
 }
 
@@ -54,7 +54,8 @@ static inline int sign(int a) {
 static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, collider_side side) {
 
     // skip without collider
-    if (!has_collider(s, e)) NIL_ENTITY;
+    printf("check.\n");
+    if (!has_collider(s, e)) return NIL_ENTITY;
 
     // get the collider
     collider *c = get_collider(s, e);
@@ -90,7 +91,10 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
             // TODO: find first hit entity (furthest away of given side)
             c->collided = 1;
             c2->collided = 1;
+            printf("collided.\n");
             return e2;
+        } else {
+            printf("a.y=%.4f A.y=%.4f b.y=%.4f B.y=%.4f\n", a.y, A.y, b.y, B.y);
         }
     }
 
@@ -139,7 +143,10 @@ static int velocity_system_move_axis(
 // handle collisions
 static void velocity_system_resolve_axis(scene *s, entity e, vec3 *outpos, enum _axis axis, int sn) {
 
+    printf("resolve\n");
+    printf("s: %d\n", sn);
     if (sn == 0) return;
+    printf("SUCCESS--------------\n");
 
     // get the first entity you woulda hit
     collider_side side = velocity_system_dir(axis, sn);
@@ -201,25 +208,16 @@ void velocity_system_update(scene *s, entity e, float dt) {
     collider_side dir;
     entity firstHit;
 
-    // move on the axes
-    int collided = 0;
-    if (velocity_system_move_axis(dt, v->velocity.x, &global.pos.x)) {
-        velocity_system_resolve_axis(s, e, &global.pos, X, sign(v->velocity.x));
-        collided = 1;
-    }
-    if (velocity_system_move_axis(dt, v->velocity.y, &global.pos.y)) {
-        velocity_system_resolve_axis(s, e, &global.pos, Y, sign(v->velocity.y));
-        collided = 1;
-    }
-    if (velocity_system_move_axis(dt, v->velocity.z, &global.pos.z)) {
-        velocity_system_resolve_axis(s, e, &global.pos, Z, sign(v->velocity.z));
-        collided = 1;
-    }
-
-    printf("rot 1: %f %f %f\n", global.rot.x, global.rot.y, global.rot.z);
+    // move  on axes
+    int mX = velocity_system_move_axis(dt, v->velocity.x, &global.pos.x);
+    int mY = velocity_system_move_axis(dt, v->velocity.y, &global.pos.y);
+    int mZ = velocity_system_move_axis(dt, v->velocity.z, &global.pos.z);
+    if (mX) velocity_system_resolve_axis(s, e, &global.pos, X, sign(v->velocity.x));
+    if (mY) velocity_system_resolve_axis(s, e, &global.pos, Y, sign(v->velocity.y));
+    if (mZ) velocity_system_resolve_axis(s, e, &global.pos, Z, sign(v->velocity.z));
 
     // if any collision
-    if (collided) {
+    if (mX || mY || mZ) {
 
         // global transform after all movement
         // TODO: cache inverse matrices
@@ -234,7 +232,6 @@ void velocity_system_update(scene *s, entity e, float dt) {
         
         // move
         transform local = transform_from_mat(newGlobal);
-        mat4_display(newGlobal);
         s->transforms[e] = local;
     }
 }

@@ -3,8 +3,8 @@
 #include <stdio.h>
 
 // width height
-#define WIDTH 1600
-#define HEIGHT 1000
+#define WIDTH 1000
+#define HEIGHT 800
 #define FPS 60
 #define TITLE "Movement Test"
 
@@ -129,7 +129,7 @@ int main(void) {
     spawnFloor();
 
     // load the static entity
-    spawnTestEntity(vec3_new(2, 0, 0));
+    // spawnTestEntity(vec3_new(2, 0, 0));
 
     // set the scene
     game_set_scene(game, mainScene);
