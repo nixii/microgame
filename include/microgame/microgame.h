@@ -5,6 +5,7 @@
 #include "microgame/engine/scene.h"
 #include "microgame/input.h"
 #define MAX_INPUTS 8
+#define PI 3.1415926535
 
 // Don't give more info on the type
 typedef struct microgame microgame;
@@ -24,6 +25,7 @@ int key_just_down(key k);
 int key_just_up(key k);
 
 void disable_mouse();
+void enable_mouse();
 vec2 get_mouse_delta();
 
 #endif // MICROGAME_H

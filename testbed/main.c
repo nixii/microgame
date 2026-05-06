@@ -71,13 +71,15 @@ void handleMovement(float dt) {
     // look around
     vec2 mD = get_mouse_delta();
 
+    // move based on delta
     float rotYaw = mD.x * CAM_SPEED * dt;
     float rotPitch = mD.y * CAM_SPEED * dt;
-    printf("%f\n", rotYaw); // TODO: fix rotation
-                            // TODO: make collision not snap to wrong side
     
+    // rotation!
     cameraTransform->rot.y += rotYaw;
     cameraTransform->rot.x += rotPitch;
+    cameraTransform->rot.x = cameraTransform->rot.x > PI / 3 ? PI / 3 : cameraTransform->rot.x;
+    cameraTransform->rot.x = cameraTransform->rot.x < -PI / 3 ? -PI / 3 : cameraTransform->rot.x;
     cameraVelocity->velocity = vec3_rotY(movement, cameraTransform->rot.y);
 }
 

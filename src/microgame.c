@@ -126,3 +126,6 @@ vec2 get_mouse_delta() {
 void disable_mouse() {
     DisableCursor();
 }
+void enable_mouse() {
+    EnableCursor();
+}
