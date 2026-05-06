@@ -54,7 +54,6 @@ static inline int sign(float a) {
 static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, collider_side side) {
 
     // skip without collider
-    printf("check.\n");
     if (!has_collider(s, e)) return NIL_ENTITY;
 
     // get the collider
@@ -91,10 +90,8 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
             // TODO: find first hit entity (furthest away of given side)
             c->collided = 1;
             c2->collided = 1;
-            printf("collided.\n");
             return e2;
         } else {
-            printf("a.y=%.4f A.y=%.4f b.y=%.4f B.y=%.4f\n", a.y, A.y, b.y, B.y);
         }
     }
 
@@ -143,10 +140,7 @@ static int velocity_system_move_axis(
 // handle collisions
 static void velocity_system_resolve_axis(scene *s, entity e, vec3 *outpos, enum _axis axis, int sn) {
 
-    printf("resolve\n");
-    printf("s: %d\n", sn);
     if (sn == 0) return;
-    printf("SUCCESS--------------\n");
 
     // get the first entity you woulda hit
     collider_side side = velocity_system_dir(axis, sn);
