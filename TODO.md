@@ -1,6 +1,13 @@
 
 ## To-Do list
 
+TODO #6 - test platformer:
+ * `[ ]` 3 simple levels
+ * `[ ]` An NPC to talk to
+ * `[ ]` Snappy movement (no acceleration besides gravity)
+ * `[ ]` A forwards dash (?)
+ * `[ ]` At least some color design for the world tiles
+
 TODO #5 - preperation for test platformer:
  * `[x]` Mouse delta detection
  * `[ ]` Collider gets scaled
