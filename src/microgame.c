@@ -117,3 +117,12 @@ int key_just_down(key k) {
 int key_just_up(key k) {
     return IsKeyReleased(key_to_rl(k));
 }
+
+// mouse movement
+vec2 get_mouse_delta() {
+    Vector2 v = GetMouseDelta();
+    return vec2_new(v.x, v.y);
+}
+void disable_mouse() {
+    DisableCursor();
+}

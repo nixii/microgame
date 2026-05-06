@@ -15,10 +15,15 @@ void game_set_scene(microgame *g, scene *s);
 int game_still_running(microgame *g);
 void game_update(microgame *g);
 void game_destroy(microgame *g);
+float get_dt();
+int get_fps();
+
+// input functions
 int key_down(key k);
 int key_just_down(key k);
 int key_just_up(key k);
-float get_dt();
-int get_fps();
+
+void disable_mouse();
+vec2 get_mouse_delta();
 
 #endif // MICROGAME_H

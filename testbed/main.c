@@ -8,8 +8,8 @@
 #define FPS 60
 #define TITLE "Movement Test"
 
-#define MOVE_SPEED 5.0
-#define CAM_SPEED 1.7
+#define MOVE_SPEED 2.0
+#define CAM_SPEED 0.25
 
 // the game
 microgame *game;
@@ -53,6 +53,7 @@ void spawnTestEntity(vec3 pos) {
 void handleMovement(float dt) {
     mainScene->camera.transform = *cameraTransform;
 
+    // movement
     vec3 movement = vec3_zero();
     if (key_down(M_KEY_A))
         movement.x -= MOVE_SPEED;
@@ -67,8 +68,11 @@ void handleMovement(float dt) {
     if (key_down(M_KEY_LCTRL))
         movement.y -= MOVE_SPEED;
 
-    float rotYaw = (float)(key_down(M_KEY_RIGHT) - key_down(M_KEY_LEFT)) * CAM_SPEED * dt;
-    float rotPitch = (float)(key_down(M_KEY_DOWN) - key_down(M_KEY_UP)) * CAM_SPEED * dt;
+    // look around
+    vec2 mD = get_mouse_delta();
+
+    float rotYaw = mD.x * CAM_SPEED * dt;
+    float rotPitch = mD.y * CAM_SPEED * dt;
     printf("%f\n", rotYaw); // TODO: fix rotation
                             // TODO: make collision not snap to wrong side
     
@@ -82,6 +86,7 @@ int main(void) {
 
     // create the game
     game = game_new(WIDTH, HEIGHT, FPS, TITLE);
+    disable_mouse();
 
     // create the scene
     mainScene = scene_new();
