@@ -83,6 +83,19 @@ void handleMovement(float dt) {
     cameraVelocity->velocity = vec3_rotY(movement, cameraTransform->rot.y);
 }
 
+// floor
+mesh_resource floorCube;
+void spawnFloor() {
+    entity e = scene_spawn(mainScene);
+
+    floorCube = mesh_resource_from_obj("assets/cube.obj");
+    attach_mesh(mainScene, e, mesh_from_resource(rgb(100, 0, 100), floorCube));
+    attach_collider(mainScene, e, collider_new(vec3_new(1, 1, 1)));
+
+    get_transform(mainScene, e)->scale = vec3_new(5, 1, 5);
+    get_transform(mainScene, e)->pos.y = -2;
+}
+
 // run the game
 int main(void) {
 
@@ -98,6 +111,9 @@ int main(void) {
 
     // laod the player
     loadPlayer();
+
+    // floor
+    spawnFloor();
 
     // load the static entity
     spawnTestEntity(vec3_new(2, 0, 0));

@@ -58,7 +58,7 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
 
     // get the collider
     collider *c = get_collider(s, e);
-    vec3 a = vec3_sub(pos, vec3_mul(c->size, 2)); // a minimum
+    vec3 a = vec3_sub(pos, vec3_mul(c->size, 0.5)); // a minimum
     vec3 A = vec3_add(a, c->size); // a maximum
 
     // closest distance and entity
@@ -76,7 +76,7 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
         vec3 pos2 = get_global_transform(s, e2).pos;
 
         // check collision
-        vec3 b = vec3_sub(pos2, vec3_mul(c2->size, 2)); // b minimum
+        vec3 b = vec3_sub(pos2, vec3_mul(c2->size, 0.5)); // b minimum
         vec3 B = vec3_add(b, c2->size); // b maximum
 
         // check the bounds
@@ -194,7 +194,6 @@ void velocity_system_update(scene *s, entity e, float dt) {
     if (!has_velocity(s, e)) return;
     velocity *v = get_velocity(s, e);
     transform global = get_global_transform(s, e);
-    printf("rot 0: %f %f %f\n", global.rot.x, global.rot.y, global.rot.z);
 
     // vars
     collider_side dir;
