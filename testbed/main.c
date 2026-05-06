@@ -10,7 +10,7 @@
 
 #define MOVE_SPEED 2.0
 #define CAM_SPEED 0.25
-#define GRAVITY 1
+#define GRAVITY 8
 
 // the game
 microgame *game;
@@ -66,10 +66,8 @@ void handleMovement(float dt) {
         movement.z += MOVE_SPEED;
     if (key_down(M_KEY_S))
         movement.z -= MOVE_SPEED;
-    if (key_down(M_KEY_SPACE))
-        movement.y += MOVE_SPEED;
-    if (key_down(M_KEY_LCTRL))
-        movement.y -= MOVE_SPEED;
+    if (key_just_down(M_KEY_SPACE))
+        negYVel = 4;
 
     // look around
     vec2 mD = get_mouse_delta();
@@ -83,17 +81,20 @@ void handleMovement(float dt) {
     cameraTransform->rot.x += rotPitch;
     cameraTransform->rot.x = cameraTransform->rot.x > PI / 3 ? PI / 3 : cameraTransform->rot.x;
     cameraTransform->rot.x = cameraTransform->rot.x < -PI / 3 ? -PI / 3 : cameraTransform->rot.x;
-    cameraVelocity->velocity = vec3_rotY(movement, cameraTransform->rot.y);
+    vec3 mov = vec3_rotY(movement, cameraTransform->rot.y);
+    cameraVelocity->velocity.x = mov.x;
+    cameraVelocity->velocity.z = mov.z;
 
     // -y vel
     negYVel -= GRAVITY * dt;
-    cameraVelocity->velocity.y = negYVel;
 
     // did it collide
     if (camCollider->collided) {
-        cameraVelocity->velocity.y = 0;
-        negYVel = 0;
+        negYVel = maxf(0, negYVel);
     }
+    
+    // set the y part
+    cameraVelocity->velocity.y = negYVel;
 }
 
 // floor

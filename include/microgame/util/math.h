@@ -59,4 +59,15 @@ mat4 mat4_model(vec3 t, vec3 r, vec3 s);
 mat4 mat4_fast_inverse(mat4 m);
 void mat4_display(mat4 m);
 
+// general math
+inline float minf(float a, float b) {
+    return a <= b ? a : b;
+}
+inline float maxf(float a, float b) {
+    return a >= b ? a : b;
+}
+inline float clampf(float a, float min, float max) {
+    return minf(max, maxf(min, a));
+}
+
 #endif // MG_UTIL_H
