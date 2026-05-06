@@ -204,10 +204,10 @@ void velocity_system_update(scene *s, entity e, float dt) {
 
     // move  on axes
     int mX = velocity_system_move_axis(dt, v->velocity.x, &global.pos.x);
-    int mY = velocity_system_move_axis(dt, v->velocity.y, &global.pos.y);
-    int mZ = velocity_system_move_axis(dt, v->velocity.z, &global.pos.z);
     if (mX) velocity_system_resolve_axis(s, e, &global.pos, X, sign(v->velocity.x));
+    int mY = velocity_system_move_axis(dt, v->velocity.y, &global.pos.y);
     if (mY) velocity_system_resolve_axis(s, e, &global.pos, Y, sign(v->velocity.y));
+    int mZ = velocity_system_move_axis(dt, v->velocity.z, &global.pos.z);
     if (mZ) velocity_system_resolve_axis(s, e, &global.pos, Z, sign(v->velocity.z));
 
     // if any collision
