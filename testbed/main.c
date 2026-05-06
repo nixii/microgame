@@ -8,7 +8,7 @@
 #define FPS 60
 #define TITLE "Movement Test"
 
-#define MOVE_SPEED 2.0
+#define MOVE_SPEED 5.0
 #define CAM_SPEED 0.25
 #define GRAVITY 8
 
@@ -104,9 +104,9 @@ void spawnFloor() {
 
     floorCube = mesh_resource_from_obj("assets/cube.obj");
     attach_mesh(mainScene, e, mesh_from_resource(rgb(100, 0, 100), floorCube));
-    attach_collider(mainScene, e, collider_new(vec3_new(10, 1, 10)));
+    attach_collider(mainScene, e, collider_new(vec3_new(30, 1, 30)));
 
-    get_transform(mainScene, e)->scale = vec3_new(10, 1, 10);
+    get_transform(mainScene, e)->scale = vec3_new(30, 1, 30);
     get_transform(mainScene, e)->pos.y = -2;
 }
 
