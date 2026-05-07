@@ -33,7 +33,7 @@ mesh meshComponent;
 void loadPlayer() {
     cameraEntity = scene_spawn(mainScene);
     cameraTransform = get_transform(mainScene, cameraEntity);
-    camCollider = attach_collider(mainScene, cameraEntity, collider_new(vec3_new(3, 3, 3)));
+    camCollider = attach_collider(mainScene, cameraEntity, collider_new(vec3_new(1, 3, 1)));
     cameraVelocity = attach_velocity(mainScene, cameraEntity, velocity_new(vec3_zero()));
 }
 
