@@ -47,6 +47,11 @@ vec3 vec3_mul(vec3 a, float b) {
     return vec3_new(a.x * b, a.y * b, a.z * b);
 }
 
+// multiply by each part
+vec3 vec3_mul_components(vec3 a, vec3 b) {
+    return vec3_new(a.x * b.x, a.y * b.y, a.z * b.z);
+}
+
 // shrink a vec3
 vec3 vec3_div(vec3 a, float b) {
     return vec3_new(a.x / b, a.y / b, a.z / b);

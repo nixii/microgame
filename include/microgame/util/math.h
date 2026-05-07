@@ -18,6 +18,7 @@ vec3 vec3_z();
 vec3 vec3_add(vec3 a, vec3 b);
 vec3 vec3_sub(vec3 a, vec3 b);
 vec3 vec3_mul(vec3 a, float b);
+vec3 vec3_mul_components(vec3 a, vec3 b);
 vec3 vec3_div(vec3 a, float b);
 vec3 vec3_rotX(vec3 v, float a);
 vec3 vec3_rotY(vec3 v, float a);

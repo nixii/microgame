@@ -58,8 +58,9 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
 
     // get the collider
     collider *c = get_collider(s, e);
-    vec3 a = vec3_sub(pos, vec3_mul(c->size, 0.5)); // a minimum
-    vec3 A = vec3_add(a, c->size); // a maximum
+    vec3 scaledArea = vec3_mul_components(c->size, get_global_transform(s, e).scale);
+    vec3 a = vec3_sub(pos, vec3_mul(scaledArea, 0.5)); // a minimum
+    vec3 A = vec3_add(a, scaledArea); // a maximum
 
     // closest distance and entity
     entity closest = NIL_ENTITY;
@@ -76,8 +77,9 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
         vec3 pos2 = get_global_transform(s, e2).pos;
 
         // check collision
-        vec3 b = vec3_sub(pos2, vec3_mul(c2->size, 0.5)); // b minimum
-        vec3 B = vec3_add(b, c2->size); // b maximum
+        vec3 scaledArea2 = c2->size;
+        vec3 b = vec3_sub(pos2, vec3_mul(scaledArea2, 0.5)); // b minimum
+        vec3 B = vec3_add(b, scaledArea2); // b maximum
 
         // check the bounds
         if ((a.x < B.x && A.x > b.x) &&
@@ -138,13 +140,13 @@ static int velocity_system_move_axis(
 }
 
 // handle collisions
-static void velocity_system_resolve_axis(scene *s, entity e, vec3 *outpos, enum _axis axis, int sn) {
+static void velocity_system_resolve_axis(scene *s, entity e, transform *outpos, enum _axis axis, int sn) {
 
     if (sn == 0) return;
 
     // get the first entity you woulda hit
     collider_side side = velocity_system_dir(axis, sn);
-    entity firstCollided = velocity_system_first_collided(s, e, *outpos, side);
+    entity firstCollided = velocity_system_first_collided(s, e, outpos->pos, side);
 
     // snap to that entity if it exists
     if (firstCollided != NIL_ENTITY) {
@@ -154,8 +156,9 @@ static void velocity_system_resolve_axis(scene *s, entity e, vec3 *outpos, enum 
         collider *col2 = get_collider(s, firstCollided);
 
         // get positions
-        vec3 pos = *outpos;
-        vec3 pos2 = get_global_transform(s, firstCollided).pos;
+        vec3 pos = outpos->pos;
+        transform transf2 = get_global_transform(s, firstCollided);
+        vec3 pos2 = transf2.pos;
 
         // get the half axes
         vec3 half = vec3_mul(col->size, 0.5);
@@ -164,27 +167,27 @@ static void velocity_system_resolve_axis(scene *s, entity e, vec3 *outpos, enum 
         // check cases
         if (axis == X) {
             if (sn > 0) {
-                outpos->x = pos2.x - half2.x - half.x;
+                outpos->pos.x = pos2.x - half2.x - half.x;
             } else if (sn < 0) {
-                outpos->x = pos2.x + half2.x + half.x;
+                outpos->pos.x = pos2.x + half2.x + half.x;
             }
         }
 
         // check the y axis
         else if (axis == Y) {
             if (sn > 0) {
-                outpos->y = pos2.y - half2.y - half.y;
+                outpos->pos.y = pos2.y - half2.y - half.y;
             } else if (sn < 0) {
-                outpos->y = pos2.y + half2.y + half.y;
+                outpos->pos.y = pos2.y + half2.y + half.y;
             }
         }
 
         // check the z axis
         else {
             if (sn > 0) {
-                outpos->z = pos2.z - half2.z - half.z;
+                outpos->pos.z = pos2.z - half2.z - half.z;
             } else if (sn < 0) {
-                outpos->z = pos2.z + half2.z + half.z;
+                outpos->pos.z = pos2.z + half2.z + half.z;
             }
         }
     }
@@ -204,11 +207,11 @@ void velocity_system_update(scene *s, entity e, float dt) {
 
     // move  on axes
     int mX = velocity_system_move_axis(dt, v->velocity.x, &global.pos.x);
-    if (mX) velocity_system_resolve_axis(s, e, &global.pos, X, sign(v->velocity.x));
+    if (mX) velocity_system_resolve_axis(s, e, &global, X, sign(v->velocity.x));
     int mY = velocity_system_move_axis(dt, v->velocity.y, &global.pos.y);
-    if (mY) velocity_system_resolve_axis(s, e, &global.pos, Y, sign(v->velocity.y));
+    if (mY) velocity_system_resolve_axis(s, e, &global, Y, sign(v->velocity.y));
     int mZ = velocity_system_move_axis(dt, v->velocity.z, &global.pos.z);
-    if (mZ) velocity_system_resolve_axis(s, e, &global.pos, Z, sign(v->velocity.z));
+    if (mZ) velocity_system_resolve_axis(s, e, &global, Z, sign(v->velocity.z));
 
     // if any collision
     if (mX || mY || mZ) {
