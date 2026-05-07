@@ -52,7 +52,7 @@ static inline int edge(int ax, int ay, int bx, int by, int px, int py) {
 }
 
 // render a triangle
-void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y2, int z2, int x3, int y3, int z3, color c) {
+void renderer_render_triangle(renderer *r, int x1, int y1, float z1, int x2, int y2, float z2, int x3, int y3, float z3, color c) {
     
     // calculate the bounds (super ugly)
     int minX = x1 < x2 ? (x1 < x3 ? x1 : x3) : (x2 < x3 ? x2 : x3);
@@ -66,7 +66,8 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y
 
     // the are of the triangle
     int area = edge(x1, y1, x2, y2, x3, y3);
-    float invArea = 1.0f / area;
+    if (area == 0) return;
+    float invArea = fabsf(1.0f / (float)area);
     int sign = area > 0 ? 1 : -1;
 
     // edge deltas
@@ -97,7 +98,7 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y
 
             if (w1*sign >= 0 && w2*sign >= 0 && w3*sign >= 0) {
 
-                float z = ((float)w1*(-1/z1) + (float)w2*(-1/z2) + (float)w3*(-1/z3) * invArea;
+                float z = (w1*invArea*(z1) + w2*invArea*(z2) + w3*invArea*(z3));
 
                 if (z < r->depthBuffer[idx]) {
                     r->depthBuffer[idx] = z;

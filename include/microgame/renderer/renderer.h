@@ -26,7 +26,7 @@ void renderer_clear(renderer *r);
 void renderer_render_rectangle(renderer *r, int x, int y, int w, int h, color c, color overlay);
 
 // render a simple triangle of color
-void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y2, int z2, int x3, int y3, int z3, color c);
+void renderer_render_triangle(renderer *r, int x1, int y1, float z1, int x2, int y2, float z2, int x3, int y3, float z3, color c);
 
 // destroy the renderer instance
 void renderer_destroy(renderer *r);

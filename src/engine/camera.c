@@ -67,7 +67,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     vec3 cameraNormal = NORMALIZE(
         CROSS(SUB(v2, v1), SUB(v3, v1))
     );
-
+    
     // backface cull it
     if (DOT(cameraNormal, v1) >= 0)
         return result;
