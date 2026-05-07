@@ -16,6 +16,7 @@ It will be usable as a visual editor *and* as a static C library.
 > ❗️ untested<br>
 > ❌ unsupported
 
-| Version | MacOS (arm64) | MacOS (x86) | Linux (arm64) | Linux (x86) | Windows |
-|---------|:---------------:|:-------------:|:---------------:|:-------------:|:---------:|
-| dev branch | ✅ | ❗️ | ❗️ | ❗️ | ❗️ |
+|  Version  |  Distribution  |  MacOS (arm64)  |  MacOS (x86)  |  Linux (arm64)  |  Linux (x86)  |  Windows  |
+|:---------:|:--------------:|:---------------:|:-------------:|:---------------:|:-------------:|:---------:|
+| dev branch | library | ✅ | ❗️ | ❗️ | ❗️ | ❗️ |
+|  | editor | n/a | n/a | n/a | n/a | n/a |
