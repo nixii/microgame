@@ -91,7 +91,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     // all outside
     if (inCount == 0) return result;
 
-    // 3 outside
+    // 0 outside
     if (outCount == 0) {
         triangle tri = {
             .a = inside[0], 
@@ -110,6 +110,8 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
         vec3 i = inside[0];
         vec3 o1 = outside[0];
         vec3 o2 = outside[1];
+        printf("out: " VEC3_FMT "\n", VEC3_ARGS(o1));
+        printf("out: " VEC3_FMT "\n\n", VEC3_ARGS(o2));
 
         triangle tri;
         tri.a = i;
