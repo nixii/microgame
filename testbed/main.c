@@ -106,7 +106,7 @@ void spawnFloor() {
     attach_mesh(mainScene, e, mesh_from_resource(rgb(100, 0, 100), floorCube));
     attach_collider(mainScene, e, collider_new(vec3_new(30, 1, 30)));
 
-    get_transform(mainScene, e)->scale = vec3_new(1, 1, 1);
+    get_transform(mainScene, e)->scale = vec3_new(5, 5, 5);
     get_transform(mainScene, e)->pos.y = -2;
 }
 

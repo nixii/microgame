@@ -10,11 +10,13 @@ TODO #6 - test platformer:
 
 TODO #5 - preperation for test platformer:
  * `[x]` Mouse delta detection
- * `[ ]` Collider gets scaled
+ * `[x]` Collider gets scaled
  * `[ ]` Mouse click detection
  * `[ ]` Fix rendering flickers
- * * `[ ]` depth-buffer fix
- * * `[ ]` fix triangles being deleted if all 3 points outside screen
+ * * `[x]` depth-buffer fix
+ * * `[x]` fix triangles being deleted if all 3 points outside screen
+ * * `[ ]` fix floor doing weird disappear things (I think it is the scale factor)
+ * * `[ ]` meshes bob up and down??
  * `[ ]` Closest hit collider only is counted
  * `[ ]` Design the scripting language
 
