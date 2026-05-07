@@ -52,7 +52,7 @@ static inline int edge(int ax, int ay, int bx, int by, int px, int py) {
 }
 
 // render a triangle
-void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y2, int z2, int x3, int y3, int z3, color c) {
+void renderer_render_triangle(renderer *r, int x1, int y1, float z1, int x2, int y2, float z2, int x3, int y3, float z3, color c) {
     
     // calculate the bounds (super ugly)
     int minX = x1 < x2 ? (x1 < x3 ? x1 : x3) : (x2 < x3 ? x2 : x3);
@@ -87,9 +87,9 @@ void renderer_render_triangle(renderer *r, int x1, int y1, int z1, int x2, int y
     // for every point
     for (int y = minY; y <= maxY; y++) {
 
-        int w1 = w1_row;
-        int w2 = w2_row;
-        int w3 = w3_row;
+        float w1 = w1_row;
+        float w2 = w2_row;
+        float w3 = w3_row;
 
         int idx = y * r->width + minX;
 
