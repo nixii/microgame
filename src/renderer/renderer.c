@@ -88,9 +88,9 @@ void renderer_render_triangle(renderer *r, int x1, int y1, float z1, int x2, int
     // for every point
     for (int y = minY; y <= maxY; y++) {
 
-        int w1 = w1_row;
-        int w2 = w2_row;
-        int w3 = w3_row;
+        float w1 = w1_row;
+        float w2 = w2_row;
+        float w3 = w3_row;
 
         int idx = y * r->width + minX;
 

@@ -297,7 +297,7 @@ void scene_render(
 
         // render the triangle
         float lighting = (vec3_dot(t.normal, vec3_new(0, 1, 0)) + 1) / 5.0;
-        renderer_render_triangle(r, v1.x, v1.y, v1.z, v2.x, v2.y, v2.z, v3.x, v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
+        renderer_render_triangle(r, (int)v1.x, (int)v1.y, v1.z, (int)v2.x, (int)v2.y, v2.z, (int)v3.x, (int)v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
 
     // render the ui
