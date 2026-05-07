@@ -170,15 +170,15 @@ transform get_global_transform(scene *s, entity e) {
 
     // scale
     vec3 scale = vec3_new(
-        vec3_len(r0),
-        vec3_len(r1),
-        vec3_len(r2)
+        LENGTH(r0),
+        LENGTH(r1),
+        LENGTH(r2)
     );
 
     // normalize rot vectors
-    if (scale.x != 0) r0 = vec3_div(r0, scale.x);
-    if (scale.y != 0) r1 = vec3_div(r1, scale.y);
-    if (scale.z != 0) r2 = vec3_div(r2, scale.z);
+    if (scale.x != 0) r0 = DIV(r0, scale.x);
+    if (scale.y != 0) r1 = DIV(r1, scale.y);
+    if (scale.z != 0) r2 = DIV(r2, scale.z);
 
     // rot matrix elements
     float r00 = r0.x, r01 = r0.y, r02 = r0.z;

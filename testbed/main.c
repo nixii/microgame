@@ -81,7 +81,7 @@ void handleMovement(float dt) {
     cameraTransform->rot.x += rotPitch;
     cameraTransform->rot.x = cameraTransform->rot.x > PI / 3 ? PI / 3 : cameraTransform->rot.x;
     cameraTransform->rot.x = cameraTransform->rot.x < -PI / 3 ? -PI / 3 : cameraTransform->rot.x;
-    vec3 mov = vec3_rotY(movement, cameraTransform->rot.y);
+    vec3 mov = vec3_rot_y(movement, cameraTransform->rot.y);
     cameraVelocity->velocity.x = mov.x;
     cameraVelocity->velocity.z = mov.z;
 

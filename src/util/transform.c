@@ -27,12 +27,12 @@ transform transform_from_mat(mat4 m) {
     vec3 c0 = vec3_new(m.m[0][0], m.m[1][0], m.m[2][0]);
     vec3 c1 = vec3_new(m.m[0][1], m.m[1][1], m.m[2][1]);
     vec3 c2 = vec3_new(m.m[0][2], m.m[1][2], m.m[2][2]);
-    t.scale = vec3_new(vec3_len(c0), vec3_len(c1), vec3_len(c2));
+    t.scale = vec3_new(LENGTH(c0), LENGTH(c1), LENGTH(c2));
 
     // rotation scaling
-    c0 = vec3_div(c0, t.scale.x);
-    c1 = vec3_div(c1, t.scale.y);
-    c2 = vec3_div(c2, t.scale.z);
+    c0 = DIV(c0, t.scale.x);
+    c1 = DIV(c1, t.scale.y);
+    c2 = DIV(c2, t.scale.z);
     float r00 = c0.x, r01 = c1.x, r02 = c2.x;
     float r10 = c0.y, r11 = c1.y, r12 = c2.y;
     float r20 = c0.z, r21 = c1.z, r22 = c2.z;

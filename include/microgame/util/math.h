@@ -2,46 +2,34 @@
 #ifndef MG_UTIL_H
 #define MG_UTIL_H
 
-// vec3 type
-typedef struct vec3 {
-    float x;
-    float y;
-    float z;
-} vec3;
+#include "microgame/util/vec3.h"
+#include "microgame/util/vec2.h"
 
-// vec3 functions
-vec3 vec3_new(float x, float y, float z);
-vec3 vec3_zero();
-vec3 vec3_x();
-vec3 vec3_y();
-vec3 vec3_z();
-vec3 vec3_add(vec3 a, vec3 b);
-vec3 vec3_sub(vec3 a, vec3 b);
-vec3 vec3_mul(vec3 a, float b);
-vec3 vec3_mul_components(vec3 a, vec3 b);
-vec3 vec3_div(vec3 a, float b);
-vec3 vec3_rotX(vec3 v, float a);
-vec3 vec3_rotY(vec3 v, float a);
-vec3 vec3_rotZ(vec3 v, float a);
-vec3 vec3_rot(vec3 v, vec3 a);
-vec3 vec3_cross(vec3 a, vec3 b);
-float vec3_dot(vec3 a, vec3 b);
-float vec3_len(vec3 a);
-vec3 vec3_normal(vec3 a);
-
-// vec2 type
-typedef struct vec2 {
-    float x;
-    float y;
-} vec2;
-
-// vec2 functions
-vec2 vec2_new(float x, float y);
-vec2 vec2_zero();
-vec2 vec2_add(vec2 a, vec2 b);
-vec2 vec2_sub(vec2 a, vec2 b);
-vec2 vec2_mul(vec2 a, float b);
-vec2 vec2_div(vec2 a, float b);
+/*
+ * special macros to make life easier
+*/
+#define ADD(a, b) _Generic((a), \
+    vec2: vec2_add, \
+    vec3: vec3_add)(a, b)
+#define SUB(a, b) _Generic((a), \
+    vec2: vec2_sub, \
+    vec3: vec3_sub)(a, b)
+#define MUL(a, b) _Generic((a), \
+    vec2: vec2_mul, \
+    vec3: vec3_mul)(a, b)
+#define DIV(a, b) _Generic((a), \
+    vec2: vec2_div, \
+    vec3: vec3_div)(a, b)
+#define DOT(a, b) _Generic((a), \
+    vec2: vec2_dot, \
+    vec3: vec3_dot)(a, b)
+#define LENGTH(a) _Generic((a), \
+    vec2: vec2_length, \
+    vec3: vec3_length)(a)
+#define NORMALIZE(a) _Generic((a), \
+    vec2: vec2_normalize, \
+    vec3: vec3_normalize)(a)
+#define CROSS(a, b) vec3_cross((a), (b))
 
 // mat4 type
 typedef struct mat4 {
@@ -61,13 +49,13 @@ mat4 mat4_fast_inverse(mat4 m);
 void mat4_display(mat4 m);
 
 // general math
-inline float minf(float a, float b) {
+static inline float minf(float a, float b) {
     return a <= b ? a : b;
 }
-inline float maxf(float a, float b) {
+static inline float maxf(float a, float b) {
     return a >= b ? a : b;
 }
-inline float clampf(float a, float min, float max) {
+static inline float clampf(float a, float min, float max) {
     return minf(max, maxf(min, a));
 }
 

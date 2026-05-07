@@ -54,8 +54,8 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     result.numTriangles = 0;
 
     // get the normal of the vertex
-    vec3 normal = vec3_normal(
-        vec3_cross(vec3_sub(v2, v1), vec3_sub(v3, v1))
+    vec3 normal = NORMALIZE(
+        vec3_cross(SUB(v2, v1), SUB(v3, v1))
     );
 
     // transform the vertices to camera space
@@ -64,12 +64,12 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     v3 = camera_transform(c, v3);
 
     // get the normal of the vertex in camera space
-    vec3 cameraNormal = vec3_normal(
-        vec3_cross(vec3_sub(v2, v1), vec3_sub(v3, v1))
+    vec3 cameraNormal = NORMALIZE(
+        CROSS(SUB(v2, v1), SUB(v3, v1))
     );
 
     // backface cull it
-    if (vec3_dot(cameraNormal, v1) >= 0)
+    if (DOT(cameraNormal, v1) >= 0)
         return result;
 
     // store in array for easy use

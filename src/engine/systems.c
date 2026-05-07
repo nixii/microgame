@@ -58,7 +58,7 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
 
     // get the collider
     collider *c = get_collider(s, e);
-    vec3 scaledArea = vec3_mul_components(c->size, get_global_transform(s, e).scale);
+    vec3 scaledArea = c->size;
     vec3 a = vec3_sub(pos, vec3_mul(scaledArea, 0.5)); // a minimum
     vec3 A = vec3_add(a, scaledArea); // a maximum
 
