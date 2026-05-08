@@ -107,4 +107,7 @@ vec3 vec3_rot_y(vec3 a, float theta);
 vec3 vec3_rot_z(vec3 a, float theta);
 vec3 vec3_rot(vec3 a, vec3 rotation);
 
+// turn rotation into a unit vector
+vec3 vec3_get_axis(vec3 a);
+
 #endif // MG_VEC3_H

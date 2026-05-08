@@ -67,10 +67,14 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     vec3 cameraNormal = NORMALIZE(
         CROSS(SUB(v2, v1), SUB(v3, v1))
     );
+
+    // get cam direction
+    // TODO: verify if this is correct
+    vec3 lookAxis = vec3_get_axis(c->transform.rot);
     
     // backface cull it
-    // FIXME: cull *after* the near-plane clipping.
-    if (DOT(cameraNormal, v1) >= 0)
+    // FIXME: backface culling is not working correctly at certain camera angles.
+    if (DOT(lookAxis, cameraNormal) < 0)
         return result;
 
     // store in array for easy use
