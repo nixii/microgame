@@ -87,7 +87,6 @@ mesh_resource mesh_resource_from_obj(const char *objFilePath) {
 
             // set the vertex
             vertices[numVertices++] = v;
-            printf(VEC3_FMT "\n", VEC3_ARGS(v));
         }
 
         if (strcmp(command, "f") == 0) {
@@ -100,15 +99,13 @@ mesh_resource mesh_resource_from_obj(const char *objFilePath) {
             char *next = readBytes + i + 1;
             char *end = NULL;
 
-            // TODO: add safeguards
             // go through
-            while (1) {
+            while (*next != '\0') {
                 int v = (int)strtol(next, &end, 10);
                 if (next == end) break;
                 next = end;
 
-                // TODO: add safeguards
-                while (*(next++) != ' ') {}
+                while (*next != ' ' && *next != '\n' && *next != '\0') next++;
 
                 // set the first index
                 if (idxFirst == -1)
@@ -131,6 +128,7 @@ mesh_resource mesh_resource_from_obj(const char *objFilePath) {
                     indices[numIndices++] = idxFirst - 1;
                     indices[numIndices++] = idxPrevious - 1;
                     indices[numIndices++] = v - 1;
+
 
                     // re-set the previous idx
                     idxPrevious = v;
