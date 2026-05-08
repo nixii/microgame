@@ -69,6 +69,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     );
     
     // backface cull it
+    // FIXME: cull *after* the near-plane clipping.
     if (DOT(cameraNormal, v1) >= 0)
         return result;
 
@@ -78,14 +79,21 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     // the amount of triangles inside or outside the view plane
     vec3 inside[3];
     vec3 outside[3];
+    int insideIdx[3];
+    int outsideIdx[3];
     int inCount = 0, outCount = 0;
 
-    // sort the triangles
+    // load all the vertices and indices
     for (int i = 0; i < 3; i++) {
-        if (v[i].z >= NEAR_CLIP)
-            inside[inCount++] = v[i];
-        else
-            outside[outCount++] = v[i];
+        if (v[i].z >= NEAR_CLIP) {
+            inside[inCount] = v[i];
+            insideIdx[inCount] = i;
+            inCount++;
+        } else {
+            outside[outCount] = v[i];
+            outsideIdx[outCount] = i;
+            outCount++;
+        }
     }
 
     // all outside
@@ -107,17 +115,21 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     // 2 outside
     if (inCount == 1 && outCount == 2) {
 
-        vec3 i = inside[0];
-        vec3 o1 = outside[0];
-        vec3 o2 = outside[1];
+        // get points, preserving winding order
+        int ii = insideIdx[0];
+        int o1i = (ii + 1) % 3;
+        int o2i = (ii + 2) % 3;
 
-        triangle tri;
-        tri.a = i;
-        tri.b = intersect_near(i, o1);
-        tri.c = intersect_near(i, o2);
-        tri.normal = normal;
+        vec3 i  = v[ii];
+        vec3 o1 = v[o1i];
+        vec3 o2 = v[o2i];
 
-        result.triangles[0] = tri;
+        result.triangles[0] = (triangle){
+            .a = i,
+            .b = intersect_near(i, o1),
+            .c = intersect_near(i, o2),
+            .normal = normal
+        };
         result.numTriangles = 1;
         return result;
     }
@@ -125,29 +137,24 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     // 1 outside
     if (inCount == 2 && outCount == 1) {
 
-        vec3 i1 = inside[0];
-        vec3 i2 = inside[1];
-        vec3 o  = outside[0];
+        // get points IN THE WINDING ORDERRRRRRRRRRRR
+        int oi = outsideIdx[0];
+        int i1i = (oi + 1) % 3;
+        int i2i = (oi + 2) % 3; 
 
-        vec3 i1i = intersect_near(i1, o);
-        vec3 i2i = intersect_near(i2, o);
+        vec3 o  = v[oi];
+        vec3 i1 = v[i1i];
+        vec3 i2 = v[i2i];
 
-        // triangle 1
+        vec3 ni1 = intersect_near(i1, o);
+        vec3 ni2 = intersect_near(i2, o);
+
         result.triangles[0] = (triangle){
-            .a = i1, 
-            .b = i2, 
-            .c = i1i, 
-            .normal = normal
+            .a = i1, .b = i2, .c = ni1, .normal = normal
         };
-
-        // triangle 2
         result.triangles[1] = (triangle){
-            .a = i2, 
-            .b = i2i, 
-            .c = i1i, 
-            .normal = normal
+            .a = i2, .b = ni2, .c = ni1, .normal = normal
         };
-
         result.numTriangles = 2;
         return result;
     }
