@@ -87,6 +87,7 @@ mesh_resource mesh_resource_from_obj(const char *objFilePath) {
 
             // set the vertex
             vertices[numVertices++] = v;
+            printf(VEC3_FMT "\n", VEC3_ARGS(v));
         }
 
         if (strcmp(command, "f") == 0) {

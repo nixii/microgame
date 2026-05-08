@@ -85,6 +85,11 @@ void renderer_render_triangle(renderer *r, int x1, int y1, float z1, int x2, int
     int w2_row = edge(x3, y3, x1, y1, minX, minY);
     int w3_row = edge(x1, y1, x2, y2, minX, minY);
 
+    // flip zs
+    z1 = 1.0 / z1;
+    z2 = 1.0 / z2;
+    z3 = 1.0 / z3;
+
     // for every point
     for (int y = minY; y <= maxY; y++) {
 
@@ -98,7 +103,7 @@ void renderer_render_triangle(renderer *r, int x1, int y1, float z1, int x2, int
 
             if (w1*sign >= 0 && w2*sign >= 0 && w3*sign >= 0) {
 
-                float z = 1/(w1*invArea*(z1) + w2*invArea*(z2) + w3*invArea*(z3));
+                float z = (w1*invArea*(z1) + w2*invArea*(z2) + w3*invArea*(z3));
 
                 if (z < r->depthBuffer[idx]) {
                     r->depthBuffer[idx] = z;
