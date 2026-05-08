@@ -15,8 +15,9 @@ TODO #5 - preperation for test platformer:
  * `[ ]` Fix rendering flickers
  * * `[x]` depth-buffer fix
  * * `[x]` fix triangles being deleted if all 3 points outside screen
- * * `[ ]` fix floor doing weird disappear things (I think it is the scale factor)
- * * `[ ]` meshes bob up and down??
+ * * `[x]` fix floor doing weird disappear things (I think it is the scale factor)
+ * * `[x]` meshes bob up and down??
+ * * `[ ]` fix backface culling
  * `[ ]` Closest hit collider only is counted
  * `[ ]` Design the scripting language
 
