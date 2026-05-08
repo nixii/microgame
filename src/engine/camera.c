@@ -55,7 +55,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
 
     // get the normal of the vertex
     vec3 normal = NORMALIZE(
-        vec3_cross(SUB(v2, v1), SUB(v3, v1))
+        vec3_cross(SUB(v2, v1), SUB(v3, v2))
     );
 
     // transform the vertices to camera space
@@ -65,16 +65,12 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
 
     // get the normal of the vertex in camera space
     vec3 cameraNormal = NORMALIZE(
-        CROSS(SUB(v2, v1), SUB(v3, v1))
+        CROSS(SUB(v2, v1), SUB(v3, v2))
     );
-
-    // get cam direction
-    // TODO: verify if this is correct
-    vec3 lookAxis = vec3_get_axis(c->transform.rot);
     
     // backface cull it
     // FIXME: backface culling is not working correctly at certain camera angles.
-    if (DOT(lookAxis, cameraNormal) < 0)
+    if (DOT(cameraNormal, v1) >= 0)
         return result;
 
     // store in array for easy use
