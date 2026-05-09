@@ -6,7 +6,7 @@
 #include "microgame/util/math.h"
 #include "microgame/util/triangle.h"
 
-#define NEAR_CLIP 0.1
+#define NEAR_CLIP 0.001
 
 typedef struct camera {
     transform transform;
