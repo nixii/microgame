@@ -69,9 +69,8 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     );
     
     // backface cull it
-    // FIXME: cull *after* the near-plane clipping.
-    if (DOT(cameraNormal, v1) >= 0)
-        return result;
+    // if (DOT(cameraNormal, v1) >= 0)
+    //     return result;
 
     // store in array for easy use
     vec3 v[3] = {v1, v2, v3};
@@ -150,10 +149,10 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
         vec3 ni2 = intersect_near(i2, o);
 
         result.triangles[0] = (triangle){
-            .a = i1, .b = i2, .c = ni1, .normal = normal
+            .a = ni1, .b = i1, .c = i2, .normal = normal
         };
         result.triangles[1] = (triangle){
-            .a = i2, .b = ni2, .c = ni1, .normal = normal
+            .a = ni2, .b = i2, .c = ni1, .normal = normal
         };
         result.numTriangles = 2;
         return result;
