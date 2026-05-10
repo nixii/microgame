@@ -262,18 +262,18 @@ void scene_render(
                 if (tris.numTriangles == 0) continue;
 
                 // color the triangles
-                for (int i = 0; i < tris.numTriangles; i++)
-                    tris.triangles[i].color = m->color;
+                for (int j = 0; j < tris.numTriangles; j++)
+                    tris.triangles[j].color = m->color;
 
                 // expand if the amount of triangles to add is too many
-                if (numTris + tris.numTriangles >= s->triangleBufferSize) {
+                if (numTris + tris.numTriangles > s->triangleBufferSize) {
                     s->triangleBufferSize *= 2;
                     s->triangleBuffer = realloc(s->triangleBuffer, sizeof(triangle) * s->triangleBufferSize);
                 }
 
                 // add it in
-                for (int i = 0; i < tris.numTriangles; i++)
-                    s->triangleBuffer[numTris++] = tris.triangles[i];
+                for (int j = 0; j < tris.numTriangles; j++)
+                    s->triangleBuffer[numTris++] = tris.triangles[j];
             }
         }
     }
@@ -285,15 +285,19 @@ void scene_render(
         triangle t = s->triangleBuffer[i];
 
         // project the points to 2d (but keep the z)
-        vec3 v1 = camera_project_point(&s->camera, t.a, r->width, r->height);
-        vec3 v2 = camera_project_point(&s->camera, t.b, r->width, r->height);
-        vec3 v3 = camera_project_point(&s->camera, t.c, r->width, r->height);
-
-        // skip behind the camera
-        if ((v1.x == v1.y && v1.x == -1) ||
-            (v2.x == v2.y && v2.x == -1) ||
-            (v3.x == v3.y && v3.x == -1))
-            continue;
+        projection_result p1 = camera_project_point(&s->camera, t.a, r->width, r->height);
+        if (p1.failure) continue;
+        projection_result p2 = camera_project_point(&s->camera, t.b, r->width, r->height);
+        if (p2.failure) continue;
+        projection_result p3 = camera_project_point(&s->camera, t.c, r->width, r->height);
+        if (p3.failure) continue;
+        
+        vec3 v1 = p1.vec;
+        vec3 v2 = p2.vec;
+        vec3 v3 = p3.vec;
+        printf("v1: "VEC3_FMT"\n", VEC3_ARGS(v1));
+        printf("v2: "VEC3_FMT"\n", VEC3_ARGS(v2));
+        printf("v3: "VEC3_FMT"\n", VEC3_ARGS(v3));
 
         // render the triangle
         float lighting = (vec3_dot(t.normal, vec3_new(0, 1, 0)) + 1) / 5.0;
@@ -308,7 +312,7 @@ void scene_render(
     for (entity i = 0; i < MAX_ENTITIES; i++) {
         s->hasGlobalMat[i] = 0;
     }
-}   
+}
 
 // get the parent of an entity
 entity get_parent(scene *s, entity child) {

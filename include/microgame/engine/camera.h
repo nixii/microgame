@@ -13,6 +13,11 @@ typedef struct camera {
     float fov;
 } camera;
 
+typedef struct projection_result {
+    int failure;
+    vec3 vec;
+} projection_result;
+
 typedef struct camera_translation_result {
     triangle triangles[2];
     int numTriangles;
@@ -20,7 +25,7 @@ typedef struct camera_translation_result {
 
 camera camera_new();
 vec3 camera_transform(camera *c, vec3 p);
-vec3 camera_project_point(camera *c, vec3 p, int width, int height);
+projection_result camera_project_point(camera *c, vec3 p, int width, int height);
 camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2, vec3 v3);
 
 #endif // MG_CAMERA_H

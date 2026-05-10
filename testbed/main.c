@@ -130,7 +130,7 @@ int main(void) {
     spawnFloor();
 
     // load the static entity
-    spawnTestEntity(vec3_new(2, 0, 0));
+    // spawnTestEntity(vec3_new(2, 0, 0));
 
     // set the scene
     game_set_scene(game, mainScene);

@@ -16,14 +16,16 @@ vec3 camera_transform(camera *c, vec3 p) {
     return p;
 }
 
-vec3 camera_project_point(camera *c, vec3 p, int width, int height) {
+projection_result camera_project_point(camera *c, vec3 p, int width, int height) {
 
     // avoid divide-by-zero
-    if (p.z <= 0) return vec3_new(-1, -1, -1);
+    if (p.z <= 0)
+        return (projection_result){ .failure = 1 };
 
     float f = c->fov / p.z;
 
-    float x = (p.x * f) / ((float)width / height);
+    float x = (p.x * f) / ((float)(width / height));
+    printf("f: %f\n", f); // FIXME: p.z is causing f to be inflated.
     float y = p.y * f;
 
     vec3 out;
@@ -32,7 +34,7 @@ vec3 camera_project_point(camera *c, vec3 p, int width, int height) {
     out.y = (1.0f - (y + 1.0f) * 0.5f) * height;
     out.z = p.z;
 
-    return out;
+    return (projection_result){ .failure = 0, .vec = out };
 }
 
 // intersenct a triangle with the near clipping plane
@@ -48,20 +50,20 @@ static vec3 intersect_near(vec3 inside, vec3 outside) {
 
 // FIXME: this function does too much. split it up.
 // translate a triangle and maybe split it
-camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2, vec3 v3) {
+camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv2, vec3 lv3) {
 
     camera_translation_result result;
     result.numTriangles = 0;
 
     // get the normal of the vertex
     vec3 normal = NORMALIZE(
-        vec3_cross(SUB(v2, v1), SUB(v3, v1))
+        vec3_cross(SUB(lv2, lv1), SUB(lv3, lv1))
     );
 
     // transform the vertices to camera space
-    v1 = camera_transform(c, v1);
-    v2 = camera_transform(c, v2);
-    v3 = camera_transform(c, v3);
+    vec3 v1 = camera_transform(c, lv1);
+    vec3 v2 = camera_transform(c, lv2);
+    vec3 v3 = camera_transform(c, lv3);
 
     // get the normal of the vertex in camera space
     vec3 cameraNormal = NORMALIZE(
@@ -73,6 +75,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
     //     return result;
 
     // store in array for easy use
+    vec3 vs[3] = {lv1, lv2, lv3};
     vec3 v[3] = {v1, v2, v3};
 
     // the amount of triangles inside or outside the view plane
@@ -92,6 +95,7 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
             outside[outCount] = v[i];
             outsideIdx[outCount] = i;
             outCount++;
+            printf("OUTSIDE: "VEC3_FMT"\n", VEC3_ARGS(vs[i]));
         }
     }
 
@@ -138,8 +142,8 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
 
         // get points IN THE WINDING ORDERRRRRRRRRRRR
         int oi = outsideIdx[0];
-        int i1i = (oi + 1) % 3;
-        int i2i = (oi + 2) % 3; 
+        int i1i = insideIdx[0];
+        int i2i = insideIdx[1];
 
         vec3 o  = v[oi];
         vec3 i1 = v[i1i];
@@ -147,6 +151,12 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2,
 
         vec3 ni1 = intersect_near(i1, o);
         vec3 ni2 = intersect_near(i2, o);
+        // printf("oi: %d\n", oi);
+        // printf("o:  "VEC3_FMT"\n", VEC3_ARGS(o));
+        // printf("i1:  "VEC3_FMT"\n", VEC3_ARGS(i1));
+        // printf("i2:  "VEC3_FMT"\n", VEC3_ARGS(i2));
+        // printf("ni1:  "VEC3_FMT"\n", VEC3_ARGS(ni1));
+        // printf("ni2:  "VEC3_FMT"\n", VEC3_ARGS(ni2));
 
         result.triangles[0] = (triangle){
             .a = ni1, .b = i1, .c = i2, .normal = normal
