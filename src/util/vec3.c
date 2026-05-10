@@ -79,11 +79,3 @@ vec3 vec3_rot_z(vec3 a, float theta) {
 vec3 vec3_rot(vec3 a, vec3 rotation) {
     return vec3_rot_z(vec3_rot_x(vec3_rot_y(a, rotation.y), rotation.x), rotation.z);
 }
-
-// turn rotation into a unit vector
-vec3 vec3_get_axis(vec3 a) {
-    float x = cosf(a.y) * cosf(a.x);
-    float y = sinf(a.y) * cosf(a.x);
-    float z = sinf(a.x);
-    return vec3_new(x, y, z);
-}

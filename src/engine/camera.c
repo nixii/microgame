@@ -48,75 +48,116 @@ static vec3 intersect_near(vec3 inside, vec3 outside) {
 
 // FIXME: this function does too much. split it up.
 // translate a triangle and maybe split it
-camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv2, vec3 lv3) {
+camera_translation_result camera_translate_triangle(camera *c, vec3 v1, vec3 v2, vec3 v3) {
+
     camera_translation_result result;
     result.numTriangles = 0;
 
-    // Transform to camera space
-    vec3 v1 = camera_transform(c, lv1);
-    vec3 v2 = camera_transform(c, lv2);
-    vec3 v3 = camera_transform(c, lv3);
+    // get the normal of the vertex
+    vec3 normal = NORMALIZE(
+        vec3_cross(SUB(v2, v1), SUB(v3, v1))
+    );
+
+    // transform the vertices to camera space
+    v1 = camera_transform(c, v1);
+    v2 = camera_transform(c, v2);
+    v3 = camera_transform(c, v3);
+
+    // get the normal of the vertex in camera space
+    vec3 cameraNormal = NORMALIZE(
+        CROSS(SUB(v2, v1), SUB(v3, v1))
+    );
     
-    // calculate the normals
-    vec3 normal = NORMALIZE(CROSS(SUB(lv2, lv1), SUB(lv3, lv1)));
-    
-    // cam normal
-    vec3 camNormal = NORMALIZE(CROSS(SUB(v2, v1), SUB(v3, v1)));
-    
-    // backface cull
-    if (camNormal.z >= 0)
+    // backface cull it
+    // FIXME: cull *after* the near-plane clipping.
+    if (DOT(cameraNormal, v1) >= 0)
         return result;
-    
-    result.numTriangles = 1;
-    result.triangles[0] = (triangle){ .a = v1, .b = v2, .c = v3, .normal = normal};
-    return result;
 
+    // store in array for easy use
     vec3 v[3] = {v1, v2, v3};
-    int inCount = 0, outCount = 0;
-    int insideIdx[3], outsideIdx[3];
 
+    // the amount of triangles inside or outside the view plane
+    vec3 inside[3];
+    vec3 outside[3];
+    int insideIdx[3];
+    int outsideIdx[3];
+    int inCount = 0, outCount = 0;
+
+    // load all the vertices and indices
     for (int i = 0; i < 3; i++) {
-        if (v[i].z > NEAR_CLIP) {
-            insideIdx[inCount++] = i;
+        if (v[i].z >= NEAR_CLIP) {
+            inside[inCount] = v[i];
+            insideIdx[inCount] = i;
+            inCount++;
         } else {
-            outsideIdx[outCount++] = i;
+            outside[outCount] = v[i];
+            outsideIdx[outCount] = i;
+            outCount++;
         }
     }
 
+    // all outside
     if (inCount == 0) return result;
 
-    if (inCount == 3) {
-        result.triangles[0] = (triangle){.a = v1, .b = v2, .c = v3, .normal = normal};
-        result.numTriangles  = 1;
+    // 0 outside
+    if (outCount == 0) {
+        triangle tri = {
+            .a = inside[0], 
+            .b = inside[1], 
+            .c = inside[2], 
+            .normal = normal
+        };
+        result.triangles[0] = tri;
+        result.numTriangles = 1;
         return result;
     }
 
-    if (inCount == 1) {
-        vec3 i = v[insideIdx[0]];
-        vec3 o1 = v[outsideIdx[0]];
-        vec3 o2 = v[outsideIdx[1]];
+    // 2 outside
+    if (inCount == 1 && outCount == 2) {
+
+        // get points, preserving winding order
+        int ii = insideIdx[0];
+        int o1i = (ii + 1) % 3;
+        int o2i = (ii + 2) % 3;
+
+        vec3 i  = v[ii];
+        vec3 o1 = v[o1i];
+        vec3 o2 = v[o2i];
 
         result.triangles[0] = (triangle){
             .a = i,
-            .b = intersect_near(i, o2),
-            .c = intersect_near(i, o1),
+            .b = intersect_near(i, o1),
+            .c = intersect_near(i, o2),
             .normal = normal
         };
         result.numTriangles = 1;
         return result;
     }
 
-    if (inCount == 2) {
-    vec3 i1 = v[insideIdx[0]];
-    vec3 i2 = v[insideIdx[1]];
-    vec3 o  = v[outsideIdx[0]];
-    vec3 ni1 = intersect_near(i1, o);
-    vec3 ni2 = intersect_near(i2, o);
-    result.triangles[0] = (triangle){.a = i1,  .b = i2,  .c = ni1, .normal = normal};
-    result.triangles[1] = (triangle){.a = i2,  .b = ni2, .c = ni1, .normal = normal};  // ← i2, not i1
-    result.numTriangles  = 2;
-    return result;
-}
+    // 1 outside
+    if (inCount == 2 && outCount == 1) {
+
+        // get points IN THE WINDING ORDERRRRRRRRRRRR
+        int oi = outsideIdx[0];
+        int i1i = (oi + 1) % 3;
+        int i2i = (oi + 2) % 3; 
+
+        vec3 o  = v[oi];
+        vec3 i1 = v[i1i];
+        vec3 i2 = v[i2i];
+
+        vec3 ni1 = intersect_near(i1, o);
+        vec3 ni2 = intersect_near(i2, o);
+
+        result.triangles[0] = (triangle){
+            .a = i1, .b = i2, .c = ni1, .normal = normal
+        };
+        result.triangles[1] = (triangle){
+            .a = i2, .b = ni2, .c = ni1, .normal = normal
+        };
+        result.numTriangles = 2;
+        return result;
+    }
 
     return result;
 }

@@ -272,8 +272,8 @@ void scene_render(
                 }
 
                 // add it in
-                for (int j = 0; j < tris.numTriangles; j++)
-                    s->triangleBuffer[numTris++] = tris.triangles[j];
+                for (int i = 0; i < tris.numTriangles; i++)
+                    s->triangleBuffer[numTris++] = tris.triangles[i];
             }
         }
     }
@@ -290,7 +290,10 @@ void scene_render(
         vec3 v3 = camera_project_point(&s->camera, t.c, r->width, r->height);
 
         // skip behind the camera
-        if (v1.z < 0 || v2.z < 0 || v3.z < 0) continue;
+        if ((v1.x == v1.y && v1.x == -1) ||
+            (v2.x == v2.y && v2.x == -1) ||
+            (v3.x == v3.y && v3.x == -1))
+            continue;
 
         // render the triangle
         float lighting = (vec3_dot(t.normal, vec3_new(0, 1, 0)) + 1) / 5.0;
@@ -305,7 +308,7 @@ void scene_render(
     for (entity i = 0; i < MAX_ENTITIES; i++) {
         s->hasGlobalMat[i] = 0;
     }
-}
+}   
 
 // get the parent of an entity
 entity get_parent(scene *s, entity child) {
