@@ -22,11 +22,9 @@ projection_result camera_project_point(camera *c, vec3 p, int width, int height)
     if (p.z <= 0)
         return (projection_result){ .failure = 1 };
 
-    float f = c->fov / p.z;
-
-    float x = (p.x * f) / ((float)(width / height));
-    printf("f: %f\n", f); // FIXME: p.z is causing f to be inflated.
-    float y = p.y * f;
+    float f = 1.0f / tanf(c->fov * 0.5f);
+    float x = (p.x * f) / p.z * ((float)width / height);
+    float y = (p.y * f) / p.z * ((float)width / height);
 
     vec3 out;
 
@@ -95,7 +93,6 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
             outside[outCount] = v[i];
             outsideIdx[outCount] = i;
             outCount++;
-            printf("OUTSIDE: "VEC3_FMT"\n", VEC3_ARGS(vs[i]));
         }
     }
 
@@ -151,12 +148,6 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
 
         vec3 ni1 = intersect_near(i1, o);
         vec3 ni2 = intersect_near(i2, o);
-        // printf("oi: %d\n", oi);
-        // printf("o:  "VEC3_FMT"\n", VEC3_ARGS(o));
-        // printf("i1:  "VEC3_FMT"\n", VEC3_ARGS(i1));
-        // printf("i2:  "VEC3_FMT"\n", VEC3_ARGS(i2));
-        // printf("ni1:  "VEC3_FMT"\n", VEC3_ARGS(ni1));
-        // printf("ni2:  "VEC3_FMT"\n", VEC3_ARGS(ni2));
 
         result.triangles[0] = (triangle){
             .a = ni1, .b = i1, .c = i2, .normal = normal

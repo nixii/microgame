@@ -295,6 +295,9 @@ void scene_render(
         vec3 v1 = p1.vec;
         vec3 v2 = p2.vec;
         vec3 v3 = p3.vec;
+        printf("a: "VEC3_FMT"\n", VEC3_ARGS(t.a));
+        printf("b: "VEC3_FMT"\n", VEC3_ARGS(t.b));
+        printf("c: "VEC3_FMT"\n", VEC3_ARGS(t.c));
         printf("v1: "VEC3_FMT"\n", VEC3_ARGS(v1));
         printf("v2: "VEC3_FMT"\n", VEC3_ARGS(v2));
         printf("v3: "VEC3_FMT"\n", VEC3_ARGS(v3));
