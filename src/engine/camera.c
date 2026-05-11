@@ -23,8 +23,8 @@ projection_result camera_project_point(camera *c, vec3 p, int width, int height)
         return (projection_result){ .failure = 1 };
 
     float f = 1.0f / tanf(c->fov * 0.5f);
-    float x = (p.x * f) / p.z * ((float)width / height);
-    float y = (p.y * f) / p.z * ((float)width / height);
+    float x = (p.x * f) / p.z / ((float)width / height);
+    float y = (p.y * f) / p.z;
 
     vec3 out;
 
@@ -35,12 +35,17 @@ projection_result camera_project_point(camera *c, vec3 p, int width, int height)
     return (projection_result){ .failure = 0, .vec = out };
 }
 
+// FIXME: I think this function is the issue.
 // intersenct a triangle with the near clipping plane
 static vec3 intersect_near(vec3 inside, vec3 outside) {
     float t = (NEAR_CLIP - inside.z) / (outside.z - inside.z);
 
     vec3 r;
     r.x = inside.x + (outside.x - inside.x) * t;
+    printf("in z: %f\n", inside.z);
+    printf("out z: %f\n", outside.z);
+    printf("t: %f\n", t);
+    printf("rx: %f\n\n", r.x);
     r.y = inside.y + (outside.y - inside.y) * t;
     r.z = NEAR_CLIP;
     return r;
