@@ -1,14 +1,14 @@
 
 ## To-Do list
 
-TODO #6 - test platformer:
+Todo #6 - test platformer:
  * `[ ]` 3 simple levels
  * `[ ]` An NPC to talk to
  * `[ ]` Snappy movement (no acceleration besides gravity)
  * `[ ]` A forwards dash (?)
  * `[ ]` At least some color design for the world tiles
 
-TODO #5 - preperation for test platformer:
+Todo #5 - preperation for test platformer:
  * `[x]` Mouse delta detection
  * `[x]` Collider gets scaled
  * `[ ]` Mouse click detection
@@ -20,7 +20,7 @@ TODO #5 - preperation for test platformer:
  * `[ ]` Closest hit collider only is counted
  * `[ ]` Design the scripting language
 
-TODO #4 - various improvements:
+Todo #4 - various improvements:
  * `[x]` UI anchor
  * `[x]` UI text auto-wrapping
  * `[x]` UI tint
@@ -34,7 +34,7 @@ TODO #4 - various improvements:
  * * `[x]` Run on-collide functions
  * * `[x]` Get certain faces of the collider's position (for alignment)
 
-TODO #3 - UI (in order of priority):
+Todo #3 - UI (in order of priority):
  * `[x]` UI vectors
  * `[x]` Custom UI layer
  * `[x]` UI transforms work (no rotation here)
@@ -49,7 +49,7 @@ TODO #3 - UI (in order of priority):
  * `[x]` More UI types
  * * `[x]` ui_text
 
-TODO #2 (in order of priority):
+Todo #2 (in order of priority):
  * `[x]` Improve performance of rendering meshes
  * `[x]` Modify the entity system to allow for parent/child relationships
  * `[x]` Apply translation, rotation, and scale down the tree
@@ -60,7 +60,7 @@ TODO #2 (in order of priority):
  * `[x]` Load file meshes into a "resource", not into a mesh (literal meshes are still stored)
  * `[x]` Optimize 3d rendering by storing global matrices each frame
 
-TODO #1 (in order of priority):
+Todo #1 (in order of priority):
  * `[x]` Depth sort the triangles
  * `[x]` Meshes now use indices and vertices to save storage space
  * `[x]` Near clipping
