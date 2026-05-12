@@ -74,8 +74,8 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
     );
     
     // backface cull it
-    // if (DOT(cameraNormal, v1) >= 0)
-    //     return result;
+    if (DOT(cameraNormal, v1) >= 0)
+        return result;
 
     // store in array for easy use
     vec3 vs[3] = {lv1, lv2, lv3};
@@ -122,8 +122,8 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
 
         // get points, preserving winding order
         int ii = insideIdx[0];
-        int o1i = (ii + 1) % 3;
-        int o2i = (ii + 2) % 3;
+        int o1i = outsideIdx[0];
+        int o2i = outsideIdx[1];
 
         vec3 i  = v[ii];
         vec3 o1 = v[o1i];
@@ -143,9 +143,9 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
     if (inCount == 2 && outCount == 1) {
 
         // get points IN THE WINDING ORDERRRRRRRRRRRR
-        int oi = outsideIdx[0];
-        int i1i = insideIdx[0];
-        int i2i = insideIdx[1];
+        int oi  = outsideIdx[0];
+        int i1i = (oi + 1) % 3;
+        int i2i = (oi + 2) % 3;
 
         vec3 o  = v[oi];
         vec3 i1 = v[i1i];
@@ -160,6 +160,20 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
         result.triangles[1] = (triangle){
             .a = ni2, .b = i2, .c = ni1, .normal = normal
         };
+
+        projection_result pa1 = camera_project_point(c, result.triangles[0].a, 1000, 800);
+        projection_result pa2 = camera_project_point(c, result.triangles[0].b, 1000, 800);
+        projection_result pa3 = camera_project_point(c, result.triangles[0].c, 1000, 800);
+        projection_result pb1 = camera_project_point(c, result.triangles[1].a, 1000, 800);
+        projection_result pb2 = camera_project_point(c, result.triangles[1].b, 1000, 800);
+        projection_result pb3 = camera_project_point(c, result.triangles[1].c, 1000, 800);
+        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pa1.vec));
+        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pa2.vec));
+        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pa3.vec));
+        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pb1.vec));
+        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pb2.vec));
+        printf("RES: "VEC3_FMT"\n\n", VEC3_ARGS(pb3.vec));
+
         result.numTriangles = 2;
         return result;
     }

@@ -105,7 +105,7 @@ void renderer_render_triangle(renderer *r, int x1, int y1, float z1, int x2, int
 
                 float z = (w1*invArea*(z1) + w2*invArea*(z2) + w3*invArea*(z3));
 
-                if (z < r->depthBuffer[idx]) {
+                if (z < r->depthBuffer[idx]) { // TODO: works fine without this depth check
                     r->depthBuffer[idx] = z;
                     r->pixels[idx] = c;
                 }
