@@ -280,6 +280,7 @@ void scene_render(
     
     // draw each triangle!
     srand(0);
+    printf("\n\n\nFRAME\n");
     for (int i = 0; i < numTris; i++) {
 
         // get the triangle
@@ -296,17 +297,25 @@ void scene_render(
         vec3 v1 = p1.vec;
         vec3 v2 = p2.vec;
         vec3 v3 = p3.vec;
-        // printf("a: "VEC3_FMT"\n", VEC3_ARGS(t.a));
-        // printf("b: "VEC3_FMT"\n", VEC3_ARGS(t.b));
-        // printf("c: "VEC3_FMT"\n", VEC3_ARGS(t.c));
-        // printf("v1: "VEC3_FMT"\n", VEC3_ARGS(v1));
-        // printf("v2: "VEC3_FMT"\n", VEC3_ARGS(v2));
-        // printf("v3: "VEC3_FMT"\n", VEC3_ARGS(v3));
+
+        if ((v1.x > r->width && v2.x > r->width && v3.x > r->width) ||
+            (v1.x < 0 && v2.x < 0 && v3.x < 0) ||
+            (v1.y > r->height && v2.y > r->height && v3.y > r->height) ||
+            (v1.y < 0 && v2.y < 0 && v3.y < 0)){
+
+            printf("a: "VEC3_FMT"\n", VEC3_ARGS(t.a));
+            printf("b: "VEC3_FMT"\n", VEC3_ARGS(t.b));
+            printf("c: "VEC3_FMT"\n", VEC3_ARGS(t.c));
+            printf("v1: "VEC3_FMT"\n", VEC3_ARGS(v1));
+            printf("v2: "VEC3_FMT"\n", VEC3_ARGS(v2));
+            printf("v3: "VEC3_FMT"\n\n", VEC3_ARGS(v3));
+        }
 
         // render the triangle
         float lighting = (vec3_dot(t.normal, vec3_new(0, 1, 0)) + 1) / 5.0;
-        // renderer_render_triangle(r, (int)v1.x, (int)v1.y, v1.z, (int)v2.x, (int)v2.y, v2.z, (int)v3.x, (int)v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
-        renderer_render_triangle(r, (int)v1.x, (int)v1.y, v1.z, (int)v2.x, (int)v2.y, v2.z, (int)v3.x, (int)v3.y, v3.z, rgb_rand());
+        t.color = rgb_rand();
+        renderer_render_triangle(r, (int)v1.x, (int)v1.y, v1.z, (int)v2.x, (int)v2.y, v2.z, (int)v3.x, (int)v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
+        // renderer_render_triangle(r, (int)v1.x, (int)v1.y, v1.z, (int)v2.x, (int)v2.y, v2.z, (int)v3.x, (int)v3.y, v3.z, rgb_rand());
         srand(rand());
     }
 

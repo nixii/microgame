@@ -19,7 +19,7 @@ vec3 camera_transform(camera *c, vec3 p) {
 projection_result camera_project_point(camera *c, vec3 p, int width, int height) {
 
     // avoid divide-by-zero
-    if (p.z <= 0)
+    if (p.z <= 0.0)
         return (projection_result){ .failure = 1 };
 
     float f = 1.0f / tanf(c->fov * 0.5f);
@@ -42,16 +42,13 @@ static vec3 intersect_near(vec3 inside, vec3 outside) {
 
     vec3 r;
     r.x = inside.x + (outside.x - inside.x) * t;
-    printf("in z: %f\n", inside.z);
-    printf("out z: %f\n", outside.z);
-    printf("t: %f\n", t);
-    printf("rx: %f\n\n", r.x);
     r.y = inside.y + (outside.y - inside.y) * t;
     r.z = NEAR_CLIP;
     return r;
 }
 
 // FIXME: this function does too much. split it up.
+// TODO: I'm just going to recode this function , it does too much and just won't work.
 // translate a triangle and maybe split it
 camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv2, vec3 lv3) {
 
@@ -74,8 +71,8 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
     );
     
     // backface cull it
-    if (DOT(cameraNormal, v1) >= 0)
-        return result;
+    // if (DOT(cameraNormal, v1) >= 0)
+    //     return result;
 
     // store in array for easy use
     vec3 vs[3] = {lv1, lv2, lv3};
@@ -143,9 +140,9 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
     if (inCount == 2 && outCount == 1) {
 
         // get points IN THE WINDING ORDERRRRRRRRRRRR
+        int i1i = insideIdx[0];
+        int i2i = insideIdx[1];
         int oi  = outsideIdx[0];
-        int i1i = (oi + 1) % 3;
-        int i2i = (oi + 2) % 3;
 
         vec3 o  = v[oi];
         vec3 i1 = v[i1i];
@@ -158,21 +155,8 @@ camera_translation_result camera_translate_triangle(camera *c, vec3 lv1, vec3 lv
             .a = ni1, .b = i1, .c = i2, .normal = normal
         };
         result.triangles[1] = (triangle){
-            .a = ni2, .b = i2, .c = ni1, .normal = normal
+            .a = ni1, .b = i2, .c = ni2, .normal = normal
         };
-
-        projection_result pa1 = camera_project_point(c, result.triangles[0].a, 1000, 800);
-        projection_result pa2 = camera_project_point(c, result.triangles[0].b, 1000, 800);
-        projection_result pa3 = camera_project_point(c, result.triangles[0].c, 1000, 800);
-        projection_result pb1 = camera_project_point(c, result.triangles[1].a, 1000, 800);
-        projection_result pb2 = camera_project_point(c, result.triangles[1].b, 1000, 800);
-        projection_result pb3 = camera_project_point(c, result.triangles[1].c, 1000, 800);
-        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pa1.vec));
-        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pa2.vec));
-        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pa3.vec));
-        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pb1.vec));
-        printf("RES: "VEC3_FMT"\n", VEC3_ARGS(pb2.vec));
-        printf("RES: "VEC3_FMT"\n\n", VEC3_ARGS(pb3.vec));
 
         result.numTriangles = 2;
         return result;
