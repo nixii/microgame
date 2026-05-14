@@ -49,7 +49,7 @@ void spawnTestEntity(vec3 pos) {
     attach_mesh(mainScene, e, meshComponent);
     get_transform(mainScene, e)->pos = pos;
     get_transform(mainScene, e)->scale = vec3_new(0.5, 0.5, 0.5);
-    // attach_collider(mainScene, e, collider_new(vec3_new(1, 1, 1)));
+    attach_collider(mainScene, e, collider_new(vec3_new(1, 1, 1)));
 }
 
 // allow movement
