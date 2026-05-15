@@ -17,6 +17,9 @@
 #define MUL(a, b) _Generic((a), \
     vec2: vec2_mul, \
     vec3: vec3_mul)(a, b)
+#define MUL_COMPONENTS(a, b) _Generic((a), \
+    vec2: vec2_mul_components, \
+    vec3: vec3_mul_components)(a, b)
 #define DIV(a, b) _Generic((a), \
     vec2: vec2_div, \
     vec3: vec3_div)(a, b)

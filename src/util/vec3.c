@@ -38,6 +38,12 @@ vec3 vec3_mul(vec3 a, float scalar) {
     return vec3_new(a.x * scalar, a.y * scalar, a.z * scalar);
 }
 
+// multiply components
+// creates a new vec3
+vec3 vec3_mul_components(vec3 a, vec3 b) {
+    return vec3_new(a.x * b.x, a.y * b.y, a.z * b.z);
+}
+
 // divide a vec3
 // creates a new vec3
 vec3 vec3_div(vec3 a, float scalar) {

@@ -17,9 +17,10 @@ Todo #5 - preperation for test platformer:
  * * `[x]` fix triangles being deleted if all 3 points outside screen
  * * `[x]` fix floor doing weird disappear things (I think it is the scale factor)
  * * `[x]` meshes bob up and down??
- * `[ ]` Box collider scales
- * `[ ]` Closest hit collider only is counted
+ * `[x]` Box collider scales
+ * `[ ]` Box collider reports hit sides
  * `[ ]` Design the scripting language
+ * `[ ]` Allow playing sounds
 
 Todo #4 - various improvements:
  * `[x]` UI anchor

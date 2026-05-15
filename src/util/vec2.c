@@ -19,6 +19,7 @@ vec2 vec2_y() { return vec2_new(0, 1); }
 vec2 vec2_add(vec2 a, vec2 b) { return vec2_new(a.x + b.x, a.y + b.y); }
 vec2 vec2_sub(vec2 a, vec2 b) { return vec2_new(a.x - b.x, a.y - b.y); }
 vec2 vec2_mul(vec2 a, float scalar) { return vec2_new(a.x * scalar, a.y * scalar); }
+vec2 vec2_mul_components(vec2 a, vec2 b) { return vec2_new(a.x * b.x, a.y * b.y); }
 vec2 vec2_div(vec2 a, float scalar) { return vec2_new(a.x / scalar, a.y / scalar); }
 
 // geometry

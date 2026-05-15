@@ -2,8 +2,12 @@
 #ifndef MG_COMPONENT_COLLIDER_H
 #define MG_COMPONENT_COLLIDER_H
 
+#include "microgame/util/transform.h"
 #include "microgame/engine/entity.h"
 #include "microgame/util/math.h"
+
+// forward-declare a scene
+typedef struct scene scene;
 
 // different sides
 typedef enum collider_side {
@@ -31,7 +35,10 @@ typedef struct collider {
 collider collider_new(vec3 size);
 
 // get offset of the side
-float collider_get_offset(collider *c, collider_side s);
+float collider_get_offset(collider *c, transform globalTransform, collider_side s);
+
+// does a collider collide
+int collider_collides(scene *s, entity e1, entity e2);
 
 // destroy a region colldier
 void collider_destroy(collider *c);

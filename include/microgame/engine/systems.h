@@ -4,6 +4,9 @@
 
 #include "microgame/engine/entity.h"
 
+// for errors
+#define COLLISION_EPSILON 0.001
+
 // just forward-declare the scene
 typedef struct scene scene;
 

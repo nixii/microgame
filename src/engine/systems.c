@@ -50,8 +50,9 @@ static inline int sign(float a) {
     return a < 0 ? -1 : (a == 0 ? 0 : 1);
 }
 
+// TODO: make this get only the FIRST hit entity.
 // get the first hit object
-static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, collider_side side) {
+static entity velocity_system_first_collided(scene *s, entity e, transform *transf, collider_side side) {
 
     // skip without collider
     if (!has_collider(s, e)) return NIL_ENTITY;
@@ -59,8 +60,9 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
     // get the collider
     collider *c = get_collider(s, e);
     vec3 scaledArea = c->size;
-    vec3 a = vec3_sub(pos, vec3_mul(scaledArea, 0.5)); // a minimum
-    vec3 A = vec3_add(a, scaledArea); // a maximum
+    scaledArea = MUL_COMPONENTS(scaledArea, transf->scale);
+    vec3 a = SUB(transf->pos, MUL(scaledArea, 0.5)); // a minimum
+    vec3 A = ADD(a, scaledArea); // a maximum
 
     // closest distance and entity
     entity closest = NIL_ENTITY;
@@ -75,11 +77,13 @@ static entity velocity_system_first_collided(scene *s, entity e, vec3 pos, colli
         // get the collider
         collider *c2 = get_collider(s, e2);
         vec3 pos2 = get_global_transform(s, e2).pos;
+        vec3 scale2 = get_global_transform(s, e2).scale;
 
         // check collision
         vec3 scaledArea2 = c2->size;
-        vec3 b = vec3_sub(pos2, vec3_mul(scaledArea2, 0.5)); // b minimum
-        vec3 B = vec3_add(b, scaledArea2); // b maximum
+        scaledArea2 = MUL_COMPONENTS(scaledArea2, scale2);
+        vec3 b = SUB(pos2, MUL(scaledArea2, 0.5)); // b minimum
+        vec3 B = ADD(b, scaledArea2); // b maximum
 
         // check the bounds
         if ((a.x < B.x && A.x > b.x) &&
@@ -146,7 +150,7 @@ static void velocity_system_resolve_axis(scene *s, entity e, transform *outpos, 
 
     // get the first entity you woulda hit
     collider_side side = velocity_system_dir(axis, sn);
-    entity firstCollided = velocity_system_first_collided(s, e, outpos->pos, side);
+    entity firstCollided = velocity_system_first_collided(s, e, outpos, side);
 
     // snap to that entity if it exists
     if (firstCollided != NIL_ENTITY) {
@@ -161,33 +165,34 @@ static void velocity_system_resolve_axis(scene *s, entity e, transform *outpos, 
         vec3 pos2 = transf2.pos;
 
         // get the half axes
-        vec3 half = vec3_mul(col->size, 0.5);
-        vec3 half2 = vec3_mul(col2->size, 0.5);
+        vec3 half = MUL_COMPONENTS(MUL(col->size, 0.5), outpos->scale);
+        vec3 half2 = MUL_COMPONENTS(MUL(col2->size, 0.5), transf2.scale);
+        printf("half, half2: "VEC3_FMT" , "VEC3_FMT"\n", VEC3_ARGS(half), VEC3_ARGS(half2));
 
         // check cases
         if (axis == X) {
             if (sn > 0) {
-                outpos->pos.x = pos2.x - half2.x - half.x;
+                outpos->pos.x = pos2.x - half2.x - half.x - COLLISION_EPSILON;
             } else if (sn < 0) {
-                outpos->pos.x = pos2.x + half2.x + half.x;
+                outpos->pos.x = pos2.x + half2.x + half.x + COLLISION_EPSILON;
             }
         }
 
         // check the y axis
         else if (axis == Y) {
             if (sn > 0) {
-                outpos->pos.y = pos2.y - half2.y - half.y;
+                outpos->pos.y = pos2.y - half2.y - half.y - COLLISION_EPSILON;
             } else if (sn < 0) {
-                outpos->pos.y = pos2.y + half2.y + half.y;
+                outpos->pos.y = pos2.y + half2.y + half.y + COLLISION_EPSILON;
             }
         }
 
         // check the z axis
         else {
             if (sn > 0) {
-                outpos->pos.z = pos2.z - half2.z - half.z;
+                outpos->pos.z = pos2.z - half2.z - half.z - COLLISION_EPSILON;
             } else if (sn < 0) {
-                outpos->pos.z = pos2.z + half2.z + half.z;
+                outpos->pos.z = pos2.z + half2.z + half.z + COLLISION_EPSILON;
             }
         }
     }
@@ -200,10 +205,6 @@ void velocity_system_update(scene *s, entity e, float dt) {
     if (!has_velocity(s, e)) return;
     velocity *v = get_velocity(s, e);
     transform global = get_global_transform(s, e);
-
-    // vars
-    collider_side dir;
-    entity firstHit;
 
     // move  on axes
     int mX = velocity_system_move_axis(dt, v->velocity.x, &global.pos.x);

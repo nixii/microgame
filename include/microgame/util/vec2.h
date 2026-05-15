@@ -35,6 +35,7 @@ vec2 vec2_y();
 vec2 vec2_add(vec2 a, vec2 b);
 vec2 vec2_sub(vec2 a, vec2 b);
 vec2 vec2_mul(vec2 a, float scalar);
+vec2 vec2_mul_components(vec2 a, vec2 b);
 vec2 vec2_div(vec2 a, float scalar);
 
 // geometry
