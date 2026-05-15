@@ -66,7 +66,7 @@ void handleMovement(float dt) {
         movement.z += MOVE_SPEED;
     if (key_down(M_KEY_S))
         movement.z -= MOVE_SPEED;
-    if (key_just_down(M_KEY_SPACE))
+    if (mouse_just_down(1))
         negYVel = 4;
 
     // look around

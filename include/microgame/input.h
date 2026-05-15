@@ -71,5 +71,6 @@ typedef enum key {
 } key;
 
 int key_to_rl(key k);
+int mouse_to_rl(int mouse);
 
 #endif // MG_INPUT_H

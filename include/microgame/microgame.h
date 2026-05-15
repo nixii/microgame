@@ -23,6 +23,9 @@ int get_fps();
 int key_down(key k);
 int key_just_down(key k);
 int key_just_up(key k);
+int mouse_down(int mouse);
+int mouse_just_down(int mouse);
+int mouse_just_up(int mouse);
 
 void disable_mouse();
 void enable_mouse();

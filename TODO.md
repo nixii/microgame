@@ -11,7 +11,7 @@ Todo #6 - test platformer:
 Todo #5 - preperation for test platformer:
  * `[x]` Mouse delta detection
  * `[x]` Collider gets scaled
- * `[ ]` Mouse click detection
+ * `[x]` Mouse click detection
  * `[x]` Fix rendering flickers
  * * `[x]` depth-buffer fix
  * * `[x]` fix triangles being deleted if all 3 points outside screen

@@ -118,6 +118,17 @@ int key_just_up(key k) {
     return IsKeyReleased(key_to_rl(k));
 }
 
+// mouse input
+int mouse_down(int mouse) {
+    return IsMouseButtonDown(mouse_to_rl(mouse));
+}
+int mouse_just_down(int mouse) {
+    return IsMouseButtonPressed(mouse_to_rl(mouse));
+}
+int mouse_just_up(int mouse) {
+    return IsMouseButtonReleased(mouse_to_rl(mouse));
+}
+
 // mouse movement
 vec2 get_mouse_delta() {
     Vector2 v = GetMouseDelta();

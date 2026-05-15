@@ -1,6 +1,8 @@
 
 #include "microgame/input.h"
 #include <raylib.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 int key_to_rl(key k) {
     switch (k) {
@@ -70,5 +72,16 @@ int key_to_rl(key k) {
         case M_KEY_UP: return KEY_UP;
         case M_KEY_DOWN: return KEY_DOWN;
         default: return 0;
+    }
+}
+
+int mouse_to_rl(int mouse) {
+    switch (mouse) {
+        case 1: return MOUSE_BUTTON_LEFT;
+        case 2: return MOUSE_BUTTON_RIGHT;
+        case 3: return MOUSE_BUTTON_MIDDLE;
+        default:
+            fprintf(stderr, "no mouse button %d supported.\n", mouse);
+            exit(1);
     }
 }
