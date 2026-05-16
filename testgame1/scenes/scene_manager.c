@@ -3,6 +3,8 @@
 #include "scene_manager.h"
 #include "util.h"
 #include "l1.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 static scene *s;
 static entity npc;
@@ -41,6 +43,20 @@ vec3 get_spawn_pos() {
     return spawnPos;
 }
 
-void handle_scenes() {
+scene *handle_scenes() {
     get_transform(s, get_teleport())->rot.y += get_dt() * PI;
+
+    if (get_collider(s, get_teleport())->hit) {
+        printf("HIT\n");
+        switch (get_go_to()) {
+            case 1:
+                create_scene_1();
+                return get_scene_1();
+            default:
+                fprintf(stderr, "no scene %d.\n", get_go_to());
+                exit(1);
+        }
+    }
+
+    return NULL;
 }

@@ -15,3 +15,4 @@ void set_dialogue_container_visibility(scene *s, int visible);
 
 void spawn_teleport(scene *s, vec3 pos, int toNum);
 entity get_teleport();
+int get_go_to();

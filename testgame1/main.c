@@ -20,8 +20,6 @@ int main(void) {
 
     // load the scenes
     create_scene_1();
-    create_scene_2();
-    create_scene_3();
 
     // get objects
     entity player = get_player();
@@ -36,7 +34,14 @@ int main(void) {
     while (game_still_running(game)) {
         update_movement(sc, player);
         check_dialogue_visibility(sc, player, npc);
-        handle_scenes();
+        scene *goToThis = handle_scenes();
+
+        if (goToThis != NULL) {
+            game_set_scene(game, sc);
+            player = get_player();
+            npc = get_npc();
+        }
+
         game_update(game);
         rescue(sc, player);
         float targetFov = (PI / 2) + LENGTH(MUL_COMPONENTS(get_velocity(sc, player)->velocity, vec3_new(1, 0, 1))) / 20;

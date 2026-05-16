@@ -11,4 +11,4 @@ entity get_player();
 
 vec3 get_spawn_pos();
 
-void handle_scenes();
+scene *handle_scenes();
