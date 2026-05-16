@@ -11,6 +11,7 @@ entity prepare_scene_1() {
 
     // create the scene
     s = scene_new();
+    create_ui(s);
 
     // spawn platforms
     spawn_platform(s, vec3_zero(), vec3_new(2, 1, 2));
