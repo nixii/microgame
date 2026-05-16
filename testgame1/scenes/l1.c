@@ -18,7 +18,8 @@ entity prepare_scene_1() {
     // spawn platforms
     spawn_platform(s, vec3_zero(), vec3_new(2, 1, 2));
     spawn_platform(s, vec3_new(0, 1, 8), vec3_new(0.5, 0.5, 0.5));
-    spawn_platform(s, vec3_new(5, 3, 6), vec3_new(1, 0.5, 0.5));
+    spawn_platform(s, vec3_new(5, 2.5, 6), vec3_new(1, 0.5, 0.5));
+    spawn_platform(s, vec3_new(20, 2.5, 6), vec3_new(1, 1, 1));
 
     // create entities
     npc = spawn_npc(s, vec3_new(3, 1, 3), PI / 4);
