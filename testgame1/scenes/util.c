@@ -6,6 +6,9 @@ static mesh_resource bottomGroundMeshResource;
 static mesh_resource npcMeshResource;
 static font_resource mainFont;
 
+static ui_container *dialogueCover;
+static ui_text *dialogue;
+
 static void load_meshes() {
     topGroundMeshResource = mesh_resource_from_obj("testgame1/assets/ground1_top.obj");
     bottomGroundMeshResource = mesh_resource_from_obj("testgame1/assets/ground1_bottom.obj");
@@ -47,26 +50,51 @@ entity spawn_player(scene *s, vec3 pos) {
     return p;
 }
 
+entity spawn_npc(scene *s, vec3 pos, float rot) {
+    if (!loadedSceneUtil) load_scene_util();
+    entity npc = scene_spawn(s);
+    attach_collider(s, npc, collider_new(vec3_new(2, 2, 2)));
+    attach_mesh(s, npc, mesh_from_resource(rgb(200, 200, 255), npcMeshResource));
+    get_transform(s, npc)->pos = ADD(pos, vec3_new(0, 0.25, 0));
+    get_transform(s, npc)->rot.y = rot;
+    get_transform(s, npc)->scale = vec3_new(0.25, 0.25, 0.25);
+    return npc;
+}
+
 void create_ui(scene *s) {
 
     ui_container *root = ui_container_empty();
     root->size = ui_vec_new(1, 0, 1, 0);
 
-    ui_container *dialogueCover = ui_container_empty();
+    dialogueCover = ui_container_empty();
     dialogueCover->size = ui_vec_new(0.5, 0, 0.3, 0);
     dialogueCover->anchor = vec2_new(0.5, 1);
     dialogueCover->pos = ui_vec_new(0.5, 0, 1, 0);
     ui_container_bind_type(dialogueCover, UI_TYPE_RECT, ui_rect_new(rgb(65, 31, 65)));
-    ui_container_set_parent(dialogueCover, root);
 
-    ui_container *dialogue = ui_container_empty();
-    dialogue->size = ui_vec_new(1, -8, 1, -8);
-    dialogue->anchor = vec2_new(0.5, 0.5);
-    dialogue->pos = ui_vec_new(0.5, 0, 0.5, 0);
-    ui_text *txt = ui_text_new(&mainFont, "Basic dialogue box here, it will have use and be able to turn off eventually.");
-    txt->autoWrap = 1;
-    ui_container_bind_type(dialogue, UI_TYPE_TEXT, txt);
-    ui_container_set_parent(dialogue, dialogueCover);
+    ui_container *dialogueContainer = ui_container_empty();
+    dialogueContainer->size = ui_vec_new(1, -8, 1, -8);
+    dialogueContainer->anchor = vec2_new(0.5, 0.5);
+    dialogueContainer->pos = ui_vec_new(0.5, 0, 0.5, 0);
+    dialogue = ui_text_new(&mainFont, "Basic dialogue box here, it will have use and be able to turn off eventually.");
+    dialogue->autoWrap = 1;
+    ui_container_bind_type(dialogueContainer, UI_TYPE_TEXT, dialogue);
+    ui_container_set_parent(dialogueContainer, dialogueCover);
 
     scene_set_ui_root(s, root);
+}
+
+ui_container *get_dialogue_container() {
+    return dialogueCover;
+}
+ui_text *get_dialogue() {
+    return dialogue;
+}
+
+void set_dialogue_container_visibility(scene *s, int visible) {
+    if (visible && dialogueCover->parent == NULL) {
+        ui_container_set_parent(dialogueCover, s->uiRoot);
+    } else if (!visible && dialogueCover->parent != NULL) {
+        ui_container_remove_parent(dialogueCover);
+    }
 }

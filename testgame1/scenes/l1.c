@@ -5,6 +5,7 @@
 
 // the scene thing
 static scene *s;
+static entity npc;
 
 // prepare the first scene
 entity prepare_scene_1() {
@@ -15,7 +16,13 @@ entity prepare_scene_1() {
 
     // spawn platforms
     spawn_platform(s, vec3_zero(), vec3_new(2, 1, 2));
+    npc = spawn_npc(s, vec3_new(3, 1, 3), PI / 4);
     return spawn_player(s, vec3_new(0, 1, 0));
+}
+
+// get the npc
+entity get_npc_1() {
+    return npc;
 }
 
 // get the scene
