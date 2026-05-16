@@ -10,6 +10,8 @@ float yVel = 0;
 static int numRescues = 0;
 static char rescuesBuf[64];
 
+static float jumpCheck = 0.0;
+
 // dash cooldown
 float dashcooldown = 0.0;
 float canJump = 0;
@@ -18,6 +20,7 @@ float canJump = 0;
 void update_movement(scene *s, entity p) {
     float dt = get_dt();
     dashcooldown -= dt;
+    jumpCheck += dt;
 
     // get the objects
     transform *cameraTransform = get_transform(s, p);
@@ -44,6 +47,7 @@ void update_movement(scene *s, entity p) {
     } else {
         vel = DIV(vel, AIR_FRICTION);
         yVel -= GRAVITY * dt;
+        canJump = canJump > 0 ? 1 : 0;
     }
 
     // movement
@@ -73,9 +77,13 @@ void update_movement(scene *s, entity p) {
     vel.z += movement.z;
 
     // jumping
-    if (key_just_down(M_KEY_SPACE) && canJump) {
+    if (key_just_down(M_KEY_SPACE)) {
+        jumpCheck = -0.25;
+    }
+    if (jumpCheck <= 0.0 && canJump) {
         yVel = JUMP_POWER;
         canJump -= 1;
+        jumpCheck = 0.0;
     }
 
     // transform & apply the velocity
