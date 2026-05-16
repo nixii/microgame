@@ -20,7 +20,6 @@ void update_movement(scene *s, entity p) {
     // slow down
     if (camCollider->hitFloor) {
         vel = DIV(vel, 1.5);
-        printf("FLOOR\n");
         yVel = 0;
     } else {
         vel = DIV(vel, 1.3);
