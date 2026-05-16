@@ -56,6 +56,27 @@ testbed/%.o: testbed/%.c
 test: $(T_OBJS) engine
 	$(CC) -o $(T_TARGET) $(T_OBJS) $(CFLAGS) $(LINK_MICROGAME) $(ADD_RAYLIB) $(OPT)
 
+###################
+# first test game #
+###################
+
+# get the source and obj files
+TG1_SRCS =  $(wildcard testgame1/*.c)
+TG1_SRCS += $(wildcard testgame1/**/*.c)
+TG1_SRCS += $(wildcard testgame1/**/**/.c)
+TG1_OBJS =  $(TG1_SRCS:.c=.o)
+
+# target
+TG1_TARGET = tg1
+
+# build a single obj
+testgame1/%.o: testgame1/%.c
+	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(OPT)
+
+# build everything
+tg1: $(TG1_OBJS) engine
+	$(CC) -o $(TG1_TARGET) $(TG1_OBJS) $(CFLAGS) $(LINK_MICROGAME) $(ADD_RAYLIB) $(OPT)
+
 #####################
 # General functions #
 #####################
@@ -63,7 +84,7 @@ test: $(T_OBJS) engine
 # clean it all up
 .PHONY: clean
 clean:
-	rm -f -- $(T_OBJS) $(T_TARGET) $(OBJS) $(TARGET)
+	rm -f -- $(T_OBJS) $(T_TARGET) $(OBJS) $(TARGET) $(TG1_OBJS) $(TG1_TARGET)
 	@echo Clean done
 
 # run it too
