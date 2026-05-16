@@ -178,7 +178,6 @@ static void velocity_system_resolve_axis(scene *s, entity e, transform *outpos, 
         // get the half axes
         vec3 half = MUL_COMPONENTS(MUL(col->size, 0.5), outpos->scale);
         vec3 half2 = MUL_COMPONENTS(MUL(col2->size, 0.5), transf2.scale);
-        printf("half, half2: "VEC3_FMT" , "VEC3_FMT"\n", VEC3_ARGS(half), VEC3_ARGS(half2));
 
         // check cases
         if (axis == X) {
