@@ -76,7 +76,7 @@ void create_ui(scene *s) {
     dialogueContainer->size = ui_vec_new(1, -8, 1, -8);
     dialogueContainer->anchor = vec2_new(0.5, 0.5);
     dialogueContainer->pos = ui_vec_new(0.5, 0, 0.5, 0);
-    dialogue = ui_text_new(&mainFont, "Basic dialogue box here, it will have use and be able to turn off eventually.");
+    dialogue = ui_text_new(&mainFont, "Impressive. You haven't fallen off yet!");
     dialogue->autoWrap = 1;
     ui_container_bind_type(dialogueContainer, UI_TYPE_TEXT, dialogue);
     ui_container_set_parent(dialogueContainer, dialogueCover);
