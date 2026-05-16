@@ -10,8 +10,8 @@ It will be usable as a visual editor *and* as a static C library.
 - Robust UI & text rendering
 
 ## Planned Features
+- Simple, human-editable YAML asset files
 - A small custom coding language for use in the editor
-- Have "Resources" for commonly used/reused data, or for preloading data
 - A full editor for the engine, coded using itself
 
 ## Platform Support
