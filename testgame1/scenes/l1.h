@@ -1,5 +1,6 @@
 
 #include <microgame/microgame.h>
 
-void prepare_scene_1();
+entity prepare_scene_1();
 scene *get_scene_1();
+void destroy_scene_1();

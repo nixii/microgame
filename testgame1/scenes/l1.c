@@ -1,20 +1,32 @@
 
 #include <microgame/microgame.h>
+#include "util.h"
 #include "l1.h"
 
 // the scene thing
-static scene *_s1;
+static scene *s;
 
 // prepare the first scene
-void prepare_scene_1() {
+entity prepare_scene_1() {
 
     // create the scene
-    _s1 = scene_new();
+    s = scene_new();
+
+    // spawn platforms
+    spawn_platform(s, vec3_zero(), vec3_new(2, 1, 2));
+    return spawn_player(s, vec3_new(0, 2, 0));
 }
 
 // get the scene
 scene *get_scene_1() {
 
     // return the scene
-    return _s1;
+    return s;
+}
+
+/*
+ * destroy the scene
+ */
+void destroy_scene_1() {
+    scene_destroy(s);
 }
