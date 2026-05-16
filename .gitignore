@@ -4,5 +4,5 @@ tb
 .DS_Store
 *.a
 test
-tg1
+tg*
 ~old
