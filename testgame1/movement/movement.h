@@ -1,7 +1,7 @@
 
 #include <microgame/microgame.h>
 
-#define MOVE_SPEED 5.0
+#define MOVE_SPEED 1.0
 #define CAM_SPEED 0.5
 #define GRAVITY 8.0
 
