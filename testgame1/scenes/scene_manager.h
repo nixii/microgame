@@ -10,3 +10,5 @@ entity get_npc();
 entity get_player();
 
 vec3 get_spawn_pos();
+
+void handle_scenes();

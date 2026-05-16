@@ -1,5 +1,7 @@
 
+#include <microgame/microgame.h>
 #include "scene_manager.h"
+#include "util.h"
 #include "l1.h"
 
 static scene *s;
@@ -37,4 +39,8 @@ void destroy_all_scenes() {
 
 vec3 get_spawn_pos() {
     return spawnPos;
+}
+
+void handle_scenes() {
+    get_transform(s, get_teleport())->rot.y += get_dt() * PI;
 }

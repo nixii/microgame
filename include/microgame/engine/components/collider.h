@@ -27,6 +27,7 @@ typedef struct collider {
     int hitFloor;
     int hitCeiling;
     int hitWall;
+    int trigger;
 } collider;
 
 /*
@@ -35,6 +36,7 @@ typedef struct collider {
 
 // create a new region collider
 collider collider_new(vec3 size);
+collider collider_new_trigger(vec3 size);
 
 // get offset of the side
 float collider_get_offset(collider *c, transform globalTransform, collider_side s);

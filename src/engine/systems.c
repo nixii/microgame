@@ -55,7 +55,7 @@ static inline int sign(float a) {
 static entity velocity_system_first_collided(scene *s, entity e, transform *transf, collider_side side) {
 
     // skip without collider
-    if (!has_collider(s, e)) return NIL_ENTITY;
+    if (!has_collider(s, e) || get_collider(s, e)->trigger) return NIL_ENTITY;
 
     // get the collider
     collider *c = get_collider(s, e);
@@ -72,7 +72,7 @@ static entity velocity_system_first_collided(scene *s, entity e, transform *tran
     for (entity e2 = 0; e2 < MAX_ENTITIES; e2++) {
 
         // skip without collider
-        if (!s->alive[e2] || e2 == e || !has_collider(s, e2)) continue;
+        if (!s->alive[e2] || e2 == e || !has_collider(s, e2) || get_collider(s, e2)->trigger) continue;
 
         // get the collider
         collider *c2 = get_collider(s, e2);

@@ -9,6 +9,9 @@ static font_resource mainFont;
 static ui_container *dialogueCover;
 static ui_text *dialogue;
 
+static entity teleporter;
+static int goTo;
+
 static void load_meshes() {
     topGroundMeshResource = mesh_resource_from_obj("testgame1/assets/ground1_top.obj");
     bottomGroundMeshResource = mesh_resource_from_obj("testgame1/assets/ground1_bottom.obj");
@@ -97,4 +100,24 @@ void set_dialogue_container_visibility(scene *s, int visible) {
     } else if (!visible && dialogueCover->parent != NULL) {
         ui_container_remove_parent(dialogueCover);
     }
+}
+
+void spawn_teleport(scene *s, vec3 pos, int toNum) {
+    goTo = toNum;
+    teleporter = scene_spawn(s);
+    attach_collider(s, teleporter, collider_new_trigger(vec3_new(4, 2, 4)));
+    get_transform(s, teleporter)->pos = pos;
+    get_transform(s, teleporter)->scale = vec3_new(0.25, 0.5, 0.25);
+    get_transform(s, teleporter)->rot = vec3_new(PI / 4, PI / 4, 0);
+
+    entity m1 = scene_spawn(s);
+    attach_mesh(s, teleporter, mesh_from_resource(rgb(234, 255, 158), topGroundMeshResource));
+    set_parent(s, m1, teleporter);
+
+    entity m2 = scene_spawn(s);
+    attach_mesh(s, m2, mesh_from_resource(rgb(255, 225, 0), bottomGroundMeshResource));
+    set_parent(s, m2, teleporter);
+}
+entity get_teleport() {
+    return teleporter;
 }

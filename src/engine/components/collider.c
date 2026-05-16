@@ -15,8 +15,16 @@ collider collider_new(vec3 size) {
         .onCollision = NULL,
         .hitFloor = 0,
         .hitWall = 0,
-        .hitCeiling = 0
+        .hitCeiling = 0,
+        .trigger = 0
     };
+}
+
+// create a collider trigger
+collider collider_new_trigger(vec3 size) {
+    collider c = collider_new(size);
+    c.trigger = 1;
+    return c;
 }
 
 // get offset of the side

@@ -21,6 +21,14 @@ entity prepare_scene_1() {
     spawn_platform(s, vec3_new(5, 2.5, 6), vec3_new(1, 0.5, 0.5));
     spawn_platform(s, vec3_new(20, 2.5, 6), vec3_new(1, 1, 1));
 
+    spawn_platform(s, vec3_new(20, 3.5, 20), vec3_new(0.3, 0.3, 0.3));
+    spawn_platform(s, vec3_new(25, 5, 25), vec3_new(0.3, 0.3, 0.3));
+    spawn_platform(s, vec3_new(30, 6.5, 20), vec3_new(0.3, 0.3, 0.3));
+    spawn_platform(s, vec3_new(25, 8, 15), vec3_new(0.3, 0.3, 0.3));
+    spawn_platform(s, vec3_new(25, 8.5, 5), vec3_new(1, 1, 1));
+
+    spawn_teleport(s, vec3_new(25, 10.5, 5), 2);
+
     // create entities
     npc = spawn_npc(s, vec3_new(3, 1, 3), PI / 4);
     return spawn_player(s, spawnPos1);
