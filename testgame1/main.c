@@ -37,6 +37,7 @@ int main(void) {
         update_movement(sc, player);
         check_dialogue_visibility(sc, player, npc);
         game_update(game);
+        rescue(sc, player);
         float targetFov = (PI / 2) + LENGTH(MUL_COMPONENTS(get_velocity(sc, player)->velocity, vec3_new(1, 0, 1))) / 20;
         sc->camera.fov += (targetFov - sc->camera.fov) * 0.2f;
     }

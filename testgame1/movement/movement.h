@@ -14,3 +14,4 @@
 #define DASH_COOLDOWN 2.0
 
 void update_movement(scene *s, entity p);
+void rescue(scene *s, entity p);

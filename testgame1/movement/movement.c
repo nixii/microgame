@@ -1,10 +1,14 @@
 
 #include "movement.h"
+#include "../scenes/scene_manager.h"
+#include "../scenes/util.h"
 #include <stdio.h>
 
 static vec3 vel = (vec3){0, 0, 0};
 static vec3 impulses = (vec3){0, 0, 0};
 float yVel = 0;
+static int numRescues = 0;
+static char rescuesBuf[64];
 
 // dash cooldown
 float dashcooldown = 0.0;
@@ -36,7 +40,7 @@ void update_movement(scene *s, entity p) {
     if (camCollider->hitFloor) {
         vel = DIV(vel, GROUND_FRICTION);
         yVel = 0;
-        canJump = 1;
+        canJump = 2;
     } else {
         vel = DIV(vel, AIR_FRICTION);
         yVel -= GRAVITY * dt;
@@ -71,9 +75,19 @@ void update_movement(scene *s, entity p) {
     // jumping
     if (key_just_down(M_KEY_SPACE) && canJump) {
         yVel = JUMP_POWER;
-        canJump = 0;
+        canJump -= 1;
     }
 
     // transform & apply the velocity
     camVel->velocity = ADD(vec3_rot_y(vec3_new(vel.x, yVel, vel.z), cameraTransform->rot.y), impulses);
+}
+
+void rescue(scene *s, entity p) {
+    if (get_transform(s, p)->pos.y < -5) {
+        get_transform(s, p)->pos = get_spawn_pos();
+        get_velocity(s, p)->velocity = vec3_zero();
+        numRescues += 1;
+        snprintf(rescuesBuf, sizeof(rescuesBuf), "You have been rescued %d times.", numRescues);
+        ui_text_set_text(get_dialogue(), rescuesBuf);
+    }
 }

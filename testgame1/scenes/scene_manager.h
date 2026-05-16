@@ -8,3 +8,5 @@ void create_scene_3();
 scene *get_scene();
 entity get_npc();
 entity get_player();
+
+vec3 get_spawn_pos();
