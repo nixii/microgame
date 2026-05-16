@@ -55,7 +55,12 @@ float vec3_length(vec3 a) { return sqrtf(a.x * a.x + a.y * a.y + a.z * a.z); }
 
 // normalize a vec3
 // creates a new vec3
-vec3 vec3_normalize(vec3 a) { return vec3_div(a, vec3_length(a)); }
+vec3 vec3_normalize(vec3 a) {
+    float len = vec3_length(a);
+    if (len > 0)
+        return vec3_div(a, vec3_length(a));
+    return a;
+}
 
 // dot a vec3
 float vec3_dot(vec3 a, vec3 b) { return a.x * b.x + a.y * b.y + a.z * b.z; }

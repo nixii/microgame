@@ -96,12 +96,12 @@ static entity velocity_system_first_collided(scene *s, entity e, transform *tran
             // TODO: find first hit entity (furthest away of given side)
             switch (side) {
                 case COLLIDER_SIDE_BOTTOM:
-                    c->hitFloor = 1;
-                    c2->hitFloor = 1;
-                    break;
-                case COLLIDER_SIDE_TOP:
                     c->hitCeiling = 1;
                     c2->hitCeiling = 1;
+                    break;
+                case COLLIDER_SIDE_TOP:
+                    c->hitFloor = 1;
+                    c2->hitFloor = 1;
                     break;
                 default:
                     c->hitWall = 1;
