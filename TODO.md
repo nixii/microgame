@@ -1,6 +1,9 @@
 
 ## To-Do list
 
+Todo #7 - engine prep:
+ * `[ ]` Design the scripting language
+
 Todo #6 - test platformer:
  * `[ ]` 3 simple levels
  * `[ ]` An NPC to talk to
@@ -19,7 +22,6 @@ Todo #5 - preperation for test platformer:
  * * `[x]` meshes bob up and down??
  * `[x]` Box collider scales
  * `[x]` Box collider reports hit sides
- * `[ ]` Design the scripting language
  * `[ ]` Allow playing sounds
 
 Todo #4 - various improvements:
