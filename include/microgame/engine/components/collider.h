@@ -27,6 +27,7 @@ typedef struct collider {
     int hitFloor;
     int hitCeiling;
     int hitWall;
+    int hit;
     int trigger;
 } collider;
 

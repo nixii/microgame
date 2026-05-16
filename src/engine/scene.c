@@ -220,6 +220,7 @@ void scene_render(
             get_collider(s, e)->hitFloor = 0;
             get_collider(s, e)->hitCeiling = 0;
             get_collider(s, e)->hitWall = 0;
+            get_collider(s, e)->hit = 0;
         }
     }
 

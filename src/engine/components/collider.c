@@ -16,7 +16,8 @@ collider collider_new(vec3 size) {
         .hitFloor = 0,
         .hitWall = 0,
         .hitCeiling = 0,
-        .trigger = 0
+        .trigger = 0,
+        .hit = 0
     };
 }
 

@@ -37,10 +37,14 @@ void collision_system_update(scene *s, entity first, float _) {
             (a.z < B.z && A.z > b.z)) {
 
             // run functions for collision
-            if (firstCol->onCollision != NULL)
+            if (firstCol->onCollision != NULL) {
                 firstCol->onCollision(first, second);
-            if (secondCol->onCollision != NULL)
+                firstCol->hit = 1;
+            }
+            if (secondCol->onCollision != NULL) {
                 secondCol->onCollision(second, first);
+                secondCol->hit = 1;
+            }
         }
     }
 }
