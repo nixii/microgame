@@ -216,8 +216,11 @@ void scene_render(
         if (!s->alive[e]) continue;
         get_world_transform_mat4(s, e);
 
-        if (has_collider(s, e))
-            get_collider(s, e)->collided = 0;
+        if (has_collider(s, e)) {
+            get_collider(s, e)->hitFloor = 0;
+            get_collider(s, e)->hitCeiling = 0;
+            get_collider(s, e)->hitWall = 0;
+        }
     }
 
     // update the systems

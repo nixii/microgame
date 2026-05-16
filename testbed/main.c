@@ -89,7 +89,7 @@ void handleMovement(float dt) {
     negYVel -= GRAVITY * dt;
 
     // did it collide
-    if (camCollider->collided) {
+    if (camCollider->hitFloor || camCollider->hitCeiling) {
         negYVel = maxf(0, negYVel);
     }
     

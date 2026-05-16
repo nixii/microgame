@@ -13,7 +13,9 @@ collider collider_new(vec3 size) {
         .size = size,
         .centered = 1,
         .onCollision = NULL,
-        .collided = 0
+        .hitFloor = 0,
+        .hitWall = 0,
+        .hitCeiling = 0
     };
 }
 

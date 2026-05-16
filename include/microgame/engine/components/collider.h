@@ -24,7 +24,9 @@ typedef struct collider {
     vec3 size;
     int centered;
     void (*onCollision)(entity, entity);
-    int collided;
+    int hitFloor;
+    int hitCeiling;
+    int hitWall;
 } collider;
 
 /*
