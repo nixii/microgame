@@ -15,7 +15,7 @@ entity prepare_scene_1() {
 
     // spawn platforms
     spawn_platform(s, vec3_zero(), vec3_new(2, 1, 2));
-    return spawn_player(s, vec3_new(0, 2, 0));
+    return spawn_player(s, vec3_new(0, 1, 0));
 }
 
 // get the scene
