@@ -47,7 +47,7 @@ void update_movement(scene *s, entity p) {
     } else {
         vel = DIV(vel, AIR_FRICTION);
         yVel -= GRAVITY * dt;
-        canJump = canJump > 0 ? 1 : 0;
+        // canJump = canJump > 0 ? 1 : 0;
     }
 
     // movement
@@ -60,6 +60,14 @@ void update_movement(scene *s, entity p) {
         movement.z += 1;
     if (key_down(M_KEY_S))
         movement.z -= 1;
+    if (key_down(M_KEY_LSHIFT) && camCollider->size.y != 0.5) {
+        camCollider->size.y = 0.5;
+        cameraTransform->pos.y -= 0.25;
+    }
+    else if (!key_down(M_KEY_LSHIFT) && camCollider->size.y == 0.5) {
+        camCollider->size.y = 1;
+        cameraTransform->pos.y += 0.25;
+    }
 
     // dashing
     if (mouse_just_down(1) && dashcooldown <= 0) {
