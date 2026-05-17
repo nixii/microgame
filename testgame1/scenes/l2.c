@@ -20,7 +20,11 @@ entity prepare_scene_2() {
     spawn_platform(s, vec3_zero(), vec3_new(2, 1, 2));
     spawn_platform(s, vec3_new(0, 2, 8), vec3_new(1, 0.5, 1));
 
-    spawn_teleport(s, vec3_new(25, 10.5, 5), 2);
+    for (int i = 0; i < 16; i++)
+        spawn_platform(s, vec3_new(0, 3 + i, 12 + 4 * i), vec3_new(0.5, 0.5, 0.5));
+    spawn_platform(s, vec3_new(0, 18, 78), vec3_new(1, 0.5, 1));
+
+    spawn_teleport(s, vec3_new(0, 20.5, 78), 3);
 
     // create entities
     npc = spawn_npc(s, vec3_new(3, 1, 3), PI / 4);
