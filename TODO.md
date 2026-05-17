@@ -3,14 +3,16 @@
 
 Todo #7 - engine prep:
  * `[ ]` Design the scripting language
- * `[ ]` Allow playing sounds
 
 Todo #6 - test platformer:
  * `[ ]` 3 simple levels
- * `[ ]` An NPC to talk to
- * `[ ]` Snappy movement (no acceleration besides gravity)
- * `[ ]` A forwards dash (?)
- * `[ ]` At least some color design for the world tiles
+ * `[ ]` Ending screen
+ * `[x]` An NPC to talk to (how many times you fell)
+ * `[x]` Snappy movement (no acceleration besides gravity)
+ * `[x]` A forwards dash (?)
+ * `[x]` At least some color design for the world tiles
+ * `[ ]` Add sounds into the engine
+ * `[ ]` Sound effects
 
 Todo #5 - preperation for test platformer:
  * `[x]` Mouse delta detection
