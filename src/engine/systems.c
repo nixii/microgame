@@ -10,41 +10,46 @@
 // handle collision system
 void collision_system_update(scene *s, entity first, float _) {
 
-    // skip if no collider or not alive
-    if (!s->alive[first] || !has_collider(s, first)) return;
+    // skip no collider
+    if (!has_collider(s, first)) return;
 
-    // get the vec3 pos and bounds
-    collider *firstCol = get_collider(s, first);
-    transform firstTrans = get_global_transform(s, first);
-    vec3 a = vec3_sub(firstTrans.pos, vec3_mul(firstCol->size, 2)); // a minimum
-    vec3 A = vec3_add(a, firstCol->size); // a maximum
+    // get the collider
+    collider *c = get_collider(s, first);
+    vec3 scaledArea = c->size;
+    transform transf = get_global_transform(s, first);
+    scaledArea = MUL_COMPONENTS(scaledArea, transf.scale);
+    vec3 a = SUB(transf.pos, MUL(scaledArea, 0.5)); // a minimum
+    vec3 A = ADD(a, scaledArea); // a maximum
 
-    // for the other entities
-    for (entity second = first + 1; second < MAX_ENTITIES; second++) {
+    // loop through other entities
+    for (entity e2 = first + 1; e2 < MAX_ENTITIES; e2++) {
 
-        // skip if no collider or not alive
-        if (!s->alive[second] || !has_collider(s, second)) continue;
+        // skip without collider
+        if (!s->alive[e2] || !has_collider(s, e2)) continue;
 
-        // get the bounds
-        collider *secondCol = get_collider(s, second);
-        transform secondTrans = get_global_transform(s, second);
-        vec3 b = vec3_sub(secondTrans.pos, vec3_mul(secondCol->size, 2)); // b minimum
-        vec3 B = vec3_add(b, secondCol->size); // b maximum
+        // get the collider
+        collider *c2 = get_collider(s, e2);
+        vec3 pos2 = get_global_transform(s, e2).pos;
+        vec3 scale2 = get_global_transform(s, e2).scale;
+
+        // check collision
+        vec3 scaledArea2 = c2->size;
+        scaledArea2 = MUL_COMPONENTS(scaledArea2, scale2);
+        vec3 b = SUB(pos2, MUL(scaledArea2, 0.5)); // b minimum
+        vec3 B = ADD(b, scaledArea2); // b maximum
 
         // check the bounds
         if ((a.x < B.x && A.x > b.x) &&
             (a.y < B.y && A.y > b.y) &&
             (a.z < B.z && A.z > b.z)) {
 
-            // run functions for collision
-            if (firstCol->onCollision != NULL) {
-                firstCol->onCollision(first, second);
-                firstCol->hit = 1;
-            }
-            if (secondCol->onCollision != NULL) {
-                secondCol->onCollision(second, first);
-                secondCol->hit = 1;
-            }
+            // set hit
+            if (c->onCollision != NULL)
+                c->onCollision(first, e2);
+            if (c2->onCollision != NULL)
+                c2->onCollision(e2, first);
+            c->hit = 1;
+            c2->hit = 1;
         }
     }
 }
@@ -175,7 +180,6 @@ static void velocity_system_resolve_axis(scene *s, entity e, transform *outpos, 
         collider *col2 = get_collider(s, firstCollided);
 
         // get positions
-        vec3 pos = outpos->pos;
         transform transf2 = get_global_transform(s, firstCollided);
         vec3 pos2 = transf2.pos;
 
