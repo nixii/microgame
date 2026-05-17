@@ -111,7 +111,7 @@ void spawn_teleport(scene *s, vec3 pos, int toNum) {
     get_transform(s, teleporter)->rot = vec3_new(PI / 4, PI / 4, 0);
 
     entity m1 = scene_spawn(s);
-    attach_mesh(s, teleporter, mesh_from_resource(rgb(234, 255, 158), topGroundMeshResource));
+    attach_mesh(s, teleporter, mesh_from_resource(rgb(234, 255, 158)    , topGroundMeshResource));
     set_parent(s, m1, teleporter);
 
     entity m2 = scene_spawn(s);

@@ -4,6 +4,7 @@
 #include "movement/movement.h"
 #include "dialogue/dialogue.h"
 #include "scenes/util.h"
+#include <stdio.h>
 
 // window settings
 #define WIDTH 1200
@@ -19,7 +20,8 @@ int main(void) {
     disable_mouse();
 
     // load the scenes
-    create_scene_1();
+    // create_scene_1();
+    create_scene_2();
 
     // get objects
     entity player = get_player();
@@ -37,9 +39,12 @@ int main(void) {
         scene *goToThis = handle_scenes();
 
         if (goToThis != NULL) {
+            sc = goToThis;
             game_set_scene(game, sc);
             player = get_player();
             npc = get_npc();
+            printf("transferred!\n");
+            continue;
         }
 
         game_update(game);
@@ -50,5 +55,4 @@ int main(void) {
 
     // destroy the game
     game_destroy(game);
-    destroy_scene_1();
 }

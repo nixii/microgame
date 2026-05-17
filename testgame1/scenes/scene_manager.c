@@ -3,6 +3,7 @@
 #include "scene_manager.h"
 #include "util.h"
 #include "l1.h"
+#include "l2.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -19,7 +20,10 @@ void create_scene_1() {
     spawnPos = get_spawn_pos_1();
 }
 void create_scene_2() {
-
+    player = prepare_scene_2();
+    npc = get_npc_2();
+    s = get_scene_2();
+    spawnPos = get_spawn_pos_2();
 }
 void create_scene_3() {
 
@@ -47,11 +51,13 @@ scene *handle_scenes() {
     get_transform(s, get_teleport())->rot.y += get_dt() * PI;
 
     if (get_collider(s, get_teleport())->hit) {
-        printf("HIT\n");
         switch (get_go_to()) {
             case 1:
                 create_scene_1();
                 return get_scene_1();
+            case 2:
+                create_scene_2();
+                return get_scene_2();
             default:
                 fprintf(stderr, "no scene %d.\n", get_go_to());
                 exit(1);
