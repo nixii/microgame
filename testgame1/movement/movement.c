@@ -15,6 +15,7 @@ static float jumpCheck = 0.0;
 
 static sound jumpSound;
 static sound dashSound;
+static sound fallSound;
 
 // dash cooldown
 float dashcooldown = 0.0;
@@ -24,6 +25,7 @@ float canJump = 0;
 void initMovement() {
     jumpSound = sound_from("testgame1/assets/jump.wav");
     dashSound = sound_from("testgame1/assets/dash.wav");
+    fallSound = sound_from("testgame1/assets/fall.wav");
 }
 
 // update the movement
@@ -119,5 +121,6 @@ void rescue(scene *s, entity p) {
         numRescues += 1;
         snprintf(rescuesBuf, sizeof(rescuesBuf), "You have been rescued %d times.", numRescues);
         ui_text_set_text(get_dialogue(), rescuesBuf);
+        sound_play(&fallSound);
     }
 }
