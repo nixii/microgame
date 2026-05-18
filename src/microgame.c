@@ -64,6 +64,11 @@ void game_set_scene(microgame *g, scene *s) {
     g->mainScene = s;
 }
 
+// set the clear color
+void game_set_clear_color(microgame *g, color c) {
+    g->renderer.clearColor = c;
+}
+
 // while running
 int game_still_running(microgame *g) {
     return (g != NULL && !WindowShouldClose());

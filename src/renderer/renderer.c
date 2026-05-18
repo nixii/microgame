@@ -13,7 +13,8 @@ renderer renderer_new(int width, int height) {
         .width = width,
         .height = height,
         .pixels = pixels,
-        .depthBuffer = depthBuffer
+        .depthBuffer = depthBuffer,
+        .clearColor = rgb(0, 0, 0)
     };
 }
 
@@ -21,7 +22,7 @@ renderer renderer_new(int width, int height) {
 void renderer_clear(renderer *r) {
     for (int y = 0; y < r->height; y++) {
         for (int x = 0; x < r->width; x++) {
-            r->pixels[x + y * r->width] = rgb(0, 0, 0);
+            r->pixels[x + y * r->width] = r->clearColor;
             r->depthBuffer[x + y * r->width] = 1e30;
         }
     }

@@ -13,6 +13,7 @@ typedef struct microgame microgame;
 // Functions
 microgame *game_new(int width, int height, int fps, char *title);
 void game_set_scene(microgame *g, scene *s);
+void game_set_clear_color(microgame *g, color c);
 int game_still_running(microgame *g);
 void game_update(microgame *g);
 void game_destroy(microgame *g);

@@ -10,6 +10,7 @@ typedef struct renderer {
     int height;
     color *pixels;
     float *depthBuffer;
+    color clearColor;
 } renderer;
 
 /*

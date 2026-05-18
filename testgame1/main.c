@@ -17,6 +17,7 @@ int main(void) {
 
     // create the game
     microgame *game = game_new(WIDTH, HEIGHT, FPS, TITLE);
+    game_set_clear_color(game, rgb(30, 36, 39));
     disable_mouse();
 
     // load the scenes
