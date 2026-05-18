@@ -31,6 +31,9 @@ int main(void) {
     game_set_scene(game, sc);
     set_dialogue_container_visibility(sc, 1);
 
+    // init
+    initMovement();
+
     // while the game is running
     while (game_still_running(game)) {
         update_movement(sc, player);

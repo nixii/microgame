@@ -71,7 +71,7 @@ TG1_TARGET = tg1
 
 # build a single obj
 testgame1/%.o: testgame1/%.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(OPT)
+	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(OPT) $(ADD_RAYLIB)
 
 # build everything
 tg1: $(TG1_OBJS) engine

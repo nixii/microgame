@@ -15,3 +15,4 @@
 
 void update_movement(scene *s, entity p);
 void rescue(scene *s, entity p);
+void initMovement();

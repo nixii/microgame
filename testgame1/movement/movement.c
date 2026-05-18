@@ -1,7 +1,8 @@
 
-#include "movement.h"
+#include <microgame/engine/resource/sound.h>
 #include "../scenes/scene_manager.h"
 #include "../scenes/util.h"
+#include "movement.h"
 #include <stdio.h>
 
 static vec3 vel = (vec3){0, 0, 0};
@@ -12,9 +13,18 @@ static char rescuesBuf[64];
 
 static float jumpCheck = 0.0;
 
+static sound jumpSound;
+static sound dashSound;
+
 // dash cooldown
 float dashcooldown = 0.0;
 float canJump = 0;
+
+// init movement
+void initMovement() {
+    jumpSound = sound_from("testgame1/assets/jump.wav");
+    dashSound = sound_from("testgame1/assets/dash.wav");
+}
 
 // update the movement
 void update_movement(scene *s, entity p) {
@@ -75,6 +85,7 @@ void update_movement(scene *s, entity p) {
         impulses = vec3_rot_y(vec3_new(0, 0, DASH_SPEED), cameraTransform->rot.y);
         dashcooldown = DASH_COOLDOWN;
         yVel = 0;
+        sound_play(&dashSound);
     }
 
     // decay dash
@@ -93,6 +104,7 @@ void update_movement(scene *s, entity p) {
         yVel = JUMP_POWER;
         canJump -= 1;
         jumpCheck = 0.0;
+        sound_play(&jumpSound);
     }
 
     // transform & apply the velocity
