@@ -11,8 +11,8 @@ Todo #6 - test platformer:
  * `[x]` Snappy movement (no acceleration besides gravity)
  * `[x]` A forwards dash (?)
  * `[x]` At least some color design for the world tiles
- * `[ ]` Add sounds into the engine
- * `[ ]` Sound effects
+ * `[x]` Add sounds into the engine
+ * `[x]` Sound effects
 
 Todo #5 - preperation for test platformer:
  * `[x]` Mouse delta detection
