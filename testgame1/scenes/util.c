@@ -84,7 +84,7 @@ void create_ui(scene *s) {
     ui_container_bind_type(dialogueContainer, UI_TYPE_TEXT, dialogue);
     ui_container_set_parent(dialogueContainer, dialogueCover);
 
-    // todo
+    // tutorial
     ui_container *tutorial = ui_container_empty();
     tutorial->size = ui_vec_new(1, 0, 1, 0);
     ui_container_bind_type(tutorial, UI_TYPE_TEXT, ui_text_new(&mainFont, "Controls:\nWASD: movement\nSpace: jump\nLSHIFT: crouch\nLMB: dash"));

@@ -5,7 +5,7 @@ Todo #7 - engine prep:
  * `[ ]` Design the scripting language
 
 Todo #6 - test platformer:
- * `[ ]` 3 simple levels
+ * `[x]` 3 simple levels
  * `[ ]` Ending screen
  * `[x]` An NPC to talk to (how many times you fell)
  * `[x]` Snappy movement (no acceleration besides gravity)
