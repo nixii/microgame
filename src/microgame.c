@@ -41,6 +41,7 @@ microgame *game_new(int width, int height, int fps, char *title) {
     // init the window
     InitWindow(width, height, title);
     SetTargetFPS(fps);
+    InitAudioDevice();
 
     // create the base image
     g->_bufImg = (Image){
@@ -93,6 +94,7 @@ void game_update(microgame *g) {
 
 // destroy the game
 void game_destroy(microgame *g) {
+    CloseAudioDevice();
     CloseWindow();
     free(g);
 }
