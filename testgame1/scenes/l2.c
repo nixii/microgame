@@ -14,6 +14,7 @@ entity prepare_scene_2() {
 
     // create the scene
     s = scene_new();
+    s->lightDir = NORMALIZE(vec3_new(1, 3, 1));
     create_ui(s);
 
     // spawn platforms

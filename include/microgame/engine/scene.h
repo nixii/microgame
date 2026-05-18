@@ -38,6 +38,9 @@ typedef struct scene {
     // the entire UI tree
     ui_container *uiRoot;
 
+    // light dir
+    vec3 lightDir;
+
     // load different component data
 #define X(name, type)\
     uint8_t has_##name[MAX_ENTITIES];\

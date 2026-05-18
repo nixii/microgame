@@ -27,6 +27,7 @@ void create_scene_1() {
 
     if (!soundLoaded) {
         travelSound = sound_from("testgame1/assets/travel.wav");
+        soundLoaded = 1;
     }
 }
 void create_scene_2() {
@@ -37,6 +38,7 @@ void create_scene_2() {
 
     if (!soundLoaded) {
         travelSound = sound_from("testgame1/assets/travel.wav");
+        soundLoaded = 1;
     }
 }
 void create_scene_3() {
@@ -47,6 +49,7 @@ void create_scene_3() {
 
     if (!soundLoaded) {
         travelSound = sound_from("testgame1/assets/travel.wav");
+        soundLoaded = 1;
     }
 }
 void create_scene_ending() {
@@ -54,6 +57,11 @@ void create_scene_ending() {
     npc = NIL_ENTITY;
     s = get_scene_ending();
     spawnPos = get_spawn_pos_ending();
+
+    if (!soundLoaded) {
+        travelSound = sound_from("testgame1/assets/travel.wav");
+        soundLoaded = 1;
+    }
 }
 
 scene *get_scene() {

@@ -19,6 +19,9 @@ scene *scene_new() {
     // clear the root
     s->uiRoot = NULL;
 
+    // the light dir
+    s->lightDir = vec3_new(0, 1, 0);
+
     // vertices ready to render
     s->triangleBufferSize = INIT_TRIANGLE_COUNT;
     s->triangleBuffer = (triangle *)malloc(sizeof(triangle) * s->triangleBufferSize);
@@ -303,7 +306,7 @@ void scene_render(
         vec3 v3 = p3.vec;
 
         // render the triangle
-        float lighting = (vec3_dot(t.normal, vec3_new(0, 1, 0)) + 1) / 5.0;
+        float lighting = (vec3_dot(t.normal, s->lightDir) + 1) / 5.0;
         renderer_render_triangle(r, (int)v1.x, (int)v1.y, v1.z, (int)v2.x, (int)v2.y, v2.z, (int)v3.x, (int)v3.y, v3.z, rgb_mix(t.color, rgb(lighting * 256, lighting * 256, lighting * 256)));
     }
 
