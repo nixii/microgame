@@ -20,8 +20,7 @@ int main(void) {
     disable_mouse();
 
     // load the scenes
-    // create_scene_1();
-    create_scene_3();
+    create_scene_1();
 
     // get objects
     entity player = get_player();

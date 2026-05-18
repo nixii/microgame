@@ -6,8 +6,7 @@
 // the scene thing
 static scene *s;
 static entity npc;
-// static vec3 spawnPos = {0, 2, 0};
-static vec3 spawnPos = {36, 29, 0};
+static vec3 spawnPos = {0, 2, 0};
 
 // prepare the first scene
 entity prepare_scene_3() {
