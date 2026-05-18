@@ -93,6 +93,18 @@ void create_ui(scene *s) {
     scene_set_ui_root(s, root);
 }
 
+void create_end_ui(scene *s) {
+    dialogueCover = NULL;
+    dialogue = NULL;
+    teleporter = NIL_ENTITY;
+
+    ui_container *root = ui_container_empty();
+    root->size = ui_vec_new(1, 0, 0.5, 16);
+    root->pos = ui_vec_new(0, 0, 0.5, -16);
+    ui_container_bind_type(root, UI_TYPE_TEXT, ui_text_new(&mainFont, "Hey, you won the testing level! Great job!"));
+    scene_set_ui_root(s, root);
+}
+
 ui_container *get_dialogue_container() {
     return dialogueCover;
 }

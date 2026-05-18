@@ -8,6 +8,7 @@ entity spawn_player(scene *s, vec3 pos);
 entity spawn_npc(scene *s, vec3 pos, float rot);
 
 void create_ui(scene *s);
+void create_end_ui(scene *s);
 
 ui_container *get_dialogue_container();
 ui_text *get_dialogue();

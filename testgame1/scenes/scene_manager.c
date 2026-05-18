@@ -5,6 +5,7 @@
 #include "l1.h"
 #include "l2.h"
 #include "l3.h"
+#include "ending.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -32,6 +33,12 @@ void create_scene_3() {
     s = get_scene_3();
     spawnPos = get_spawn_pos_3();
 }
+void create_scene_ending() {
+    player = prepare_scene_ending();
+    npc = NIL_ENTITY;
+    s = get_scene_ending();
+    spawnPos = get_spawn_pos_ending();
+}
 
 scene *get_scene() {
     return s;
@@ -52,6 +59,7 @@ vec3 get_spawn_pos() {
 }
 
 scene *handle_scenes() {
+    if (get_player() == NIL_ENTITY) return NULL;
     get_transform(s, get_teleport())->rot.y += get_dt() * PI;
 
     if (get_collider(s, get_teleport())->hit) {
@@ -65,6 +73,9 @@ scene *handle_scenes() {
             case 3:
                 create_scene_3();
                 return get_scene_3();
+            case 4:
+                create_scene_ending();
+                return get_scene_ending();
             default:
                 fprintf(stderr, "no scene %d.\n", get_go_to());
                 exit(1);

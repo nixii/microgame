@@ -6,7 +6,7 @@ Todo #7 - engine prep:
 
 Todo #6 - test platformer:
  * `[x]` 3 simple levels
- * `[ ]` Ending screen
+ * `[x]` Ending screen
  * `[x]` An NPC to talk to (how many times you fell)
  * `[x]` Snappy movement (no acceleration besides gravity)
  * `[x]` A forwards dash (?)

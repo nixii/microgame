@@ -18,6 +18,7 @@ float canJump = 0;
 
 // update the movement
 void update_movement(scene *s, entity p) {
+    if (p == NIL_ENTITY) return;
     float dt = get_dt();
     dashcooldown -= dt;
     jumpCheck += dt;
@@ -99,6 +100,7 @@ void update_movement(scene *s, entity p) {
 }
 
 void rescue(scene *s, entity p) {
+    if (p == NIL_ENTITY) return;
     if (get_transform(s, p)->pos.y < -5) {
         get_transform(s, p)->pos = get_spawn_pos();
         get_velocity(s, p)->velocity = vec3_zero();

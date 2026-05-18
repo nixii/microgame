@@ -7,6 +7,7 @@
 static int visible = 0;
 
 void check_dialogue_visibility(scene *sc, entity plr, entity npc) {
+    if (plr == NIL_ENTITY || npc == NIL_ENTITY) return;
     vec3 playerPos = get_transform(sc, plr)->pos;
     vec3 npcPos = get_transform(sc, npc)->pos;
 

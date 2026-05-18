@@ -35,7 +35,7 @@ int main(void) {
     // while the game is running
     while (game_still_running(game)) {
         update_movement(sc, player);
-        check_dialogue_visibility(sc, player, npc);
+        if (player != NIL_ENTITY) check_dialogue_visibility(sc, player, npc);
         scene *goToThis = handle_scenes();
 
         if (goToThis != NULL) {
@@ -43,14 +43,15 @@ int main(void) {
             game_set_scene(game, sc);
             player = get_player();
             npc = get_npc();
-            printf("transferred!\n");
             continue;
         }
 
         game_update(game);
         rescue(sc, player);
-        float targetFov = (PI / 2) + LENGTH(MUL_COMPONENTS(get_velocity(sc, player)->velocity, vec3_new(1, 0, 1))) / 20;
-        sc->camera.fov += (targetFov - sc->camera.fov) * 0.2f;
+        if (player != NIL_ENTITY) {
+            float targetFov = (PI / 2) + LENGTH(MUL_COMPONENTS(get_velocity(sc, player)->velocity, vec3_new(1, 0, 1))) / 20;
+            sc->camera.fov += (targetFov - sc->camera.fov) * 0.2f;
+        }
     }
 
     // destroy the game
