@@ -21,7 +21,7 @@ int main(void) {
 
     // load the scenes
     // create_scene_1();
-    create_scene_2();
+    create_scene_3();
 
     // get objects
     entity player = get_player();

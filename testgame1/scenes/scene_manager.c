@@ -4,6 +4,7 @@
 #include "util.h"
 #include "l1.h"
 #include "l2.h"
+#include "l3.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -26,7 +27,10 @@ void create_scene_2() {
     spawnPos = get_spawn_pos_2();
 }
 void create_scene_3() {
-
+    player = prepare_scene_3();
+    npc = get_npc_3();
+    s = get_scene_3();
+    spawnPos = get_spawn_pos_3();
 }
 
 scene *get_scene() {
@@ -58,6 +62,9 @@ scene *handle_scenes() {
             case 2:
                 create_scene_2();
                 return get_scene_2();
+            case 3:
+                create_scene_3();
+                return get_scene_3();
             default:
                 fprintf(stderr, "no scene %d.\n", get_go_to());
                 exit(1);
