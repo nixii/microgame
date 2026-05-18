@@ -1,5 +1,6 @@
 
 #include <microgame/microgame.h>
+#include <microgame/engine/resource/sound.h>
 #include "scene_manager.h"
 #include "util.h"
 #include "l1.h"
@@ -15,23 +16,38 @@ static entity player;
 
 static vec3 spawnPos;
 
+static sound travelSound;
+static int soundLoaded = 0;
+
 void create_scene_1() {
     player = prepare_scene_1();
     npc = get_npc_1();
     s = get_scene_1();
     spawnPos = get_spawn_pos_1();
+
+    if (!soundLoaded) {
+        travelSound = sound_from("testgame1/assets/travel.wav");
+    }
 }
 void create_scene_2() {
     player = prepare_scene_2();
     npc = get_npc_2();
     s = get_scene_2();
     spawnPos = get_spawn_pos_2();
+
+    if (!soundLoaded) {
+        travelSound = sound_from("testgame1/assets/travel.wav");
+    }
 }
 void create_scene_3() {
     player = prepare_scene_3();
     npc = get_npc_3();
     s = get_scene_3();
     spawnPos = get_spawn_pos_3();
+
+    if (!soundLoaded) {
+        travelSound = sound_from("testgame1/assets/travel.wav");
+    }
 }
 void create_scene_ending() {
     player = prepare_scene_ending();
@@ -63,6 +79,7 @@ scene *handle_scenes() {
     get_transform(s, get_teleport())->rot.y += get_dt() * PI;
 
     if (get_collider(s, get_teleport())->hit) {
+        sound_play(&travelSound);
         switch (get_go_to()) {
             case 1:
                 create_scene_1();
