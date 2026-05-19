@@ -63,7 +63,7 @@ ms_token _tokenize_identifier(_lexer_state *state) {
         };
     }
 
-    // create the new string
+    // create the new string ident
     char *newString = strndup(state->readBuf + start, len);
 
     // create the token
@@ -137,6 +137,21 @@ ms_tokens tokenize(const char *filepath) {
                 // end of line
                 case '\n':
                     ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_NEWLINE  });
+                    break;
+                
+                // arithmetic
+                case '+':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_PLUS  });
+                    break;
+                case '-':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MINUS  });
+                    break;
+                case '*':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MUL  });
+                    break;
+                case '/':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_DIV  });
+                    break;
             }
         }
 
