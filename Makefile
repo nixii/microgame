@@ -77,6 +77,27 @@ testgame1/%.o: testgame1/%.c
 tg1: $(TG1_OBJS) engine
 	$(CC) -o $(TG1_TARGET) $(TG1_OBJS) $(CFLAGS) $(LINK_MICROGAME) $(ADD_RAYLIB) $(OPT)
 
+###################
+# the actual editor! #
+###################
+
+# get the source and obj files
+EDITOR_SRCS =  $(wildcard editor/*.c)
+EDITOR_SRCS += $(wildcard editor/**/*.c)
+EDITOR_SRCS += $(wildcard editor/**/**/.c)
+EDITOR_OBJS =  $(EDITOR_SRCS:.c=.o)
+
+# target
+EDITOR_TARGET = microgame
+
+# build a single obj
+editor/%.o: editor/%.c
+	$(CC) -o $@ -c $< $(CFLAGS) $(IFLAGS) $(OPT) $(ADD_RAYLIB)
+
+# build everything
+editor: $(EDITOR_OBJS) engine
+	$(CC) -o $(EDITOR_TARGET) $(EDITOR_OBJS) $(CFLAGS) $(LINK_MICROGAME) $(ADD_RAYLIB) $(OPT)
+
 #####################
 # General functions #
 #####################
@@ -84,7 +105,7 @@ tg1: $(TG1_OBJS) engine
 # clean it all up
 .PHONY: clean
 clean:
-	rm -f -- $(T_OBJS) $(T_TARGET) $(OBJS) $(TARGET) $(TG1_OBJS) $(TG1_TARGET)
+	rm -f -- $(T_OBJS) $(T_TARGET) $(OBJS) $(TARGET) $(TG1_OBJS) $(TG1_TARGET) $(EDITOR_OBJS) $(EDITOR_TARGET)
 	@echo Clean done
 
 # run it too

@@ -1,6 +1,6 @@
 
 # say that this whole script now will run as a scene (so "me" is unset)
-script as new scene
+assert me is nil
 
 set camera new camera with
     set position 0 0 0
@@ -9,7 +9,7 @@ end
 
 set light_direction 0 1 0
 
-let e1 entity new with
+let e1 new entity with
     set guid player
     set position 0 0 0
     set rotation 0 0 0
@@ -20,7 +20,7 @@ let e1 entity new with
     end
 end
 
-let e2 entity new with
+let e2 new entity with
     set guid floor
     set position 0 -2 0
     set rotation 0 0 0
