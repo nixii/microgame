@@ -1,45 +1,106 @@
 
-#include <stdio.h>
+#include <string.h>
 #include <assert.h>
+#include <stdio.h>
 #include "lexer.h"
 
 // define the da
 DA_DEFINE(ms_tokens, ms_token);
 
-// tokenize a string
+// lexer state
+typedef struct {
+    FILE *f;
+    char *readBuf;
+    size_t bufSize;
+    ssize_t numRead;
+    ssize_t curIdx;
+} _lexer_state;
+
+// tokenize
+ms_token _tokenize_identifier(_lexer_state *state) {
+    size_t start = state->curIdx;
+    size_t len = 0;
+    int endLoop = 0;
+
+    // while there is a char
+    while (state->curIdx < state->numRead && !endLoop) {
+
+        // add the char
+        switch (state->readBuf[state->curIdx]) {
+            case 'A'...'Z':
+            case 'a'...'z':
+            case '0'...'9':
+            case '_':
+                len++;
+                break;
+            default:
+                endLoop = 1;
+                break;
+        }
+        state->curIdx++;
+    }
+
+    // go back a char
+    state->curIdx--;
+
+    // create the new string
+    char *newString = strndup(state->readBuf + start, len);
+    printf("KW: %s\n", newString);
+
+    // create the token
+    return (ms_token) {
+        .type = MS_TT_IDENT,
+        .value = { newString }
+    };
+}
+
+// tokenize a whole file
 ms_tokens tokenize(const char *filepath) {
 
+    // create the lexer state
+    _lexer_state ls = { 0 };
+
     // load the file
-    FILE *f = fopen(filepath, "r");
-    assert(f != NULL);
+    ls.f = fopen(filepath, "r");
+    assert(ls.f != NULL);
 
     // allocate the buffer for characters
-    char *readBuf = NULL;
-    size_t bufSize = 0;
-    ssize_t numRead = 0;
+    ls.readBuf = NULL;
+    ls.bufSize = 0;
+    ls.numRead = 0;
 
     // create the da
     ms_tokens tokens = ms_tokens_new();
 
     // read!
-    while ((numRead = getline(&readBuf, &bufSize, f)) > 0) {
+    while ((ls.numRead = getline(&ls.readBuf, &ls.bufSize, ls.f)) > 0) {
         
         // iterate over the characters
-        for (ssize_t i = 0; i < numRead; i++) {
+        for (ls.curIdx = 0; ls.curIdx < ls.numRead; ls.curIdx++) {
 
             // get teh current character
-            char c = readBuf[i];
+            char c = ls.readBuf[ls.curIdx];
 
             // skip comments
             if (c == '#')
                 break;
-            printf("%c", c);
-        }
-    }
 
+            // go through the tokens
+            switch (c) {
+                case 'A'...'Z':
+                case 'a'...'z':
+                case '_':
+                    ms_tokens_append(&tokens, _tokenize_identifier(&ls));
+                    break;
+            }
+        }
+
+        // free the buffer
+    }
+    
     // close the file
-    fclose(f);
-    free(readBuf);
+    fclose(ls.f);
+    free(ls.readBuf);
 
     // return the da
     return tokens;
