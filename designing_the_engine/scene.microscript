@@ -1,6 +1,4 @@
 
-# say that this whole script now will run as a scene (so "me" is unset)
-
 set camera new camera with
     set position 0 0 0
     set rotation 0 0 0

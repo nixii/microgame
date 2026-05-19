@@ -54,6 +54,19 @@ ms_token _tokenize_identifier(_lexer_state *state) {
     };
 }
 
+// tokenize numbes or a vector
+ms_token _tokenize_numbers(_lexer_state *state) {
+
+    // up to 4 numbers in a row
+    char *numStrs[4];
+    int endLoop = 0;
+
+    // find the numbers
+    while (state->curIdx < state->numRead && !endLoop) {
+        // TODO: finish
+    }
+}
+
 // tokenize a whole file
 ms_tokens tokenize(const char *filepath) {
 
@@ -91,6 +104,9 @@ ms_tokens tokenize(const char *filepath) {
                 case 'a'...'z':
                 case '_':
                     ms_tokens_append(&tokens, _tokenize_identifier(&ls));
+                    break;
+                case '0'...'9':
+                    ms_tokens_append(&tokens, _tokenize_numbers(&ls));
                     break;
             }
         }
