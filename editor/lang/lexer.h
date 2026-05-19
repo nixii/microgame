@@ -33,9 +33,7 @@ typedef enum {
 typedef union {
     char *chars;
     int num;
-    vec2 v2;
-    vec3 v3;
-    ui_vec v4;
+    int vecs[4];
 } ms_token_value;
 
 // actual token object
