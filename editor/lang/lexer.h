@@ -2,6 +2,13 @@
 #ifndef MG_EDITOR_LEXER_H
 #define MG_EDITOR_LEXER_H
 
+#include <microgame/microgame.h>
+#include "../da.h"
+
+// the amount of chars to read in a line
+#define MS_LEXER_LINE_READ_SIZE 4096
+
+// token types
 typedef enum {
 
     // various important things
@@ -23,7 +30,25 @@ typedef enum {
     MS_TT_DIV,
 } ms_token_type;
 
-// load tokens
+// token values
+typedef union {
+    char *chars;
+    int num;
+    vec2 v2;
+    vec3 v3;
+    ui_vec v4;
+} ms_token_value;
 
+// actual token object
+typedef struct {
+    ms_token_type type;
+    ms_token_value value;
+} ms_token;
+
+// create the dynamic array type
+DA_DECLARE(ms_tokens, ms_token);
+
+// load tokens
+ms_tokens tokenize(const char *src);
 
 #endif // MG_EDITOR_LEXER_H

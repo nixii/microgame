@@ -5,13 +5,21 @@
 #define DA_START_SIZE 8
 #define DA_GROWTH_RATE 2
 
-// dynamic array macro
-#define DA_CREATE(name, type)\
+// just declare
+#define DA_DECLARE(name, type)\
     typedef struct {\
         int capacity;\
         int length;\
         type *data;\
     } name;\
+    name name##_new();\
+    void name##_destroy(name *f);\
+    int name##_resize(name *f);\
+    void name##_append(name *f, type val);\
+    type name##_get(name *f, int idx);
+
+// define all the functions
+#define DA_DEFINE(name, type)\
     name name##_new() {\
         type *data = (type*)malloc(sizeof(type) * DA_START_SIZE);\
         if (data == NULL) {\
