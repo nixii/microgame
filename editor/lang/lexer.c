@@ -43,6 +43,26 @@ ms_token _tokenize_identifier(_lexer_state *state) {
     // go back a char
     state->curIdx--;
 
+    // handle booleans
+    if (strncmp(state->readBuf + start, "true", len) == 0) {
+        return (ms_token){
+            .type = MS_TT_BOOL,
+            .value = { .num = 1 }
+        };
+    } else if (strncmp(state->readBuf + start, "false", len) == 0) {
+        return (ms_token){
+            .type = MS_TT_BOOL,
+            .value = { .num = 0 }
+        };
+    }
+
+    // nil
+    else if (strncmp(state->readBuf + start, "nil", len) == 0) {
+        return (ms_token){
+            .type = MS_TT_NIL
+        };
+    }
+
     // create the new string
     char *newString = strndup(state->readBuf + start, len);
     printf("KW: %s\n", newString);
@@ -50,7 +70,7 @@ ms_token _tokenize_identifier(_lexer_state *state) {
     // create the token
     return (ms_token) {
         .type = MS_TT_IDENT,
-        .value = { newString }
+        .value = { .chars = newString }
     };
 }
 
@@ -64,7 +84,9 @@ ms_token _tokenize_numbers(_lexer_state *state) {
     // find the numbers
     while (state->curIdx < state->numRead && !endLoop) {
         // TODO: finish
+        state->curIdx++;
     }
+    state->curIdx--;
 }
 
 // tokenize a whole file

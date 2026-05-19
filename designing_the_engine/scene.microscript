@@ -1,4 +1,8 @@
 
+true
+false
+nil
+
 set camera new camera with
     set position 0 0 0
     set rotation 0 0 0
