@@ -65,7 +65,6 @@ ms_token _tokenize_identifier(_lexer_state *state) {
 
     // create the new string
     char *newString = strndup(state->readBuf + start, len);
-    printf("KW: %s\n", newString);
 
     // create the token
     return (ms_token) {
@@ -122,14 +121,22 @@ ms_tokens tokenize(const char *filepath) {
 
             // go through the tokens
             switch (c) {
+
+                // identifiers
                 case 'A'...'Z':
                 case 'a'...'z':
                 case '_':
                     ms_tokens_append(&tokens, _tokenize_identifier(&ls));
                     break;
+
+                // numbers and all vec types
                 case '0'...'9':
                     ms_tokens_append(&tokens, _tokenize_numbers(&ls));
                     break;
+
+                // end of line
+                case '\n':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_NEWLINE  });
             }
         }
 
