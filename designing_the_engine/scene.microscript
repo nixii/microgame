@@ -1,6 +1,5 @@
 
 # say that this whole script now will run as a scene (so "me" is unset)
-assert me is nil
 
 set camera new camera with
     set position 0 0 0
