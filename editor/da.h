@@ -34,7 +34,7 @@
         f->capacity = 0;\
     }\
     int name##_resize(name *f) {\
-        if (f->length < f->capacity) return 0;\
+        if (f->length < f->capacity) return 1;\
         type *data = realloc(f->data, sizeof(type) * f->capacity * DA_GROWTH_RATE);\
         if (data == NULL) {\
             free(f->data);\

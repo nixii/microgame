@@ -40,9 +40,6 @@ ms_token _tokenize_identifier(_lexer_state *state) {
         state->curIdx++;
     }
 
-    // go back a char
-    state->curIdx--;
-
     // handle booleans
     if (strncmp(state->readBuf + start, "true", len) == 0) {
         return (ms_token){
@@ -108,7 +105,6 @@ ms_token _tokenize_numbers(_lexer_state *state) {
         // TODO: finish
         state->curIdx++;
     }
-    state->curIdx--;
 
     // get the type
     switch (numNums) {
@@ -171,7 +167,8 @@ ms_tokens tokenize(const char *filepath) {
     while ((ls.numRead = getline(&ls.readBuf, &ls.bufSize, ls.f)) > 0) {
         
         // iterate over the characters
-        for (ls.curIdx = 0; ls.curIdx < ls.numRead; ls.curIdx++) {
+        ls.curIdx = 0;
+        while (ls.curIdx < ls.numRead) {
 
             // get teh current character
             char c = ls.readBuf[ls.curIdx];
@@ -188,12 +185,12 @@ ms_tokens tokenize(const char *filepath) {
                 case 'a'...'z':
                 case '_':
                     ms_tokens_append(&tokens, _tokenize_identifier(&ls));
-                    break;
+                    continue;
 
                 // numbers and all vec types
                 case '0'...'9':
                     ms_tokens_append(&tokens, _tokenize_numbers(&ls));
-                    break;
+                    continue;
 
                 // end of line
                 case '\n':
@@ -218,8 +215,10 @@ ms_tokens tokenize(const char *filepath) {
                 case '"':
                 case '\'':
                     ms_tokens_append(&tokens, _tokenize_string(&ls, c));
-                    break;
+                    continue;
             }
+
+            ls.curIdx++;
         }
 
         // free the buffer
