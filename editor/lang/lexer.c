@@ -45,12 +45,12 @@ ms_token _tokenize_identifier(_lexer_state *state) {
     if (strncmp(state->readBuf + start, "true", len) == 0) {
         return (ms_token){
             .type = MS_TT_BOOL,
-            .value = { .num = 1 }
+            .value = { .truthy = 1 }
         };
     } else if (strncmp(state->readBuf + start, "false", len) == 0) {
         return (ms_token){
             .type = MS_TT_BOOL,
-            .value = { .num = 0 }
+            .value = { .truthy = 0 }
         };
     }
 
