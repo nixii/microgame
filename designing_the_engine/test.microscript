@@ -1,6 +1,2 @@
 
-preload
-    echo "hello world"
-end preload
-
-echo update. dt: ${dt}
+echo "hello, world!"
