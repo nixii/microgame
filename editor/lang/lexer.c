@@ -7,6 +7,11 @@
 // define the da
 DA_DEFINE(ms_tokens, ms_token);
 
+// all keywords
+static char *keywords[] = {
+    "set"
+};
+
 // lexer state
 typedef struct {
     FILE *f;
@@ -63,6 +68,17 @@ ms_token _tokenize_identifier(_lexer_state *state) {
 
     // create the new string ident
     char *newString = strndup(state->readBuf + start, len);
+
+    // check keywords
+    size_t numKeywords = sizeof(keywords) / sizeof(char*);
+    for (size_t currentKeyword = 0; currentKeyword < numKeywords; currentKeyword++) {
+        if (strcmp(newString, keywords[currentKeyword]) == 0) {
+            return (ms_token) {
+                .type = MS_TT_KEYWORD,
+                .value = { .chars = newString }
+            };
+        }
+    }
 
     // create the token
     return (ms_token) {

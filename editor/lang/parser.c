@@ -37,7 +37,10 @@ ms_token ms_ast_expect(ms_ast *ast, ms_tokens *tokens, ms_token_type type) {
 // get a whole block
 ms_node *ms_ast_get_next_block(ms_ast *ast, ms_tokens *tokens) {
     
-    ms_token cmd = ms_ast_expect(ast, tokens, MS_TT_IDENT);
+    // TODO: make this work
+    ms_token cmd = ms_ast_expect(ast, tokens, MS_TT_KEYWORD);
+    cmd = ms_ast_expect(ast, tokens, MS_TT_IDENT);
+    cmd = ms_ast_expect(ast, tokens, MS_TT_NUMBER);
     printf("command.\n");
 }
 

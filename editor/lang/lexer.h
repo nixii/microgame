@@ -13,6 +13,7 @@ typedef enum {
 
     // various important things
     MS_TT_IDENT,
+    MS_TT_KEYWORD,
     MS_TT_NUMBER,
     MS_TT_VEC2,
     MS_TT_VEC3,
