@@ -16,7 +16,7 @@ typedef enum {
 
     // parameters
     MS_NT_PARAM_VALUE,
-    MS_NT_PARAM_IDENTIFIER,
+    MS_NT_PARAM_IDENT,
 
     // operators
     MS_NT_OP_PLUS,
@@ -64,9 +64,10 @@ typedef struct ms_ast_context {
 typedef struct {
     ms_nodes nodes;
     ms_ast_context context;
+    size_t curPos;
 } ms_ast;
 
 // create an ast
-ms_ast parse(ms_tokens tokens);
+ms_ast parse(ms_tokens *tokens);
 
 #endif // MG_EDITOR_PARSER_H

@@ -10,5 +10,5 @@ int main(void) {
     //     if (tokens.data[i].type == MS_TT_NEWLINE)
     //         printf("\n");
     // }
-    ms_ast ast = parse(tokens);
+    ms_ast ast = parse(&tokens);
 }
