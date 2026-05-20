@@ -136,10 +136,11 @@ ms_token _tokenize_string(_lexer_state *state, char startChar) {
     }
 
     // resize the buf to save memory
-    char *attemptResize = realloc(strBuf, sizeof(char) * numChars);
+    char *attemptResize = realloc(strBuf, sizeof(char) * (numChars + 1));
     if (attemptResize != NULL) {
         strBuf = attemptResize;
     }
+    strBuf[numChars] = '\0';
 
     // return the string
     return (ms_token){ .type = MS_TT_STRING, .value = { .chars = strBuf } };
