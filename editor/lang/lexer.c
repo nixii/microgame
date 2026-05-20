@@ -39,6 +39,7 @@ ms_token _tokenize_identifier(_lexer_state *state) {
         }
         state->curIdx++;
     }
+    state->curIdx--;
 
     // handle booleans
     if (strncmp(state->readBuf + start, "true", len) == 0) {
@@ -187,11 +188,13 @@ ms_tokens tokenize(const char *filepath) {
                 case 'a'...'z':
                 case '_':
                     ms_tokens_append(&tokens, _tokenize_identifier(&ls));
-                    continue;
+                    ls.curIdx--;
+                    break;
 
                 // numbers and all vec types
                 case '0'...'9':
                     ms_tokens_append(&tokens, _tokenize_numbers(&ls));
+                    ls.curIdx--;
                     continue;
 
                 // end of line
