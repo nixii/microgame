@@ -3,6 +3,10 @@
 
 Todo #7 - engine prep:
  * `[ ]` Design the scripting language
+ * `[ ]` Create the lexer
+ * `[ ]` Create a basic parser
+ * * `[ ]` Arithmetic & printing
+ * * `[ ]` Engine-specific things
 
 Todo #6 - test platformer:
  * `[x]` 3 simple levels
