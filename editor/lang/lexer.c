@@ -37,7 +37,7 @@ ms_token _tokenize_identifier(_lexer_state *state) {
                 endLoop = 1;
                 break;
         }
-        state->curIdx++;
+        if (!endLoop) state->curIdx++;
     }
     state->curIdx--;
 
@@ -103,7 +103,6 @@ ms_token _tokenize_numbers(_lexer_state *state) {
                 break;
         }
         
-        // TODO: finish
         state->curIdx++;
     }
 
@@ -188,7 +187,6 @@ ms_tokens tokenize(const char *filepath) {
                 case 'a'...'z':
                 case '_':
                     ms_tokens_append(&tokens, _tokenize_identifier(&ls));
-                    ls.curIdx--;
                     break;
 
                 // numbers and all vec types
