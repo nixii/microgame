@@ -1,8 +1,4 @@
 
-true
-false
-nil
-
 set camera new camera with
     set position 0 0 0
     set rotation 0 0 0
@@ -28,7 +24,7 @@ let e2 new entity with
     set scale 30 1 30
 end
 
-let mesh_resource load mesh obj ./assets/cube.obj
+let mesh_resource load mesh obj "./assets/cube.obj"
 
 as e2 do attach new mesh from mesh_resource
 

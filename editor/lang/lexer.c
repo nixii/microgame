@@ -126,6 +126,29 @@ ms_token _tokenize_numbers(_lexer_state *state) {
     }
 }
 
+// tokenize a string; either quote is fine
+ms_token _tokenize_string(_lexer_state *state, char startChar) {
+
+    // store the string
+    char *strBuf = malloc(sizeof(char) * state->numRead);
+    int numChars = 0;
+
+    // get the characters
+    state->curIdx++;
+    while (state->curIdx < state->numRead && state->readBuf[state->curIdx] != startChar) {
+        strBuf[numChars++] = state->readBuf[state->curIdx++];
+    }
+
+    // resize the buf to save memory
+    char *attemptResize = realloc(strBuf, sizeof(char) * numChars);
+    if (attemptResize != NULL) {
+        strBuf = attemptResize;
+    }
+
+    // return the string
+    return (ms_token){ .type = MS_TT_STRING, .value = { .chars = strBuf } };
+}
+
 // tokenize a whole file
 ms_tokens tokenize(const char *filepath) {
 
@@ -189,6 +212,12 @@ ms_tokens tokenize(const char *filepath) {
                     break;
                 case '/':
                     ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_DIV  });
+                    break;
+
+                // strings
+                case '"':
+                case '\'':
+                    ms_tokens_append(&tokens, _tokenize_string(&ls, c));
                     break;
             }
         }
