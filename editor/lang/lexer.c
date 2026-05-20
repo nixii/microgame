@@ -122,6 +122,7 @@ ms_token _tokenize_numbers(_lexer_state *state) {
     }
 }
 
+// TODO: use strndup instead.
 // tokenize a string; either quote is fine
 ms_token _tokenize_string(_lexer_state *state, char startChar) {
 
