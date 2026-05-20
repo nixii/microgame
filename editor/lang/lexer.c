@@ -77,15 +77,53 @@ ms_token _tokenize_identifier(_lexer_state *state) {
 ms_token _tokenize_numbers(_lexer_state *state) {
 
     // up to 4 numbers in a row
-    char *numStrs[4];
+    float numbers[4];
+    int numNums = 0;
     int endLoop = 0;
 
     // find the numbers
     while (state->curIdx < state->numRead && !endLoop) {
+
+        // get the char
+        char c = state->readBuf[state->curIdx];
+        char *endptr;
+
+        // number buffer
+        switch (c) {
+            case '0'...'9': {
+                float newFloat = strtof(state->readBuf + state->curIdx, &endptr);
+                size_t diff = endptr - (state->readBuf + state->curIdx);
+                state->curIdx += diff - 1;
+                numbers[numNums++] = newFloat;
+                break;
+            }
+            case ' ':
+            case '\t':
+                break;
+            default:    
+                endLoop = 1;
+                break;
+        }
+        
         // TODO: finish
         state->curIdx++;
     }
     state->curIdx--;
+
+    // get the type
+    switch (numNums) {
+        case 1:
+            return (ms_token){ .type = MS_TT_NUMBER, .value = { .num = numbers[0] } };
+        case 2:
+            return (ms_token){ .type = MS_TT_VEC2, .value = { .v2 = vec2_new(numbers[0], numbers[1]) } };
+        case 3:
+            return (ms_token){ .type = MS_TT_VEC3, .value = { .v3 = vec3_new(numbers[0], numbers[1], numbers[2]) } };
+        case 4:
+            return (ms_token){ .type = MS_TT_VEC4, .value = { .v4 = ui_vec_new(numbers[0], numbers[1], numbers[2], numbers[3]) } };
+        default:
+            fprintf(stderr, "can't load a numerical value with %d numbers.\n", numNums);
+            exit(1);
+    }
 }
 
 // tokenize a whole file
