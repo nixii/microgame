@@ -192,7 +192,6 @@ ms_tokens tokenize(const char *filepath) {
                 // numbers and all vec types
                 case '0'...'9':
                     ms_tokens_append(&tokens, _tokenize_numbers(&ls));
-                    ls.curIdx--;
                     continue;
 
                 // end of line
