@@ -94,6 +94,7 @@ ms_node *ms_ast_parse_echo(ms_ast *ast, ms_tokens *tokens) {
     while ((paramToken = ms_ast_next_of_any(ast, tokens, MS_LEN(_ANY_PARAMETER), _ANY_PARAMETER)) != NULL) {
         *next = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .tok = *paramToken, .nextParam = NULL } });
         next = &(*next)->value.param.nextParam;
+        cmd->numParams++;
     }
 
     // return the final command

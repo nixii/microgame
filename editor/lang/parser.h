@@ -35,6 +35,7 @@ typedef struct {
 typedef struct {
     const char *funcName;
     ms_node *firstParam;
+    uint8_t numParams;
 } ms_node_call;
 
 // a parameter node
