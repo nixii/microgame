@@ -105,6 +105,7 @@ ms_node *ms_ast_parse_echo(ms_ast *ast, ms_tokens *tokens) {
     return cmd;
 }
 
+// TODO: parse whole expressions.
 // TODO: allow this to parse other commands.
 // CMD(let)
 // let property value
