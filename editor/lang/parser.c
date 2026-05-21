@@ -84,15 +84,19 @@ ms_token ms_ast_expect(ms_ast *ast, ms_tokens *tokens, ms_token_type type) {
 ///////////////////////
 // HANDLE COMMANDS
 ms_node *ms_ast_parse_echo(ms_ast *ast, ms_tokens *tokens) {
+
+    // create the root command node
     ms_node *cmd = ms_node_new(MS_NT_CALL, (ms_node_value){ .call = { .funcName = "echo", .firstParam = NULL } });
-    ms_token *paramToken = ms_ast_next_of_any(ast, tokens, MS_LEN(_ANY_PARAMETER), _ANY_PARAMETER);
-    ms_node *param = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .tok = *paramToken, .nextParam = NULL } });
-    cmd->value.call.firstParam = param;
+
+    // load all the parameters
+    ms_node **next = &cmd->value.call.firstParam;
+    ms_token *paramToken;
     while ((paramToken = ms_ast_next_of_any(ast, tokens, MS_LEN(_ANY_PARAMETER), _ANY_PARAMETER)) != NULL) {
-        param->value.param.nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .tok = *paramToken, .nextParam = NULL } });
-        param = param->value.param.nextParam;
-        printf("param. %s\n", param->value.param.tok.value.chars);
+        *next = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .tok = *paramToken, .nextParam = NULL } });
+        next = &(*next)->value.param.nextParam;
     }
+
+    // return the final command
     return cmd;
 }
 

@@ -152,15 +152,16 @@ ms_token _tokenize_string(_lexer_state *state, char startChar) {
     while (state->curIdx < state->numRead && state->readBuf[state->curIdx] != startChar) {
         strBuf[numChars++] = state->readBuf[state->curIdx++];
     }
-
+    
     // resize the buf to save memory
     char *attemptResize = realloc(strBuf, sizeof(char) * (numChars + 1));
     if (attemptResize != NULL) {
         strBuf = attemptResize;
     }
     strBuf[numChars] = '\0';
-
+    
     // return the string
+    state->curIdx++;
     return (ms_token){ .type = MS_TT_STRING, .value = { .chars = strBuf } };
 }
 
