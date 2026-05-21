@@ -14,9 +14,9 @@ typedef enum {
     // commands
     MS_NT_CMD_SET,
 
-    // parameters
-    MS_NT_PARAM_VALUE,
-    MS_NT_PARAM_IDENT,
+    // parameters and functions
+    MS_NT_CALL,
+    MS_NT_PARAM,
 
     // operators
     MS_NT_OP_PLUS,
@@ -31,15 +31,23 @@ typedef struct {
     ms_node *right;
 } ms_node_binop;
 
-// a variable access
+// calling a function
 typedef struct {
-    const char *name;
-} ms_node_access;
+    const char *funcName;
+    ms_node *firstParam;
+} ms_node_call;
+
+// a parameter node
+typedef struct {
+    ms_token tok;
+    ms_node *nextParam;
+} ms_node_param;
 
 // all kinds of values
 typedef union {
     ms_node_binop binop;
-    ms_node_access access;
+    ms_node_call call;
+    ms_node_param param;
     ms_token value;
 } ms_node_value;
 
