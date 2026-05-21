@@ -9,7 +9,7 @@ DA_DEFINE(ms_tokens, ms_token);
 
 // all keywords
 static char *keywords[] = {
-    "set",
+    "let",
     "echo"
 };
 

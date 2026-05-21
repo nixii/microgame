@@ -83,6 +83,10 @@ ms_token ms_ast_expect(ms_ast *ast, ms_tokens *tokens, ms_token_type type) {
 
 ///////////////////////
 // HANDLE COMMANDS
+
+// CMD(echo)
+// echo command.
+// print.
 ms_node *ms_ast_parse_echo(ms_ast *ast, ms_tokens *tokens) {
 
     // create the root command node
@@ -94,10 +98,24 @@ ms_node *ms_ast_parse_echo(ms_ast *ast, ms_tokens *tokens) {
     while ((paramToken = ms_ast_next_of_any(ast, tokens, MS_LEN(_ANY_PARAMETER), _ANY_PARAMETER)) != NULL) {
         *next = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .tok = *paramToken, .nextParam = NULL } });
         next = &(*next)->value.param.nextParam;
-        cmd->numParams++;
+        cmd->value.call.numParams++;
     }
 
     // return the final command
+    return cmd;
+}
+
+// TODO: allow this to parse other commands.
+// CMD(let)
+// let property value
+ms_node *ms_ast_parse_let(ms_ast *ast, ms_tokens *tokens) {
+
+    // get the needed tokens
+    ms_token name = ms_ast_expect(ast, tokens, MS_TT_IDENT);
+    ms_token *val = ms_ast_next_of_any(ast, tokens, MS_LEN(_ANY_PARAMETER), _ANY_PARAMETER);
+
+    // create the command
+    ms_node *cmd = ms_node_new(MS_NT_LET, (ms_node_value){ .let = { .name = name.value.chars, .value = *val } });
     return cmd;
 }
 
@@ -118,7 +136,8 @@ typedef struct {
 
 // the table of commands
 static const _ms_command_entry _ms_command_table[] = {
-    { "echo", ms_ast_parse_echo }
+    { "echo", ms_ast_parse_echo },
+    { "let", ms_ast_parse_let },
 };
 #define MS_COMMAND_COUNT (sizeof(_ms_command_table) / sizeof(_ms_command_table[0]))
 

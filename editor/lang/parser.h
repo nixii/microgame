@@ -12,7 +12,7 @@ typedef struct ms_node ms_node;
 typedef enum {
     
     // commands
-    MS_NT_CMD_SET,
+    MS_NT_LET,
 
     // parameters and functions
     MS_NT_CALL,
@@ -44,11 +44,18 @@ typedef struct {
     ms_node *nextParam;
 } ms_node_param;
 
+// a set command
+typedef struct {
+    const char *name;
+    ms_token value;
+} ms_node_let;
+
 // all kinds of values
 typedef union {
     ms_node_binop binop;
     ms_node_call call;
     ms_node_param param;
+    ms_node_let let;
     ms_token value;
 } ms_node_value;
 
