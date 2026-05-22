@@ -39,6 +39,7 @@ ms_ast_context ms_ast_context_new(ms_ast_context *parent) {
 // make an ast node
 ms_node *ms_node_new(ms_node_type type, ms_node_value val) {
     ms_node *n = malloc(sizeof(ms_node));
+    memset(n, 0, sizeof(ms_node));
     n->type = type;
     n->value = val;
     return n;
@@ -109,7 +110,7 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
 
         // return nothing on a newline
         case MS_TT_NEWLINE:
-            return NULL;
+            break;
         
         // parse an expression
         default:
@@ -117,6 +118,7 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
     }
 
     // nothing worked
+    ast->curPos++;
     return NULL;
 }
 
@@ -131,7 +133,9 @@ ms_ast parse(ms_tokens *tokens) {
 
     // basic expect
     while (ast.curPos < (size_t)tokens->length) {
-        ms_nodes_append(&ast.nodes, ms_ast_next(&ast, tokens));
+        ms_node *new = ms_ast_next(&ast, tokens);
+        if (new != NULL)
+            ms_nodes_append(&ast.nodes, new);
     }
 
     // return the empty ast

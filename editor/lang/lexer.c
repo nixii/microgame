@@ -248,6 +248,9 @@ ms_tokens tokenize(const char *filepath) {
     fclose(ls.f);
     free(ls.readBuf);
 
+    // add a newline at the end
+    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_NEWLINE });
+
     // return the da
     return tokens;
 }
