@@ -7,7 +7,7 @@ end
 set light_direction 0 1 0
 
 let e1 new entity with
-    set guid player
+    set guid "player"
     set position 0 0 0
     set rotation 0 0 0
     set scale 1 2 1
@@ -18,7 +18,7 @@ let e1 new entity with
 end
 
 let e2 new entity with
-    set guid floor
+    set guid "floor"
     set position 0 -2 0
     set rotation 0 0 0
     set scale 30 1 30
@@ -27,5 +27,3 @@ end
 let mesh_resource load mesh obj "./assets/cube.obj"
 
 as e2 do attach new mesh from mesh_resource
-
-set main_scene true

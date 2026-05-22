@@ -66,7 +66,7 @@ typedef struct ms_node {
 } ms_node;
 
 // declare all needed dynamic arrays
-DA_DECLARE(ms_nodes, ms_node)
+DA_DECLARE(ms_nodes, ms_node*)
 DA_DECLARE(ms_names, char*)
 
 // ast context

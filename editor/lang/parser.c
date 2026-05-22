@@ -5,29 +5,26 @@
 #include "parser.h"
 
 // define the node dynamic array
-DA_DEFINE(ms_nodes, ms_node)
+DA_DEFINE(ms_nodes, ms_node*)
 DA_DEFINE(ms_names, char*)
 
-// length
-#define MS_LEN(a) (sizeof(a) / sizeof((a)[0]))
 
-// different queries
-ms_token_type _ANY_PARAMETER[] = {
-    MS_TT_BOOL,
-    MS_TT_NIL,
-    MS_TT_IDENT,
-    MS_TT_NUMBER,
-    MS_TT_STRING,
-    MS_TT_VEC2,
-    MS_TT_VEC3,
-    MS_TT_VEC4,
-};
+
+
+////////////
+// HELPERS
+static inline ms_token *ms_ast_peek(ms_ast *ast, ms_tokens *toks) {
+    return &(toks->data[ast->curPos]);
+}
+static inline ms_token *ms_ast_advance(ms_ast *ast, ms_tokens *toks) {
+    return &(toks->data[ast->curPos++]);
+}
 
 
 
 
 //////////////////////
-// IMPLEMENTATION
+// HELPERS
 
 // create a new ast context
 ms_ast_context ms_ast_context_new(ms_ast_context *parent) {
@@ -46,117 +43,45 @@ ms_node *ms_node_new(ms_node_type type, ms_node_value val) {
     return n;
 }
 
-// get the next token
-static inline ms_token ms_ast_next(ms_ast *ast, ms_tokens *tokens) {
-    return tokens->data[ast->curPos++];
-}
 
-// get the next of a type
-static inline ms_token *ms_ast_next_of(ms_ast *ast, ms_tokens *tokens, ms_token_type type) {
-    if (tokens->data[ast->curPos].type == type)
-        return &(tokens->data[ast->curPos++]);
-    return NULL;
-}
-static inline ms_token *ms_ast_next_of_any(ms_ast *ast, ms_tokens *tokens, size_t numTypes, ms_token_type *types) {
-    if (ast->curPos >= (size_t)tokens->length) return NULL;
-    ms_token *next = &(tokens->data[ast->curPos]);
-    for (size_t i = 0; i < numTypes; i++) {
-        if (next->type == types[i]) {
-            ast->curPos++;
-            return next;
-        }
+
+
+/////////////////////
+// parse a command
+ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
+    ms_token *tok = ms_ast_advance(ast, toks);
+
+    // do correct command
+    if (strcmp(tok->value.chars, "echo") == 0) {
+        printf("echo found!");
     }
+
     return NULL;
 }
 
-// expect of a type
-ms_token ms_ast_expect(ms_ast *ast, ms_tokens *tokens, ms_token_type type) {
-    ms_token t = ms_ast_next(ast, tokens);
-    if (t.type != type) {
-        fprintf(stderr, "expected token of type %d, found type %d\n", type, t.type);
-        exit(1);
-    }
-    return t;
-}
 
 
 
-///////////////////////
-// HANDLE COMMANDS
+////////////////
+// NEXT LINE
+ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
+    ms_token *tok = ms_ast_peek(ast, toks);
 
-// CMD(echo)
-// echo command.
-// print.
-ms_node *ms_ast_parse_echo(ms_ast *ast, ms_tokens *tokens) {
+    // parse commands
+    switch (tok->type) {
 
-    // create the root command node
-    ms_node *cmd = ms_node_new(MS_NT_CALL, (ms_node_value){ .call = { .funcName = "echo", .firstParam = NULL } });
-
-    // load all the parameters
-    ms_node **next = &cmd->value.call.firstParam;
-    ms_token *paramToken;
-    while ((paramToken = ms_ast_next_of_any(ast, tokens, MS_LEN(_ANY_PARAMETER), _ANY_PARAMETER)) != NULL) {
-        *next = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .tok = *paramToken, .nextParam = NULL } });
-        next = &(*next)->value.param.nextParam;
-        cmd->value.call.numParams++;
+        // parse a new command block
+        case MS_TT_KEYWORD:
+            return ms_ast_parse_command(ast, toks);
+            break;
+        
+        // parse an expression
+        default:
+            break;
     }
 
-    // return the final command
-    return cmd;
-}
-
-// TODO: parse whole expressions.
-// TODO: allow this to parse other commands.
-// CMD(let)
-// let property value
-ms_node *ms_ast_parse_let(ms_ast *ast, ms_tokens *tokens) {
-
-    // get the needed tokens
-    ms_token name = ms_ast_expect(ast, tokens, MS_TT_IDENT);
-    ms_token *val = ms_ast_next_of_any(ast, tokens, MS_LEN(_ANY_PARAMETER), _ANY_PARAMETER);
-
-    // create the command
-    ms_node *cmd = ms_node_new(MS_NT_LET, (ms_node_value){ .let = { .name = name.value.chars, .value = *val } });
-    return cmd;
-}
-
-
-
-
-///////////////////////
-// COMMAND HASH
-
-// function handlers for each command type
-typedef ms_node *(*_ms_parse_fn)(ms_ast *ast, ms_tokens *tokens);
-
-// store the name and function
-typedef struct {
-    const char *keyword;
-    _ms_parse_fn parse;
-} _ms_command_entry;
-
-// the table of commands
-static const _ms_command_entry _ms_command_table[] = {
-    { "echo", ms_ast_parse_echo },
-    { "let", ms_ast_parse_let },
-};
-#define MS_COMMAND_COUNT (sizeof(_ms_command_table) / sizeof(_ms_command_table[0]))
-
-
-
-
-///////////////////////
-// ACTUALLY PAERSE
-
-// get a whole block
-ms_node *ms_ast_get_next_block(ms_ast *ast, ms_tokens *tokens) {
-    ms_token cmd = ms_ast_expect(ast, tokens, MS_TT_KEYWORD);
-    for (size_t i = 0; i < MS_COMMAND_COUNT; i++) {
-        if (strcmp(cmd.value.chars, _ms_command_table[i].keyword) == 0)
-            return _ms_command_table[i].parse(ast, tokens);
-    }
-    fprintf(stderr, "command %s not found.\n", cmd.value.chars);
-    exit(1);
+    // nothing worked
+    return NULL;
 }
 
 // create an entire ast
@@ -170,7 +95,7 @@ ms_ast parse(ms_tokens *tokens) {
 
     // basic expect
     while (ast.curPos < (size_t)tokens->length) {
-        ms_ast_get_next_block(&ast, tokens);
+        ms_nodes_append(&ast.nodes, ms_ast_next(&ast, tokens));
         ast.curPos++;
     }
 
