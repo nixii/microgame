@@ -132,7 +132,6 @@ ms_ast parse(ms_tokens *tokens) {
     // basic expect
     while (ast.curPos < (size_t)tokens->length) {
         ms_nodes_append(&ast.nodes, ms_ast_next(&ast, tokens));
-        ast.curPos++;
     }
 
     // return the empty ast
