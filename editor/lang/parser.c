@@ -8,23 +8,24 @@
 DA_DEFINE(ms_nodes, ms_node*)
 DA_DEFINE(ms_names, char*)
 
+// forward-declare functions
+ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks);
+
 
 
 
 ////////////
 // HELPERS
+
+// look at what the next token is
 static inline ms_token *ms_ast_peek(ms_ast *ast, ms_tokens *toks) {
     return &(toks->data[ast->curPos]);
 }
+
+// consume the next token
 static inline ms_token *ms_ast_advance(ms_ast *ast, ms_tokens *toks) {
     return &(toks->data[ast->curPos++]);
 }
-
-
-
-
-//////////////////////
-// HELPERS
 
 // create a new ast context
 ms_ast_context ms_ast_context_new(ms_ast_context *parent) {
@@ -46,14 +47,46 @@ ms_node *ms_node_new(ms_node_type type, ms_node_value val) {
 
 
 
+//////////////////////
+// PARSE SPECIFIC COMMANDS
+
+// call to 'echo'
+ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
+
+    // create the base command
+    ms_node *cmd = ms_node_new(MS_NT_CALL, (ms_node_value){ .call = {
+        .funcName = "echo",
+        .firstParam = NULL,
+        .numParams = 0 } }
+    );
+
+    // links to the params
+    ms_node **nextParam = &cmd->value.call.firstParam;
+    ms_node *toAdd;
+
+    // for all params it can get
+    while ((toAdd = ms_ast_next(ast, toks)) != NULL) {
+        *nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .value = toAdd, .nextParam = NULL } });
+        nextParam = &(*nextParam)->value.param.nextParam;
+        cmd->value.call.numParams++;
+    }
+
+    // finally return the whole command
+    printf("done with %d args\n", cmd->value.call.numParams);
+    return cmd;
+}
+
+
+
+
 /////////////////////
-// parse a command
+// GENERAL DIRECTIVES
 ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
     ms_token *tok = ms_ast_advance(ast, toks);
 
     // do correct command
     if (strcmp(tok->value.chars, "echo") == 0) {
-        printf("echo found!");
+        return ms_ast_parse_command_echo(ast, toks);
     }
 
     return NULL;
@@ -73,7 +106,10 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
         // parse a new command block
         case MS_TT_KEYWORD:
             return ms_ast_parse_command(ast, toks);
-            break;
+
+        // return nothing on a newline
+        case MS_TT_NEWLINE:
+            return NULL;
         
         // parse an expression
         default:

@@ -40,7 +40,7 @@ typedef struct {
 
 // a parameter node
 typedef struct {
-    ms_token tok;
+    ms_node *value;
     ms_node *nextParam;
 } ms_node_param;
 
