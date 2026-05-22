@@ -18,6 +18,9 @@ typedef enum {
     MS_NT_CALL,
     MS_NT_PARAM,
 
+    // literal values
+    MS_NT_LITERAL,
+
     // operators
     MS_NT_OP_PLUS,
     MS_NT_OP_MINUS,
@@ -47,7 +50,7 @@ typedef struct {
 // a set command
 typedef struct {
     const char *name;
-    ms_token value;
+    ms_node *value;
 } ms_node_let;
 
 // all kinds of values
@@ -56,7 +59,7 @@ typedef union {
     ms_node_call call;
     ms_node_param param;
     ms_node_let let;
-    ms_token value;
+    ms_token literal;
 } ms_node_value;
 
 // any kind of node
