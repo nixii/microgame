@@ -10,7 +10,6 @@ typedef struct ms_node ms_node;
 
 // declare all needed dynamic arrays
 DA_DECLARE(ms_nodes, ms_node*)
-DA_DECLARE(ms_names, char*)
 
 // all possible node types
 typedef enum {
@@ -76,17 +75,9 @@ typedef struct ms_node {
     ms_node_type type;
 } ms_node;
 
-// ast context
-typedef struct ms_ast_context {
-    struct ms_ast_context *parentContext;
-    ms_names variableNames;
-    ms_tokens variableValues;
-} ms_ast_context;
-
 // a final ast
 typedef struct {
     ms_nodes nodes;
-    ms_ast_context context;
     size_t curPos;
 } ms_ast;
 

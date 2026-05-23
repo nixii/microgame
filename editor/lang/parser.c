@@ -7,7 +7,6 @@
 
 // define the node dynamic array
 DA_DEFINE(ms_nodes, ms_node*)
-DA_DEFINE(ms_names, char*)
 
 // forward-declare functions
 ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks);
@@ -26,15 +25,6 @@ static inline ms_token *ms_ast_peek(ms_ast *ast, ms_tokens *toks) {
 // consume the next token
 static inline ms_token *ms_ast_advance(ms_ast *ast, ms_tokens *toks) {
     return &(toks->data[ast->curPos++]);
-}
-
-// create a new ast context
-ms_ast_context ms_ast_context_new(ms_ast_context *parent) {
-    return (ms_ast_context){
-        .parentContext = parent,
-        .variableNames = ms_names_new(),
-        .variableValues = ms_tokens_new()
-    };
 }
 
 // make an ast node
@@ -227,7 +217,6 @@ ms_ast parse(ms_tokens *tokens) {
     // create the empty ast
     ms_ast ast;
     ast.nodes = ms_nodes_new();
-    ast.context = ms_ast_context_new(NULL); // no parent
     ast.curPos = 0;
 
     // basic expect
