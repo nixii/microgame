@@ -13,6 +13,7 @@ static char *keywords[] = {
     "echo",
     "on",
     "do",
+    "end",
 };
 
 // lexer state

@@ -134,12 +134,15 @@ ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
     
     // while there is a next node
     while (nextNode != NULL && nextNode->type != MS_NT_CMD_END) {
-        printf("node.\n");
         ms_nodes_append(nodes, nextNode);
         nextNode = ms_ast_next(ast, toks);
+        printf("node.\n");
     }
 
-    // return the final node
+    // make sure there is an 'end'
+    assert(nextNode != NULL);
+
+    // remove that last command and return the whole block
     free(nextNode);
     return block;
 }
