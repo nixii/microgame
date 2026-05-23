@@ -74,7 +74,6 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
     }
 
     // finally return the whole command
-    printf("done with %d args\n", cmd->value.call.numParams);
     return cmd;
 }
 
@@ -94,7 +93,6 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
         .name = name->value.chars,
         .value = value
     }});
-    printf("LET: %s %f\n", cmd->value.let.name, cmd->value.let.value->value.literal.value.num);
     return cmd;
 }
 
