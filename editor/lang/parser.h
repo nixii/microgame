@@ -12,7 +12,7 @@ typedef struct ms_node ms_node;
 typedef enum {
     
     // commands
-    MS_NT_LET,
+    MS_NT_CMD_LET,
 
     // parameters and functions
     MS_NT_CALL,

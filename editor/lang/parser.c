@@ -1,4 +1,5 @@
 
+#include <assert.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -58,8 +59,8 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
     ms_node *cmd = ms_node_new(MS_NT_CALL, (ms_node_value){ .call = {
         .funcName = "echo",
         .firstParam = NULL,
-        .numParams = 0 } }
-    );
+        .numParams = 0
+    }});
 
     // links to the params
     ms_node **nextParam = &cmd->value.call.firstParam;
@@ -77,22 +78,51 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
     return cmd;
 }
 
+// call to 'let' for variables
+ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
+
+    // get the name
+    ms_token *name = ms_ast_advance(ast, toks);
+    assert(name->type == MS_TT_IDENT); // TODO: make better error handling system
+
+    // next, get the following block
+    ms_node *value = ms_ast_next(ast, toks);
+    assert(value != NULL);
+
+    // create the command
+    ms_node *cmd = ms_node_new(MS_NT_CMD_LET, (ms_node_value){ .let = {
+        .name = name->value.chars,
+        .value = value
+    }});
+    printf("LET: %s %f\n", cmd->value.let.name, cmd->value.let.value->value.literal.value.num);
+    return cmd;
+}
+
 
 
 
 /////////////////////
 // GENERAL DIRECTIVES
+
+// direct to the correct command
 ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
     ms_token *tok = ms_ast_advance(ast, toks);
 
     // do correct command
     if (strcmp(tok->value.chars, "echo") == 0) {
         return ms_ast_parse_command_echo(ast, toks);
+    } else if (strcmp(tok->value.chars, "let") == 0) {
+        return ms_ast_parse_command_let(ast, toks);
     }
 
     return NULL;
 }
 
+// parse a value
+ms_node *ms_ast_parse_literal(ms_ast *ast, ms_tokens *toks) {
+    // FIXME: dereference; good idea?
+    return ms_node_new(MS_NT_LITERAL, (ms_node_value){ .literal = *ms_ast_advance(ast, toks) });
+}
 
 
 
@@ -114,7 +144,7 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
         
         // parse an expression
         default:
-            break;
+            return ms_ast_parse_literal(ast, toks);
     }
 
     // nothing worked
