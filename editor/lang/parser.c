@@ -54,6 +54,7 @@ ms_node *ms_node_new(ms_node_type type, ms_node_value val) {
 
 // call to 'echo'
 ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
+    printf("parsing echo.\n");
 
     // create the base command
     ms_node *cmd = ms_node_new(MS_NT_CALL, (ms_node_value){ .call = {
@@ -98,16 +99,16 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
 
 // end a block of code
 ms_node *ms_ast_parse_command_end(ms_ast *ast, ms_tokens *toks) {
+    printf("parsing end.\n");
     (void)(ast); (void)(toks);
-    printf("end.\n");
     return ms_node_new(MS_NT_CMD_END, (ms_node_value){ 0 });
 }
 
 // start a command definition
 ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
+    printf("parsing on.\n");
 
     // get the name of the function
-    printf("ON\n");
     ms_token *name = ms_ast_advance(ast, toks);
     assert(name->type == MS_TT_IDENT);
 
@@ -121,6 +122,7 @@ ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
 
 // define a block
 ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
+    printf("parsing block.\n");
 
     // create the block
     ms_node *block = ms_node_new(MS_NT_CMD_DO, (ms_node_value){ .doCmd = { .nodes = ms_nodes_new() } });
@@ -129,21 +131,21 @@ ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
     ms_nodes *nodes = &block->value.doCmd.nodes;
 
     // the next read node
-    ms_node *nextNode = ms_ast_next(ast, toks);
-    printf("started a do block!\n");
+    ms_token *nextTok = NULL;
     
     // while there is a next node
-    while (nextNode != NULL && nextNode->type != MS_NT_CMD_END) {
+    while ((nextTok = ms_ast_peek(ast, toks))->type != MS_TT_NEWLINE && nextTok->type != MS_TT_EOF) {
+        ms_node *nextNode = ms_ast_next(ast, toks);
+        if (nextNode->type == MS_NT_CMD_END) {
+            free(nextNode);
+            break;
+        }
+        printf("    block has a line.\n");
         ms_nodes_append(nodes, nextNode);
         nextNode = ms_ast_next(ast, toks);
-        printf("node.\n");
     }
 
-    // make sure there is an 'end'
-    assert(nextNode != NULL);
-
-    // remove that last command and return the whole block
-    free(nextNode);
+    // return the block
     return block;
 }
 
@@ -199,7 +201,7 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
         
         // end the file
         case MS_TT_EOF:
-            return NULL;
+            break;
         
         // parse an expression
         default:
@@ -208,7 +210,7 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
 
     // nothing worked
     ast->curPos++;
-    return ms_ast_next(ast,  toks);
+    return NULL;
 }
 
 

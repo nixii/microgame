@@ -24,6 +24,7 @@ typedef enum {
     // parameters and functions
     MS_NT_CALL,
     MS_NT_PARAM,
+    MS_NT_NEWLINE,
 
     // literal values
     MS_NT_LITERAL,
