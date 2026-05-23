@@ -1,12 +1,24 @@
 
 ## To-Do list
 
-Todo #7 - engine prep:
- * `[ ]` Design the scripting language
- * `[ ]` Create the lexer
+Todo #7 - beginning of the language:
+ * `[x]` Design the scripting language
+ * `[x]` Create the lexer
  * `[ ]` Create a basic parser
- * * `[ ]` Arithmetic & printing
- * * `[ ]` Engine-specific things
+ * * `[x]` Echo command
+ * * `[x]` Let command
+ * * `[x]` On command
+ * * `[x]` Do command
+ * * `[x]` End command
+ * * `[ ]` Set command
+ * * `[ ]` Get command
+ * * `[ ]` With command
+ * `[ ]` Make a basic interpreter
+ * * `[ ]` Works on non-engine-specific things
+ * * `[ ]` Preload runs first
+ * * `[ ]` Loads into a scene
+ * * `[ ]` Can print variables in the scene
+ * * `[ ]` Can set scene properties
 
 Todo #6 - test platformer:
  * `[x]` 3 simple levels
