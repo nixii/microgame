@@ -80,6 +80,7 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
 
 // call to 'let' for variables
 ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
+    printf("parsing let.\n");
 
     // get the name
     ms_token *name = ms_ast_advance(ast, toks);
@@ -134,13 +135,17 @@ ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
     ms_token *nextTok = NULL;
     
     // while there is a next node
-    while ((nextTok = ms_ast_peek(ast, toks))->type != MS_TT_NEWLINE && nextTok->type != MS_TT_EOF) {
+    while ((nextTok = ms_ast_peek(ast, toks))->type != MS_TT_EOF) {
+        if (nextTok->type == MS_TT_NEWLINE) {
+            ms_ast_advance(ast, toks);
+            continue;
+        }
+
         ms_node *nextNode = ms_ast_next(ast, toks);
         if (nextNode->type == MS_NT_CMD_END) {
             free(nextNode);
             break;
         }
-        printf("    block has a line.\n");
         ms_nodes_append(nodes, nextNode);
         nextNode = ms_ast_next(ast, toks);
     }
