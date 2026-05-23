@@ -8,11 +8,18 @@
 // forward declare a node
 typedef struct ms_node ms_node;
 
+// declare all needed dynamic arrays
+DA_DECLARE(ms_nodes, ms_node*)
+DA_DECLARE(ms_names, char*)
+
 // all possible node types
 typedef enum {
     
     // commands
     MS_NT_CMD_LET,
+    MS_NT_CMD_END,
+    MS_NT_CMD_ON,
+    MS_NT_CMD_DO,
 
     // parameters and functions
     MS_NT_CALL,
@@ -20,19 +27,7 @@ typedef enum {
 
     // literal values
     MS_NT_LITERAL,
-
-    // operators
-    MS_NT_OP_PLUS,
-    MS_NT_OP_MINUS,
-    MS_NT_OP_MUL,
-    MS_NT_OP_DIV,
 } ms_node_type;
-
-// binary operations
-typedef struct {
-    ms_node *left;
-    ms_node *right;
-} ms_node_binop;
 
 // calling a function
 typedef struct {
@@ -53,12 +48,24 @@ typedef struct {
     ms_node *value;
 } ms_node_let;
 
+// a block of code
+typedef struct {
+    ms_nodes nodes;
+} ms_node_do;
+
+// defining a function
+typedef struct {
+    const char *name;
+    ms_node *block;
+} ms_node_on;
+
 // all kinds of values
 typedef union {
-    ms_node_binop binop;
     ms_node_call call;
     ms_node_param param;
     ms_node_let let;
+    ms_node_do doCmd;
+    ms_node_on onCmd;
     ms_token literal;
 } ms_node_value;
 
@@ -67,10 +74,6 @@ typedef struct ms_node {
     ms_node_value value;
     ms_node_type type;
 } ms_node;
-
-// declare all needed dynamic arrays
-DA_DECLARE(ms_nodes, ms_node*)
-DA_DECLARE(ms_names, char*)
 
 // ast context
 typedef struct ms_ast_context {

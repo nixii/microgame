@@ -22,6 +22,7 @@ typedef enum {
     MS_TT_BOOL,
     MS_TT_NIL,
     MS_TT_NEWLINE,
+    MS_TT_EOF,
 
     // operators
     MS_TT_PLUS,

@@ -10,7 +10,9 @@ DA_DEFINE(ms_tokens, ms_token);
 // all keywords
 static char *keywords[] = {
     "let",
-    "echo"
+    "echo",
+    "on",
+    "do",
 };
 
 // lexer state
@@ -249,7 +251,7 @@ ms_tokens tokenize(const char *filepath) {
     free(ls.readBuf);
 
     // add a newline at the end
-    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_NEWLINE });
+    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_EOF });
 
     // return the da
     return tokens;

@@ -96,6 +96,54 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
     return cmd;
 }
 
+// end a block of code
+ms_node *ms_ast_parse_command_end(ms_ast *ast, ms_tokens *toks) {
+    (void)(ast); (void)(toks);
+    printf("end.\n");
+    return ms_node_new(MS_NT_CMD_END, (ms_node_value){ 0 });
+}
+
+// start a command definition
+ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
+
+    // get the name of the function
+    printf("ON\n");
+    ms_token *name = ms_ast_advance(ast, toks);
+    assert(name->type == MS_TT_IDENT);
+
+    // get the code of the function
+    ms_node *block = ms_ast_next(ast, toks);
+    assert(block->type == MS_NT_CMD_DO);
+
+    // return the final definition
+    return ms_node_new(MS_NT_CMD_ON, (ms_node_value){ .onCmd = { .name = name->value.chars, .block = block } });
+}
+
+// define a block
+ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
+
+    // create the block
+    ms_node *block = ms_node_new(MS_NT_CMD_DO, (ms_node_value){ .doCmd = { .nodes = ms_nodes_new() } });
+
+    // easy link to all the nodes
+    ms_nodes *nodes = &block->value.doCmd.nodes;
+
+    // the next read node
+    ms_node *nextNode = ms_ast_next(ast, toks);
+    printf("started a do block!\n");
+    
+    // while there is a next node
+    while (nextNode != NULL && nextNode->type != MS_NT_CMD_END) {
+        printf("node.\n");
+        ms_nodes_append(nodes, nextNode);
+        nextNode = ms_ast_next(ast, toks);
+    }
+
+    // return the final node
+    free(nextNode);
+    return block;
+}
+
 
 
 
@@ -111,6 +159,12 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
         return ms_ast_parse_command_echo(ast, toks);
     } else if (strcmp(tok->value.chars, "let") == 0) {
         return ms_ast_parse_command_let(ast, toks);
+    } else if (strcmp(tok->value.chars, "end") == 0) {
+        return ms_ast_parse_command_end(ast, toks);
+    } else if (strcmp(tok->value.chars, "on") == 0) {
+        return ms_ast_parse_command_on(ast, toks);
+    } else if (strcmp(tok->value.chars, "do") == 0) {
+        return ms_ast_parse_command_generic_block(ast, toks);
     }
 
     return NULL;
@@ -140,6 +194,10 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
         case MS_TT_NEWLINE:
             break;
         
+        // end the file
+        case MS_TT_EOF:
+            return NULL;
+        
         // parse an expression
         default:
             return ms_ast_parse_literal(ast, toks);
@@ -147,8 +205,11 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
 
     // nothing worked
     ast->curPos++;
-    return NULL;
+    return ms_ast_next(ast,  toks);
 }
+
+
+
 
 // create an entire ast
 ms_ast parse(ms_tokens *tokens) {
