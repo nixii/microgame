@@ -74,10 +74,19 @@ static void ms_interpreter_appendf_data(char **buf, size_t *len, ms_data d) {
             appendf(buf, len, "nil");
             break;
         case MS_DT_NUMBER:
-            appendf(buf, len, "%f", d.value.num);
+            appendf(buf, len, "%.3f", d.value.num);
             break;
         case MS_DT_STRING:
             appendf(buf, len, "%s", d.value.str);
+            break;
+        case MS_DT_VEC2:
+            appendf(buf, len, "%.3f %.3f", d.value.v2.x, d.value.v2.y);
+            break;
+        case MS_DT_VEC3:
+            appendf(buf, len, "%.3f %.3f %.3f", d.value.v3.x, d.value.v3.y, d.value.v3.z);
+            break;
+        case MS_DT_VEC4:
+            appendf(buf, len, "%.3f %.3f", d.value.v4.scaleX, d.value.v4.pixelsX, d.value.v4.scaleY, d.value.v4.pixelsX);
             break;
         default:
             fprintf(stderr, "ms_interpreter_appendf_data does not support type %d\n", d.type);
@@ -90,10 +99,9 @@ static ms_data ms_interpreter_get_variable(ms_interpreter *interp, const char *n
 
     // get the scope
     ms_interpreter_scope *s = interp->scope;
-    int checking = 0;
 
     // iterate through scopes
-    while (s != NULL && checking) {
+    while (s != NULL) {
         for (int i = 0; i < s->varNames.length; i++) {
             if (strcmp(s->varNames.data[i], name) == 0) {
                 return s->varValues.data[i];
@@ -176,6 +184,7 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
 
                 // switch depending on the type of data
                 ms_interpreter_appendf_data(&out, &len, value);
+                break;
             }
             default:
                 fprintf(stderr, "unsupported value type for echo: %d.\n", param->value.param.data->value.literal.type);
@@ -229,7 +238,6 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
     // append to this scope
     ms_names_append(&interp->scope->varNames, name);
     ms_datas_append(&interp->scope->varValues, d);
-    printf("APPENDing %s.\n", name);
 
     // just return it back!
     return d;
@@ -250,6 +258,12 @@ static ms_data ms_interpreter_run_code_literal(ms_interpreter *interp, const ms_
             return (ms_data){ .type = MS_DT_NUMBER, .value = (ms_data_value){ .num = tok.value.num } };
         case MS_TT_STRING:
             return (ms_data){ .type = MS_DT_STRING, .value = (ms_data_value){ .str = tok.value.chars } };
+        case MS_TT_VEC2:
+            return (ms_data){ .type = MS_DT_VEC2, .value = (ms_data_value){ .v2 = tok.value.v2 } };
+        case MS_TT_VEC3:
+            return (ms_data){ .type = MS_DT_VEC3, .value = (ms_data_value){ .v3 = tok.value.v3 } };
+        case MS_TT_VEC4:
+            return (ms_data){ .type = MS_DT_VEC4, .value = (ms_data_value){ .v4 = tok.value.v4 } };
         default:
             fprintf(stderr, "no way to interpret literal of type %d\n", tok.type);
             exit(1);

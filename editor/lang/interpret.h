@@ -23,6 +23,11 @@ typedef enum {
     MS_DT_BOOL,
     MS_DT_NIL,
 
+    // math
+    MS_DT_VEC2,
+    MS_DT_VEC3,
+    MS_DT_VEC4,
+
     // special types
     MS_DT_EVENT,
     
@@ -36,6 +41,10 @@ typedef union {
     const char *str;
     float num;
     int boolean;
+
+    vec2 v2;
+    vec3 v3;
+    ui_vec v4;
     
     scene *s;
     entity e;
