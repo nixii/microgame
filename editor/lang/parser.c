@@ -6,7 +6,7 @@
 #include "parser.h"
 
 // define the node dynamic array
-DA_DEFINE(ms_nodes, ms_node*)
+DA_DEFINE(ms_nodes, const ms_node*)
 
 // forward-declare functions
 ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks);
@@ -58,12 +58,33 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
 
     // for all params it can get
     while ((toAdd = ms_ast_next(ast, toks)) != NULL) {
-        *nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .value = toAdd, .nextParam = NULL } });
+        *nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = toAdd, .nextParam = NULL } });
         nextParam = &(*nextParam)->value.param.nextParam;
         cmd->value.invoke.numParams++;
     }
 
     // finally return the whole command
+    return cmd;
+}
+
+// create a new instance of something
+ms_node *ms_ast_parse_command_new(ms_ast *ast, ms_tokens *toks) {
+
+    // create the command
+    ms_node *cmd = ms_node_new(MS_NT_INVOKE, (ms_node_value){ .invoke = {
+        .eventName = "new",
+        .firstParam = NULL,
+        .numParams = 0
+    }});
+
+    // get the type to go to
+    ms_node *next = ms_ast_next(ast, toks);
+    assert(next->type == MS_NT_PARAM);
+
+    // set the type
+    cmd->value.invoke.firstParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = next, .nextParam = NULL } });
+
+    // all done!
     return cmd;
 }
 
@@ -79,9 +100,9 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
     assert(value != NULL);
 
     // create the command
-    ms_node *cmd = ms_node_new(MS_NT_CMD_LET, (ms_node_value){ .let = {
+    ms_node *cmd = ms_node_new(MS_NT_CMD_LET, (ms_node_value){ .letCmd = {
         .name = name->value.chars,
-        .value = value
+        .data = value
     }});
     return cmd;
 }
@@ -160,6 +181,8 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
         return ms_ast_parse_command_on(ast, toks);
     } else if (strcmp(tok->value.chars, "do") == 0) {
         return ms_ast_parse_command_generic_block(ast, toks);
+    } else if (strcmp(tok->value.chars, "new") == 0) {
+        return ms_ast_parse_command_new(ast, toks);
     }
 
     return NULL;

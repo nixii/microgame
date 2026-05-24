@@ -1,2 +1,2 @@
-echo "why won't this print? " 1 " " true " " 1 1 " " nil " " 2 4 3 " " false " " 1 -10 0.5 -10
-echo "woo!"
+let x echo "hi!"
+echo x

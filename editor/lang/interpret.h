@@ -12,12 +12,48 @@
 */
 
 // dynamic array to declare things
-DA_DECLARE(ms_names, char*)
+DA_DECLARE(ms_names, const char*)
+
+// datatypes
+typedef enum {
+
+    // primitives
+    MS_DT_STRING,
+    MS_DT_NUMBER,
+    MS_DT_BOOL,
+    MS_DT_NIL,
+
+    // special types
+    MS_DT_EVENT,
+    
+    // engine objects
+    MS_DT_SCENE,
+    MS_DT_ENTITY
+} ms_data_type;
+
+// a ms value
+typedef union {
+    const char *str;
+    float num;
+    int boolean;
+    
+    scene *s;
+    entity e;
+} ms_data_value;
+
+// a data point
+typedef struct {
+    ms_data_type type;
+    ms_data_value value;
+} ms_data;
+
+// declare the data dyn arr
+DA_DECLARE(ms_datas, ms_data);
 
 // current scope of the interpreter
 typedef struct ms_interpreter_scope {
     ms_names varNames;
-    // TODO: variable name types
+    ms_datas varValues;
     ms_names funcNames;
     ms_nodes funcNodes;
     struct ms_interpreter_scope *parentScope;

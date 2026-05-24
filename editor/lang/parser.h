@@ -9,7 +9,7 @@
 typedef struct ms_node ms_node;
 
 // declare all needed dynamic arrays
-DA_DECLARE(ms_nodes, ms_node*)
+DA_DECLARE(ms_nodes, const ms_node*)
 
 // all possible node types
 typedef enum {
@@ -38,14 +38,14 @@ typedef struct {
 
 // a parameter node
 typedef struct {
-    ms_node *value;
+    ms_node *data;
     ms_node *nextParam;
 } ms_node_param;
 
 // a set command
 typedef struct {
     const char *name;
-    ms_node *value;
+    ms_node *data;
 } ms_node_let;
 
 // a block of code
@@ -63,7 +63,7 @@ typedef struct {
 typedef union {
     ms_node_invoke invoke;
     ms_node_param param;
-    ms_node_let let;
+    ms_node_let letCmd;
     ms_node_do doCmd;
     ms_node_on onCmd;
     ms_token literal;
