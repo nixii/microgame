@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "lang/lexer.h"
 #include "lang/parser.h"
+#include "lang/interpret.h"
 
 int main(void) {
     ms_tokens tokens = tokenize("designing_the_engine/test.microscript");
@@ -11,4 +12,5 @@ int main(void) {
     //         printf("\n");
     // }
     ms_ast ast = parse(&tokens);
+    ms_interpreter interp = ms_interpreter_from(&ast, NULL, -1);
 }
