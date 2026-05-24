@@ -72,7 +72,7 @@ static void ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, ms_node 
                 printf("%.3f %.3f %.3f", t->value.v3.x, t->value.v3.y, t->value.v3.z);
                 break;
             case MS_TT_VEC4:
-                printf("%.3f %.3d %.3f %3df", t->value.v4.scaleX, t->value.v4.pixelsX, t->value.v4.scaleY, t->value.v4.pixelsY);
+                printf("%.3f %.3d %.3f %3d", t->value.v4.scaleX, t->value.v4.pixelsX, t->value.v4.scaleY, t->value.v4.pixelsY);
                 break;
             default:
                 fprintf(stderr, "unsupported type. %d\n", param->value.param.value->value.literal.type);

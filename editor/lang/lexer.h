@@ -22,13 +22,7 @@ typedef enum {
     MS_TT_BOOL,
     MS_TT_NIL,
     MS_TT_NEWLINE,
-    MS_TT_EOF,
-
-    // operators
-    MS_TT_PLUS,
-    MS_TT_MINUS,
-    MS_TT_MUL,
-    MS_TT_DIV,
+    MS_TT_EOF
 } ms_token_type;
 
 // token values

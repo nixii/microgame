@@ -44,7 +44,6 @@ static ms_node *ms_node_new(ms_node_type type, ms_node_value val) {
 
 // call to 'echo'
 ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
-    printf("parsing echo.\n");
 
     // create the base command
     ms_node *cmd = ms_node_new(MS_NT_INVOKE, (ms_node_value){ .invoke = {
@@ -70,7 +69,6 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
 
 // call to 'let' for variables
 ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
-    printf("parsing let.\n");
 
     // get the name
     ms_token *name = ms_ast_advance(ast, toks);
@@ -90,14 +88,12 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
 
 // end a block of code
 ms_node *ms_ast_parse_command_end(ms_ast *ast, ms_tokens *toks) {
-    printf("parsing end.\n");
     (void)(ast); (void)(toks);
     return ms_node_new(MS_NT_CMD_END, (ms_node_value){ 0 });
 }
 
 // start a command definition
 ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
-    printf("parsing on.\n");
 
     // get the name of the function
     ms_token *name = ms_ast_advance(ast, toks);
@@ -113,7 +109,6 @@ ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
 
 // define a block
 ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
-    printf("parsing block.\n");
 
     // create the block
     ms_node *block = ms_node_new(MS_NT_CMD_DO, (ms_node_value){ .doCmd = { .nodes = ms_nodes_new() } });

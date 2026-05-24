@@ -51,12 +51,12 @@ ms_token _tokenize_identifier(_lexer_state *state) {
     state->curIdx--;
 
     // handle booleans
-    if (strncmp(state->readBuf + start, "true", len) == 0) {
+    if (len == 4 && strncmp(state->readBuf + start, "true", 4) == 0) {
         return (ms_token){
             .type = MS_TT_BOOL,
             .value = { .truthy = 1 }
         };
-    } else if (strncmp(state->readBuf + start, "false", len) == 0) {
+    } else if (len == 5 && strncmp(state->readBuf + start, "false", 5) == 0) {
         return (ms_token){
             .type = MS_TT_BOOL,
             .value = { .truthy = 0 }
@@ -64,7 +64,7 @@ ms_token _tokenize_identifier(_lexer_state *state) {
     }
 
     // nil
-    else if (strncmp(state->readBuf + start, "nil", len) == 0) {
+    else if (len == 3 && strncmp(state->readBuf + start, "nil", 3) == 0) {
         return (ms_token){
             .type = MS_TT_NIL
         };
@@ -108,6 +108,7 @@ ms_token _tokenize_numbers(_lexer_state *state) {
 
         // number buffer
         switch (c) {
+            case '-':
             case '0'...'9': {
                 float newFloat = strtof(state->readBuf + state->curIdx, &endptr);
                 size_t diff = endptr - (state->readBuf + state->curIdx);
@@ -120,7 +121,7 @@ ms_token _tokenize_numbers(_lexer_state *state) {
                 break;
             default:    
                 endLoop = 1;
-                break;
+                continue;
         }
         
         state->curIdx++;
@@ -211,6 +212,7 @@ ms_tokens tokenize(const char *filepath) {
                     break;
 
                 // numbers and all vec types
+                case '-':
                 case '0'...'9':
                     ms_tokens_append(&tokens, _tokenize_numbers(&ls));
                     continue;
@@ -218,20 +220,6 @@ ms_tokens tokenize(const char *filepath) {
                 // end of line
                 case '\n':
                     ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_NEWLINE  });
-                    break;
-                
-                // arithmetic
-                case '+':
-                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_PLUS  });
-                    break;
-                case '-':
-                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MINUS  });
-                    break;
-                case '*':
-                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MUL  });
-                    break;
-                case '/':
-                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_DIV  });
                     break;
 
                 // strings
