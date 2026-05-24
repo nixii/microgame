@@ -1,3 +1,1 @@
-on preload do
-    echo "hi"
-end
+echo "hi"

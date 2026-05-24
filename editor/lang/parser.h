@@ -21,7 +21,7 @@ typedef enum {
     MS_NT_CMD_DO,
 
     // parameters and functions
-    MS_NT_CALL,
+    MS_NT_INVOKE,
     MS_NT_PARAM,
     MS_NT_NEWLINE,
 
@@ -31,10 +31,10 @@ typedef enum {
 
 // calling a function
 typedef struct {
-    const char *funcName;
+    const char *eventName;
     ms_node *firstParam;
     uint8_t numParams;
-} ms_node_call;
+} ms_node_invoke;
 
 // a parameter node
 typedef struct {
@@ -61,7 +61,7 @@ typedef struct {
 
 // all kinds of values
 typedef union {
-    ms_node_call call;
+    ms_node_invoke invoke;
     ms_node_param param;
     ms_node_let let;
     ms_node_do doCmd;

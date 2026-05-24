@@ -47,21 +47,21 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
     printf("parsing echo.\n");
 
     // create the base command
-    ms_node *cmd = ms_node_new(MS_NT_CALL, (ms_node_value){ .call = {
-        .funcName = "echo",
+    ms_node *cmd = ms_node_new(MS_NT_INVOKE, (ms_node_value){ .invoke = {
+        .eventName = "echo",
         .firstParam = NULL,
         .numParams = 0
     }});
 
     // links to the params
-    ms_node **nextParam = &cmd->value.call.firstParam;
+    ms_node **nextParam = &cmd->value.invoke.firstParam;
     ms_node *toAdd;
 
     // for all params it can get
     while ((toAdd = ms_ast_next(ast, toks)) != NULL) {
         *nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .value = toAdd, .nextParam = NULL } });
         nextParam = &(*nextParam)->value.param.nextParam;
-        cmd->value.call.numParams++;
+        cmd->value.invoke.numParams++;
     }
 
     // finally return the whole command

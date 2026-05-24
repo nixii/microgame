@@ -1,6 +1,7 @@
-
 #include <microgame/microgame.h>
+
 #include "interpret.h"
+#include <string.h>
 #include <stdio.h>
 
 // names
@@ -34,6 +35,39 @@ static void ms_interpreter_load_event(ms_interpreter *interp, ms_node *n) {
     printf("do %s loaded.\n", name);
 }
 
+// run invoked code
+static void ms_interpreter_run_code_invoke(ms_interpreter *interp, ms_node *n) {
+
+    // the name of the event
+    const char *name = n->value.invoke.eventName;
+
+    if (strcmp(name, "echo") == 0) {
+        printf("ECHO :: %s\n", n->value.invoke.firstParam->value.literal.value.chars);
+        return;
+    }
+
+    // error for no event foind
+    fprintf(stderr, "event %s not found.\n", n->value.invoke.eventName);
+    exit(1);
+}
+
+// run a certain block of code
+static void ms_interpreter_run_code(ms_interpreter *interp, ms_node *n) {
+
+    // run the correct function
+    switch (n->type) {
+        // call another function
+        case MS_NT_INVOKE:
+            return ms_interpreter_run_code_invoke(interp, n);
+        default:
+            break;
+    }
+
+    // failure case
+    fprintf(stderr, "no way to run type %d\n", n->type);
+    exit(1);
+}
+
 // create an interpreter
 ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e) {
 
@@ -54,6 +88,7 @@ ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e) {
                 ms_interpreter_load_event(&interp, n);
                 break;
             default:
+                ms_interpreter_run_code(&interp, n);
                 break;
         }
     }
