@@ -2,6 +2,7 @@
 
 #include "interpret.h"
 #include <string.h>
+#include "lexer.h"
 #include <stdio.h>
 
 // names
@@ -35,16 +36,64 @@ static void ms_interpreter_load_event(ms_interpreter *interp, ms_node *n) {
     printf("do %s loaded.\n", name);
 }
 
+// run the ECHO event
+static void ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, ms_node *n) {
+
+    // get the parameter
+    ms_node *param = n->value.invoke.firstParam;
+
+    // echo is prefixed for now
+    printf("echo >  ");
+
+    // while there are parameters
+    while (param != NULL) {
+
+        // get the token value
+        ms_token *t = &param->value.param.value->value.literal;
+
+        // format-print it
+        switch (t->type) {
+            case MS_TT_STRING:
+                printf("%s", t->value.chars);
+                break;
+            case MS_TT_NUMBER:
+                printf("%f", t->value.num);
+                break;
+            case MS_TT_NIL:
+                printf("nil");
+                break;
+            case MS_TT_BOOL:
+                printf(t->value.truthy ? "true" : "false");
+                break;
+            case MS_TT_VEC2:
+                printf("%.3f %.3f", t->value.v2.x, t->value.v2.y);
+                break;
+            case MS_TT_VEC3:
+                printf("%.3f %.3f %.3f", t->value.v3.x, t->value.v3.y, t->value.v3.z);
+                break;
+            case MS_TT_VEC4:
+                printf("%.3f %.3d %.3f %3df", t->value.v4.scaleX, t->value.v4.pixelsX, t->value.v4.scaleY, t->value.v4.pixelsY);
+                break;
+            default:
+                fprintf(stderr, "unsupported type. %d\n", param->value.param.value->value.literal.type);
+                exit(1);
+        }
+
+        // next param
+        param = param->value.param.nextParam;
+    }
+    // printf("ECHO :: %s\n", n->value.invoke.firstParam->value.param.value->value.literal.value.chars);
+    printf("\n");
+}
+
 // run invoked code
 static void ms_interpreter_run_code_invoke(ms_interpreter *interp, ms_node *n) {
 
     // the name of the event
     const char *name = n->value.invoke.eventName;
 
-    if (strcmp(name, "echo") == 0) {
-        printf("ECHO :: %s\n", n->value.invoke.firstParam->value.literal.value.chars);
-        return;
-    }
+    if (strcmp(name, "echo") == 0)
+        return ms_interpreter_run_code_invoke_echo(interp, n);
 
     // error for no event foind
     fprintf(stderr, "event %s not found.\n", n->value.invoke.eventName);

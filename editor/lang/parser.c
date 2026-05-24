@@ -28,7 +28,7 @@ static inline ms_token *ms_ast_advance(ms_ast *ast, ms_tokens *toks) {
 }
 
 // make an ast node
-ms_node *ms_node_new(ms_node_type type, ms_node_value val) {
+static ms_node *ms_node_new(ms_node_type type, ms_node_value val) {
     ms_node *n = malloc(sizeof(ms_node));
     memset(n, 0, sizeof(ms_node));
     n->type = type;
