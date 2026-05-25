@@ -10,7 +10,7 @@ ui_vec ui_vec_empty() {
 }
 
 // ui vec with sX, pX, sY, pY
-ui_vec ui_vec_new(float sX, int pX, float sY, int pY) {
+ui_vec ui_vec_new(float sX, float pX, float sY, float pY) {
     return (ui_vec){
         .scaleX = sX, .pixelsX = pX,
         .scaleY = sY, .pixelsY = pY

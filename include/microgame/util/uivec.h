@@ -4,7 +4,7 @@
 
 typedef struct ui_vec {
     float scaleX, scaleY;
-    int pixelsX, pixelsY;
+    float pixelsX, pixelsY;
 } ui_vec;
 
 /*
@@ -15,6 +15,6 @@ typedef struct ui_vec {
 ui_vec ui_vec_empty();
 
 // ui vec with sX, pX, sY, pY
-ui_vec ui_vec_new(float sX, int pX, float sY, int pY);
+ui_vec ui_vec_new(float sX, float pX, float sY, float pY);
 
 #endif // MG_UIVEC_H
