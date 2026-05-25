@@ -69,15 +69,16 @@ typedef struct ms_interpreter_scope {
 } ms_interpreter_scope;
 
 // current *context* of the interpreter (object and scene)
-typedef struct {
+typedef struct ms_interpreter_context {
     scene *s;
     entity e;
+    struct ms_interpreter_context *parentContext;
 } ms_interpreter_context;
 
 // the entire interpreter and its context
 typedef struct {
     ms_interpreter_scope *scope;
-    ms_interpreter_context context;
+    ms_interpreter_context *context;
 
     ms_ast *ast;
 } ms_interpreter;

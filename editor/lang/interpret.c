@@ -32,11 +32,12 @@ static ms_interpreter_scope *ms_interpreter_scope_new(ms_interpreter_scope *pare
 }
 
 // create a new context window with the entity and scene
-static ms_interpreter_context ms_interpreter_context_new(scene *s, entity e) {
-    return (ms_interpreter_context){
-        .s = s,
-        .e = e
-    };
+static ms_interpreter_context *ms_interpreter_context_new(scene *s, entity e, ms_interpreter_context *parent) {
+    ms_interpreter_context *ctx = malloc(sizeof(ms_interpreter_context));
+    ctx->parentContext = parent;
+    ctx->s = s;
+    ctx->e = e;
+    return ctx;
 }
 
 // append formatted
@@ -297,7 +298,7 @@ ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e) {
     // create the interpreter
     ms_interpreter interp = (ms_interpreter){
         .scope = ms_interpreter_scope_new(NULL),
-        .context = ms_interpreter_context_new(s, e),
+        .context = ms_interpreter_context_new(s, e, NULL),
         .ast = ast
     };
 
