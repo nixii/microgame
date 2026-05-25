@@ -86,7 +86,7 @@ static void ms_interpreter_appendf_data(char **buf, size_t *len, ms_data d) {
             appendf(buf, len, "%.3f %.3f %.3f", d.value.v3.x, d.value.v3.y, d.value.v3.z);
             break;
         case MS_DT_VEC4:
-            appendf(buf, len, "%.3f %.3f", d.value.v4.scaleX, d.value.v4.pixelsX, d.value.v4.scaleY, d.value.v4.pixelsX);
+            appendf(buf, len, "%.3f %.3f %.3f %.3f", d.value.v4.scaleX, (float)d.value.v4.pixelsX, d.value.v4.scaleY, (float)d.value.v4.pixelsY);
             break;
         default:
             fprintf(stderr, "ms_interpreter_appendf_data does not support type %d\n", d.type);
