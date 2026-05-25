@@ -67,27 +67,6 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
     return cmd;
 }
 
-// create a new instance of something
-ms_node *ms_ast_parse_command_new(ms_ast *ast, ms_tokens *toks) {
-
-    // create the command
-    ms_node *cmd = ms_node_new(MS_NT_INVOKE, (ms_node_value){ .invoke = {
-        .eventName = "new",
-        .firstParam = NULL,
-        .numParams = 0
-    }});
-
-    // get the type to go to
-    ms_node *next = ms_ast_next(ast, toks);
-    assert(next->type == MS_NT_PARAM);
-
-    // set the type
-    cmd->value.invoke.firstParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = next, .nextParam = NULL } });
-
-    // all done!
-    return cmd;
-}
-
 // call to 'let' for variables
 ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
 
@@ -158,6 +137,35 @@ ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
 
     // return the block
     return block;
+}
+
+// create a new instance of something
+ms_node *ms_ast_parse_command_new(ms_ast *ast, ms_tokens *toks) {
+
+    // create the command
+    ms_node *cmd = ms_node_new(MS_NT_INVOKE, (ms_node_value){ .invoke = {
+        .eventName = "new",
+        .firstParam = NULL,
+        .numParams = 0
+    }});
+
+    // get the type to go to
+    ms_node *next = ms_ast_next(ast, toks);
+    assert(next != NULL);
+
+    // set the type
+    cmd->value.invoke.firstParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = next, .nextParam = NULL } });
+
+    // set the do if it exists
+    ms_token *nextTok = ms_ast_peek(ast, toks);
+    if (nextTok != NULL && nextTok->type == MS_TT_KEYWORD && strcmp(nextTok->value.chars, "with") == 0) {
+        ms_ast_advance(ast, toks);
+        ms_node *block = ms_ast_parse_command_generic_block(ast, toks);
+        cmd->value.invoke.firstParam->value.param.nextParam = block;
+    }
+
+    // all done!
+    return cmd;
 }
 
 
