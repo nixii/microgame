@@ -55,17 +55,18 @@ static void ms_interpreter_scope_pop(ms_interpreter *interpreter) {
 // CONTEXT
 
 // create a new context window with the entity and scene
-static ms_interpreter_context *ms_interpreter_context_new(scene *s, ms_data *obj, ms_interpreter_context *parent) {
+static ms_interpreter_context *ms_interpreter_context_new(scene *s, entity e, ms_data obj, ms_interpreter_context *parent) {
     ms_interpreter_context *ctx = malloc(sizeof(ms_interpreter_context));
     ctx->parentContext = parent;
     ctx->s = s;
+    ctx->e = e;
     ctx->obj = obj;
     return ctx;
 }
 
 // push a context
-static void ms_interpreter_context_push(ms_interpreter *interp, scene *s, ms_data *obj) {
-    ms_interpreter_context *new = ms_interpreter_context_new(s, obj, interp->context);
+static void ms_interpreter_context_push(ms_interpreter *interp, scene *s, entity e, ms_data obj) {
+    ms_interpreter_context *new = ms_interpreter_context_new(s, e, obj, interp->context);
     interp->context = new;
 }
 
@@ -168,7 +169,7 @@ static ms_data ms_interpreter_get_variable(ms_interpreter *interp, const char *n
 // INTERPRETING
 
 // run an event
-static ms_data ms_interpreter_load_event(ms_interpreter *interp, const ms_node *n) {
+static ms_data ms_interpreter_run_code_cmd_on(ms_interpreter *interp, const ms_node *n) {
     const char *name = n->value.onCmd.name;
     const ms_node *block = n->value.onCmd.block;
     ms_names_append(&interp->scope->funcNames, name);
@@ -370,6 +371,8 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
             return ms_interpreter_run_code_cmd_let(interp, n);
         case MS_NT_LITERAL:
             return ms_interpreter_run_code_literal(interp, n);
+        case MS_NT_CMD_ON:
+            return ms_interpreter_run_code_cmd_on(interp, n);
         case MS_NT_CMD_DO:
             break; // TODO: make this parse an entire block
         default:
@@ -382,12 +385,12 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
 }
 
 // create an interpreter
-ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e) {
+ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e, ms_data obj) {
 
     // create the interpreter
     ms_interpreter interp = (ms_interpreter){
         .scope = ms_interpreter_scope_new(NULL),
-        .context = ms_interpreter_context_new(s, e, NULL),
+        .context = ms_interpreter_context_new(s, e, obj, NULL),
         .ast = ast
     };
 
@@ -395,17 +398,15 @@ ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e) {
     for (int i = 0; i < ast->nodes.length; i++) {
         const ms_node *n = ast->nodes.data[i];
 
-        // update based on the type
-        switch (n->type) {
-            case MS_NT_CMD_ON: // TODO: remove this and just have it happen on run
-                ms_interpreter_load_event(&interp, n);
-                break;
-            default:
-                ms_interpreter_run_code(&interp, n);
-                break;
-        }
+        // run the code!
+        ms_interpreter_run_code(&interp, n);
     }
 
     // return the interpreter
     return interp;
+}
+
+// create an empty data
+ms_data ms_data_nil() {
+    return (ms_data){ .type = MS_DT_NIL };
 }
