@@ -199,14 +199,44 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
     return (ms_data){ .type = MS_DT_STRING, .value = (ms_data_value){ .str = out } };
 }
 
+// new of something
+static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const ms_node *n) {
+
+    // the first parameter
+    ms_node *firstParam = n->value.invoke.firstParam;
+    assert(firstParam != NULL);
+
+    // the name of the type
+    const char *typeName = firstParam->value.param.data->value.literal.value.chars;
+
+    // instantiate the instance
+    ms_data instance = ms_interpreter_spawn_instance(interp, n, typeName); // TODO: make the instance
+
+    // the  block parameter
+    ms_node *withBlock = firstParam->value.param.nextParam;
+    if (withBlock != NULL) {
+
+        // set the scope and context
+
+        // call the block
+
+    }
+
+    // return the instance
+    return instance;
+}
+
 // run invoked code
 static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_node *n) {
 
     // the name of the event
     const char *name = n->value.invoke.eventName;
 
+    // engine functions
     if (strcmp(name, "echo") == 0)
         return ms_interpreter_run_code_invoke_echo(interp, n);
+    else if (strcmp(name, "new") == 0)
+        return ms_interpreter_run_code_invoke_new(interp, n);
 
     // error for no event foind
     fprintf(stderr, "event %s not found.\n", n->value.invoke.eventName);
