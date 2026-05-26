@@ -120,7 +120,7 @@ ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
     ms_token *nextTok = NULL;
     
     // while there is a next node
-    while ((nextTok = ms_ast_peek(ast, toks))->type != MS_TT_EOF) {
+    while ((nextTok = ms_ast_peek(ast, toks)) != NULL && nextTok->type != MS_TT_EOF) {
         if (nextTok->type == MS_TT_NEWLINE) {
             ms_ast_advance(ast, toks);
             continue;
@@ -131,8 +131,8 @@ ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
             free(nextNode);
             break;
         }
+
         ms_nodes_append(nodes, nextNode);
-        nextNode = ms_ast_next(ast, toks);
     }
 
     // return the block
@@ -208,6 +208,7 @@ ms_node *ms_ast_parse_literal(ms_ast *ast, ms_tokens *toks) {
 // NEXT LINE
 ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
     ms_token *tok = ms_ast_peek(ast, toks);
+    assert(tok != NULL);
 
     // parse commands
     switch (tok->type) {
@@ -230,7 +231,7 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
     }
 
     // nothing worked
-    ast->curPos++;
+    ms_ast_advance(ast, toks);
     return NULL;
 }
 
@@ -239,6 +240,7 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
 
 // create an entire ast
 ms_ast parse(ms_tokens *tokens) {
+    printf("parser started\n");
 
     // create the empty ast
     ms_ast ast;
