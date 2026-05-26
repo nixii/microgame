@@ -1,6 +1,7 @@
 #include <microgame/microgame.h>
 
 #include "interpret.h"
+#include <assert.h>
 #include <string.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -199,6 +200,19 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
     return (ms_data){ .type = MS_DT_STRING, .value = (ms_data_value){ .str = out } };
 }
 
+// make a new instance of type
+static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char *typeName) {
+    
+    if (strcmp(typeName, "entity") == 0) {
+        // TODO: spawn an entity
+        return (ms_data){ .type = MS_DT_ENTITY, .value = (ms_data_value){ .entity = scene_spawn(interp->context->s) } };
+    }
+
+    // failure
+    fprintf(stderr, "couldn't create instance of %s\n", typeName);
+    exit(1);
+}
+
 // new of something
 static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const ms_node *n) {
 
@@ -210,7 +224,7 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
     const char *typeName = firstParam->value.param.data->value.literal.value.chars;
 
     // instantiate the instance
-    ms_data instance = ms_interpreter_spawn_instance(interp, n, typeName); // TODO: make the instance
+    ms_data instance = ms_interpreter_spawn_instance(interp, typeName); // TODO: make the instance
 
     // the  block parameter
     ms_node *withBlock = firstParam->value.param.nextParam;

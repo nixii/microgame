@@ -46,8 +46,8 @@ typedef union {
     vec3 v3;
     ui_vec v4;
     
-    scene *s;
-    entity e;
+    scene *scene;
+    entity entity;
 } ms_data_value;
 
 // a data point
