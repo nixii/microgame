@@ -18,8 +18,9 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
 
 
 
-//////////////
-// HELPERS
+
+///////////////
+// SCOPE
 
 // create a new scope with a possible parent
 // NULL is a fine parameter
@@ -32,14 +33,54 @@ static ms_interpreter_scope *ms_interpreter_scope_new(ms_interpreter_scope *pare
     return s;
 }
 
+// go into a new scope with the given scene and entity
+static void ms_interpreter_scope_push(ms_interpreter *interpreter, scene *s, entity e) {
+    ms_interpreter_scope *new = ms_interpreter_scope_new();
+    interpreter->scope = new;
+}
+
+// go back up a scope
+static void ms_interpreter_scope_pop(ms_interpreter *interpreter) {
+    ms_interpreter_scope *parent = interpreter->scope->parentScope;
+    free(interpreter->scope);
+    interpreter->scope = parent;
+}
+
+
+
+
+
+
+/////////////
+// CONTEXT
+
 // create a new context window with the entity and scene
-static ms_interpreter_context *ms_interpreter_context_new(scene *s, entity e, ms_interpreter_context *parent) {
+static ms_interpreter_context *ms_interpreter_context_new(scene *s, ms_data *obj, ms_interpreter_context *parent) {
     ms_interpreter_context *ctx = malloc(sizeof(ms_interpreter_context));
     ctx->parentContext = parent;
     ctx->s = s;
-    ctx->e = e;
+    ctx->obj = obj;
     return ctx;
 }
+
+// push a context
+static void ms_interpreter_context_push(ms_interpreter *interp, scene *s, ms_data *obj) {
+    ms_interpreter_context *new = ms_interpreter_context_new(s, obj, interp->context);
+    interp->context = new;
+}
+
+// pop a context
+static void ms_interpreter_context_pop(ms_interpreter *interp) {
+    ms_interpreter_context *parent = interp->context->parentContext;
+    free(interp->context);
+    interp->context = parent;
+}
+
+
+
+
+//////////////
+// HELPERS
 
 // append formatted
 static void appendf(char **buf, size_t *len, const char *fmt, ...) {
@@ -231,9 +272,11 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
     if (withBlock != NULL) {
 
         // set the scope and context
+        ms_interpreter_scope_push(interp);
+        ms_interpreter_context_push(interp, interp->context->s, &instance) // TODO: make this change scene too
 
         // call the block
-
+        ms_interpreter_run_code(withBlock);
     }
 
     // return the instance
@@ -327,6 +370,8 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
             return ms_interpreter_run_code_cmd_let(interp, n);
         case MS_NT_LITERAL:
             return ms_interpreter_run_code_literal(interp, n);
+        case MS_NT_CMD_DO:
+            break; // TODO: make this parse an entire block
         default:
             break;
     }
@@ -352,7 +397,7 @@ ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e) {
 
         // update based on the type
         switch (n->type) {
-            case MS_NT_CMD_ON:
+            case MS_NT_CMD_ON: // TODO: remove this and just have it happen on run
                 ms_interpreter_load_event(&interp, n);
                 break;
             default:

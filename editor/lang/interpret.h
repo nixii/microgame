@@ -71,7 +71,7 @@ typedef struct ms_interpreter_scope {
 // current *context* of the interpreter (object and scene)
 typedef struct ms_interpreter_context {
     scene *s;
-    entity e;
+    ms_data *obj;
     struct ms_interpreter_context *parentContext;
 } ms_interpreter_context;
 
