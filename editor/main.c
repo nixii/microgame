@@ -23,7 +23,7 @@ int main(void) {
     ms_ast ast = parse(&tokens);
 
     // interpret!
-    ms_interpreter interp = ms_interpreter_from(&ast, s, -1);
+    ms_interpreter interp = ms_interpreter_from(&ast, s, NIL_ENTITY, ms_data_nil());
 
     // run
     while (game_still_running(game)) {

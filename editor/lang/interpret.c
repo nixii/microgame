@@ -34,8 +34,8 @@ static ms_interpreter_scope *ms_interpreter_scope_new(ms_interpreter_scope *pare
 }
 
 // go into a new scope with the given scene and entity
-static void ms_interpreter_scope_push(ms_interpreter *interpreter, scene *s, entity e) {
-    ms_interpreter_scope *new = ms_interpreter_scope_new();
+static void ms_interpreter_scope_push(ms_interpreter *interpreter) {
+    ms_interpreter_scope *new = ms_interpreter_scope_new(interpreter->scope);
     interpreter->scope = new;
 }
 
@@ -273,11 +273,17 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
     if (withBlock != NULL) {
 
         // set the scope and context
-        ms_interpreter_scope_push(interp);
-        ms_interpreter_context_push(interp, interp->context->s, &instance) // TODO: make this change scene too
+        ms_interpreter_context_push(
+            interp, 
+            interp->context->s, 
+            instance.type == MS_DT_ENTITY ? instance.value.entity : NIL_ENTITY, 
+            instance); // TODO: make this change scene too
 
         // call the block
-        ms_interpreter_run_code(withBlock);
+        ms_interpreter_run_code(interp, withBlock);
+
+        // go back
+        ms_interpreter_context_pop(interp);
     }
 
     // return the instance
@@ -359,6 +365,31 @@ static ms_data ms_interpreter_run_code_literal(ms_interpreter *interp, const ms_
     }
 }
 
+// run an entire "do" block
+static ms_data ms_interpreter_run_code_cmd_do(ms_interpreter *interp, const ms_node *n) {
+
+    // new context
+    ms_interpreter_scope_push(interp);
+
+    // get all of the nodes
+    const ms_nodes *nodes = &n->value.doCmd.nodes;
+    assert(nodes != NULL);
+
+    // run each node besides the last
+    for (int i = 0; i < nodes->length - 1; i++) {
+        ms_interpreter_run_code(interp, nodes->data[i]);
+    }
+    
+    // return the last node
+    ms_data result = ms_interpreter_run_code(interp, nodes->data[nodes->length - 1]);
+
+    // go back a scope
+    ms_interpreter_scope_pop(interp);
+
+    // return
+    return result;
+}
+
 // run a certain block of code
 static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n) {
 
@@ -374,7 +405,7 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
         case MS_NT_CMD_ON:
             return ms_interpreter_run_code_cmd_on(interp, n);
         case MS_NT_CMD_DO:
-            break; // TODO: make this parse an entire block
+            return ms_interpreter_run_code_cmd_do(interp, n);
         default:
             break;
     }

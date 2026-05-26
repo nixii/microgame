@@ -85,7 +85,7 @@ typedef struct {
 } ms_interpreter;
 
 // create an interpreter
-ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e);
-ms_data ms_data_nil():
+ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e, ms_data obj);
+ms_data ms_data_nil();
 
 #endif // MG_EDITOR_INTERPRET_H
