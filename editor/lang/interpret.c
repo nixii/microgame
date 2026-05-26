@@ -245,13 +245,15 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
 // make a new instance of type
 static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char *typeName) {
     
+    // TODO: be able to spawn other entities
     if (strcmp(typeName, "entity") == 0) {
-        // TODO: spawn an entity
         return (ms_data){ .type = MS_DT_ENTITY, .value = (ms_data_value){ .entity = scene_spawn(interp->context->s) } };
+    } else if (strcmp(typeName, "scene") == 0) {
+        return (ms_data){ .type = MS_DT_SCENE, .value = (ms_data_value){ .scene = scene_new() } };
     }
 
     // failure
-    fprintf(stderr, "couldn't create instance of %s\n", typeName);
+    fprintf(stderr, "couldn't create instance of %s;  doesn't exist\n", typeName);
     exit(1);
 }
 
@@ -336,6 +338,22 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
 
     // just return it back!
     return d;
+}
+
+// run the set command
+static ms_data ms_interpreter_run_code_cmd_set(ms_interpreter *interp, const ms_node *n) {
+
+    // get the name
+    const char *name = n->value.letCmd.name;
+
+    // the value
+    ms_data value = ms_interpreter_run_code(n->value.letCmd.data);
+
+    // set the value
+    ms_interpreter_set_property(interp, name, value); // TODO: make this function
+
+    // return the value
+    return value;
 }
 
 // literal

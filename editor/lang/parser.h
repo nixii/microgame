@@ -16,6 +16,7 @@ typedef enum {
     
     // commands
     MS_NT_CMD_LET,
+    MS_NT_CMD_SET,
     MS_NT_CMD_END,
     MS_NT_CMD_ON,
     MS_NT_CMD_DO,
@@ -42,7 +43,7 @@ typedef struct {
     ms_node *nextParam;
 } ms_node_param;
 
-// a set command
+// a let command
 typedef struct {
     const char *name;
     ms_node *data;

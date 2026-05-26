@@ -68,7 +68,7 @@ ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
 }
 
 // call to 'let' for variables
-ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
+ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks, int doLetCommand) {
 
     // get the name
     ms_token *name = ms_ast_advance(ast, toks);
@@ -79,7 +79,7 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks) {
     assert(value != NULL);
 
     // create the command
-    ms_node *cmd = ms_node_new(MS_NT_CMD_LET, (ms_node_value){ .letCmd = {
+    ms_node *cmd = ms_node_new(doLetCommand ? MS_NT_CMD_LET : MS_NT_CMD_SET, (ms_node_value){ .letCmd = {
         .name = name->value.chars,
         .data = value
     }});
@@ -182,7 +182,9 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
     if (strcmp(tok->value.chars, "echo") == 0) {
         return ms_ast_parse_command_echo(ast, toks);
     } else if (strcmp(tok->value.chars, "let") == 0) {
-        return ms_ast_parse_command_let(ast, toks);
+        return ms_ast_parse_command_let(ast, toks, 1);
+    } else if (strcmp(tok->value.chars, "set") == 0) {
+        return ms_ast_parse_command_let(ast, toks, 0);
     } else if (strcmp(tok->value.chars, "end") == 0) {
         return ms_ast_parse_command_end(ast, toks);
     } else if (strcmp(tok->value.chars, "on") == 0) {
