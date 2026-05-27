@@ -84,7 +84,7 @@ tg1: $(TG1_OBJS) engine
 # get the source and obj files
 EDITOR_SRCS =  $(wildcard editor/*.c)
 EDITOR_SRCS += $(wildcard editor/**/*.c)
-EDITOR_SRCS += $(wildcard editor/**/**/.c)
+EDITOR_SRCS += $(wildcard editor/**/**/*.c)
 EDITOR_OBJS =  $(EDITOR_SRCS:.c=.o)
 
 # target

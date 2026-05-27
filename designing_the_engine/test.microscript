@@ -1,4 +1,6 @@
 new entity with
     echo "hi"
     set position 1 1 1
+    set rotation 45 45 45
+    set scale 3 3 3
 end

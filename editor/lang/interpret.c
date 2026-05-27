@@ -1,5 +1,7 @@
 #include <microgame/microgame.h>
 
+#include "properties/entity.h"
+
 #include "interpret.h"
 #include <assert.h>
 #include <string.h>
@@ -342,25 +344,27 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
 
 static void ms_interpreter_set_property(ms_interpreter *interp, const char *name, ms_data val) {
 
+    // the interpreter context is malformed
+    if (interp->context->s == NULL) {
+        fprintf(stderr, "context got mangled.\n");
+        exit(1);
+    }
+
+    // special objects
     if (interp->context->obj.type == MS_DT_NIL) {
         fprintf(stderr, "obj not implemented.\n");
         exit(1);
         return;
     }
 
+    // specifically an entity
     if (interp->context->e != NIL_ENTITY) {
-        fprintf(stderr, "entity not implemented.\n");
-        exit(1);
+        ms_interpreter_entity_set_property(interp->context->s, interp->context->e, name, val);
         return;
     }
 
-    if (interp->context->s != NULL) {
-        fprintf(stderr, "scene not implemented.\n");
-        exit(1);
-        return;
-    }
-
-    fprintf(stderr, "context got mangled.\n");
+    // a scene
+    fprintf(stderr, "scene not implemented.\n");
     exit(1);
 }
 
