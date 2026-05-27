@@ -368,6 +368,31 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
     exit(1);
 }
 
+// get a property rather than set it
+static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *name) {
+
+    // the interpreter context is malformed
+    if (interp->context->s == NULL) {
+        fprintf(stderr, "context got mangled.\n");
+        exit(1);
+    }
+
+    // special objects
+    if (interp->context->obj.type == MS_DT_NIL) {
+        fprintf(stderr, "obj not implemented.\n");
+        exit(1);
+    }
+
+    // specifically an entity
+    if (interp->context->e != NIL_ENTITY) {
+        return ms_interpreter_entity_get_property(interp->context->s, interp->context->e, name);
+    }
+
+    // a scene
+    fprintf(stderr, "scene not implemented.\n");
+    exit(1);
+}
+
 // run the set command
 static ms_data ms_interpreter_run_code_cmd_set(ms_interpreter *interp, const ms_node *n) {
 
@@ -382,6 +407,14 @@ static ms_data ms_interpreter_run_code_cmd_set(ms_interpreter *interp, const ms_
 
     // return the value
     return value;
+}
+
+// get a property
+static ms_data ms_interpreter_run_code_cmd_get(ms_interpreter *interp, const ms_node *n) {
+
+    // return the property
+    const char *name = n->value.getCmd.name;
+    return ms_interpreter_get_property(interp, name);
 }
 
 // literal
@@ -448,6 +481,8 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
             return ms_interpreter_run_code_cmd_let(interp, n);
         case MS_NT_CMD_SET:
             return ms_interpreter_run_code_cmd_set(interp, n);
+        case MS_NT_CMD_GET:
+            return ms_interpreter_run_code_cmd_get(interp, n);
         case MS_NT_LITERAL:
             return ms_interpreter_run_code_literal(interp, n);
         case MS_NT_CMD_ON:

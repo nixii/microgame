@@ -16,7 +16,8 @@ static char *keywords[] = {
     "end",
     "new",
     "with",
-    "set"
+    "set",
+    "get"
 };
 
 // lexer state

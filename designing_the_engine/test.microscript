@@ -1,6 +1,15 @@
 new entity with
     echo "hi"
+    
     set position 1 1 1
+    let pos get position
+    echo "set position to " pos
+
     set rotation 45 45 45
+    let rot get rotation
+    echo "set rotation to " rot
+
     set scale 3 3 3
+    let scale get scale
+    echo "set scale to " scale
 end

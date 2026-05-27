@@ -17,6 +17,7 @@ typedef enum {
     // commands
     MS_NT_CMD_LET,
     MS_NT_CMD_SET,
+    MS_NT_CMD_GET,
     MS_NT_CMD_END,
     MS_NT_CMD_ON,
     MS_NT_CMD_DO,
@@ -49,6 +50,11 @@ typedef struct {
     ms_node *data;
 } ms_node_let;
 
+// a get command
+typedef struct {
+    const char *name;
+} ms_node_get;
+
 // a block of code
 typedef struct {
     ms_nodes nodes;
@@ -65,6 +71,7 @@ typedef union {
     ms_node_invoke invoke;
     ms_node_param param;
     ms_node_let letCmd;
+    ms_node_get getCmd;
     ms_node_do doCmd;
     ms_node_on onCmd;
     ms_token literal;

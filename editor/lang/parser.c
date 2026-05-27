@@ -86,6 +86,18 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks, int doLetCommand
     return cmd;
 }
 
+// a call to 'get' for properties
+ms_node *ms_ast_parse_command_get(ms_ast *ast, ms_tokens *toks) {
+
+    // get the name
+    ms_token *name = ms_ast_advance(ast, toks);
+    assert(name->type == MS_TT_IDENT);
+
+    // return the final node
+    ms_node *cmd = ms_node_new(MS_NT_CMD_GET, (ms_node_value){ .getCmd = { .name = name->value.chars } });
+    return cmd;
+}
+
 // end a block of code
 ms_node *ms_ast_parse_command_end(ms_ast *ast, ms_tokens *toks) {
     (void)(ast); (void)(toks);
@@ -185,6 +197,8 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
         return ms_ast_parse_command_let(ast, toks, 1);
     } else if (strcmp(tok->value.chars, "set") == 0) {
         return ms_ast_parse_command_let(ast, toks, 0);
+    } else if (strcmp(tok->value.chars, "get") == 0) {
+        return ms_ast_parse_command_get(ast, toks);
     } else if (strcmp(tok->value.chars, "end") == 0) {
         return ms_ast_parse_command_end(ast, toks);
     } else if (strcmp(tok->value.chars, "on") == 0) {
