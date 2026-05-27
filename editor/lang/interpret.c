@@ -271,7 +271,7 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
     const char *typeName = firstParam->value.param.data->value.literal.value.chars;
 
     // instantiate the instance
-    ms_data instance = ms_interpreter_spawn_instance(interp, typeName); // TODO: make the instance
+    ms_data instance = ms_interpreter_spawn_instance(interp, typeName);
 
     // the  block parameter
     ms_node *withBlock = firstParam->value.param.nextParam;
@@ -282,7 +282,7 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
             interp, 
             interp->context->s, 
             instance.type == MS_DT_ENTITY ? instance.value.entity : NIL_ENTITY, 
-            instance.type == MS_DT_ENTITY ? ms_data_nil()         : instance); // TODO: make this change scene too
+            instance.type == MS_DT_ENTITY ? ms_data_nil()         : instance);
 
         // call the block
         ms_interpreter_run_code(interp, withBlock);
@@ -402,7 +402,7 @@ static ms_data ms_interpreter_run_code_cmd_set(ms_interpreter *interp, const ms_
     ms_data value = ms_interpreter_run_code(interp, n->value.letCmd.data);
 
     // set the value
-    ms_interpreter_set_property(interp, name, value); // TODO: make this function
+    ms_interpreter_set_property(interp, name, value);
 
     // return the value
     return value;
