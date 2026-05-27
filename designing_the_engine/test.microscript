@@ -1,6 +1,4 @@
 new entity with
-    let x 1
-    echo x
+    echo "hi"
+    set position 1 1 1
 end
-
-echo "x no longer exists"

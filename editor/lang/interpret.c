@@ -340,6 +340,30 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
     return d;
 }
 
+static void ms_interpreter_set_property(ms_interpreter *interp, const char *name, ms_data val) {
+
+    if (interp->context->obj.type == MS_DT_NIL) {
+        fprintf(stderr, "obj not implemented.\n");
+        exit(1);
+        return;
+    }
+
+    if (interp->context->e != NIL_ENTITY) {
+        fprintf(stderr, "entity not implemented.\n");
+        exit(1);
+        return;
+    }
+
+    if (interp->context->s != NULL) {
+        fprintf(stderr, "scene not implemented.\n");
+        exit(1);
+        return;
+    }
+
+    fprintf(stderr, "context got mangled.\n");
+    exit(1);
+}
+
 // run the set command
 static ms_data ms_interpreter_run_code_cmd_set(ms_interpreter *interp, const ms_node *n) {
 
@@ -347,7 +371,7 @@ static ms_data ms_interpreter_run_code_cmd_set(ms_interpreter *interp, const ms_
     const char *name = n->value.letCmd.name;
 
     // the value
-    ms_data value = ms_interpreter_run_code(n->value.letCmd.data);
+    ms_data value = ms_interpreter_run_code(interp, n->value.letCmd.data);
 
     // set the value
     ms_interpreter_set_property(interp, name, value); // TODO: make this function
@@ -418,6 +442,8 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
             return ms_interpreter_run_code_invoke(interp, n);
         case MS_NT_CMD_LET:
             return ms_interpreter_run_code_cmd_let(interp, n);
+        case MS_NT_CMD_SET:
+            return ms_interpreter_run_code_cmd_set(interp, n);
         case MS_NT_LITERAL:
             return ms_interpreter_run_code_literal(interp, n);
         case MS_NT_CMD_ON:
