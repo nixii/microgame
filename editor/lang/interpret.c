@@ -1,6 +1,7 @@
 #include <microgame/microgame.h>
 
 #include "properties/entity.h"
+#include "properties/scene.h"
 
 #include "interpret.h"
 #include <assert.h>
@@ -281,7 +282,7 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
             interp, 
             interp->context->s, 
             instance.type == MS_DT_ENTITY ? instance.value.entity : NIL_ENTITY, 
-            instance); // TODO: make this change scene too
+            instance.type == MS_DT_ENTITY ? ms_data_nil()         : instance); // TODO: make this change scene too
 
         // call the block
         ms_interpreter_run_code(interp, withBlock);
@@ -351,7 +352,7 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
     }
 
     // special objects
-    if (interp->context->obj.type == MS_DT_NIL) {
+    if (interp->context->obj.type != MS_DT_NIL) {
         fprintf(stderr, "obj not implemented.\n");
         exit(1);
         return;
@@ -364,8 +365,7 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
     }
 
     // a scene
-    fprintf(stderr, "scene not implemented.\n");
-    exit(1);
+    ms_interpreter_scene_set_property(interp->context->s, name, val);
 }
 
 // get a property rather than set it
@@ -378,7 +378,7 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
     }
 
     // special objects
-    if (interp->context->obj.type == MS_DT_NIL) {
+    if (interp->context->obj.type != MS_DT_NIL) {
         fprintf(stderr, "obj not implemented.\n");
         exit(1);
     }
@@ -389,8 +389,7 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
     }
 
     // a scene
-    fprintf(stderr, "scene not implemented.\n");
-    exit(1);
+    return ms_interpreter_scene_get_property(interp->context->s, name);
 }
 
 // run the set command

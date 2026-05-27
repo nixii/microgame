@@ -1,6 +1,6 @@
 new entity with
     echo "hi"
-    
+
     set position 1 1 1
     let pos get position
     echo "set position to " pos
@@ -13,3 +13,7 @@ new entity with
     let scale get scale
     echo "set scale to " scale
 end
+
+set light_direction 0 1 0
+let ld get light_direction
+echo "light is going (opposite) of <" ld ">!"
