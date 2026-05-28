@@ -1,8 +1,8 @@
 
 # microgame
 
-Microgame will be a small game engine for retro-esque video games.<br>
-It will be usable as a visual editor *and* as a static C library.
+Microgame is a small game engine for retro-esque video games.<br>
+It will be usable as a custom coding language *and* as a static C library.
 
 ## Features
 - An ECS scene graph allowing for easy addition of new data
@@ -10,9 +10,8 @@ It will be usable as a visual editor *and* as a static C library.
 - Robust UI & text rendering
 
 ## Planned Features
-- Simple, human-editable YAML asset files
-- A small custom coding language for use in the editor
-- A full editor for the engine, coded using itself
+- A small custom coding language for use in the engine
+- ~~A full editor for the engine, coded using itself~~ **NOTE:** this feature was cut due to time constraints. It may be added at a later date
 
 ## Platform Support
 > ✅ works<br>
