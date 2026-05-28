@@ -45,6 +45,7 @@ typedef union {
     scene *scene;
     entity entity;
     collider collider;
+    velocity velocity;
     mesh mesh;
 
     mesh_resource meshResource;

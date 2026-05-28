@@ -59,6 +59,9 @@ void ms_interpreter_entity_attach_component(scene *s, entity e, ms_data value) {
         case MS_DT_COMPONENT_COLLIDER:
             attach_collider(s, e, value.value.collider);
             break;
+        case MS_DT_COMPONENT_VELOCITY:
+            attach_velocity(s, e, value.value.velocity);
+            break;
         default:
             fprintf(stderr, "no way to attach %d\n", value.type);
             exit(1);

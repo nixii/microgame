@@ -270,6 +270,11 @@ static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char 
         return (ms_data){ .type = MS_DT_COMPONENT_COLLIDER, .value = (ms_data_value){ .collider = collider_new(vec3_new(1, 1, 1)) } };
     }
 
+    else if (strcmp(typeName, "velocity") == 0) {
+        // DEFAULT VELOCITY: <0 0 0>
+        return (ms_data){ .type = MS_DT_COMPONENT_VELOCITY, .value = (ms_data_value){ .velocity = velocity_new(vec3_zero()) } };
+    }
+
     // failure
     fprintf(stderr, "couldn't create instance of %s;  doesn't exist\n", typeName);
     exit(1);
@@ -391,7 +396,7 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
         // switch the type
         switch (interp->context->obj.type) {
             case MS_DT_COMPONENT_COLLIDER:
-                ms_interpreter_component_collider_set_property(interp->context->s, interp->context->e, name, val);
+                ms_interpreter_component_collider_set_property(&interp->context->obj.value.collider, name, val);
                 break;
             default:
                 fprintf(stderr, "obj not implemented.\n");
@@ -425,7 +430,7 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
         // switch the type
         switch (interp->context->obj.type) {
             case MS_DT_COMPONENT_COLLIDER:
-                return ms_interpreter_component_collider_get_property(interp->context->s, interp->context->e, name);
+                return ms_interpreter_component_collider_get_property(&interp->context->obj.value.collider, name);
             default:
                 fprintf(stderr, "obj not implemented.\n");
                 exit(1);
@@ -486,6 +491,8 @@ static ms_data ms_interpreter_run_code_literal(ms_interpreter *interp, const ms_
             return (ms_data){ .type = MS_DT_VEC3, .value = (ms_data_value){ .v3 = tok.value.v3 } };
         case MS_TT_VEC4:
             return (ms_data){ .type = MS_DT_VEC4, .value = (ms_data_value){ .v4 = tok.value.v4 } };
+        case MS_TT_IDENT:
+            return ms_interpreter_get_variable(interp, tok.value.chars);
         default:
             fprintf(stderr, "no way to interpret literal of type %d\n", tok.type);
             exit(1);
