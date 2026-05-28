@@ -3,8 +3,12 @@
 
 Todo #8 - more advanced features for the language:
  * `[ ]` Creating resources
+ * * `[ ]` Creating mesh resources
  * `[ ]` Creating components
- * `[ ]` Attaching components
+ * * `[ ]` Creating mesh components
+ * * `[x]` Creating collider components
+ * * `[x]` Creating velocity components
+ * `[x]` Attaching components
  * `[ ]` Detaching components
  * `[ ]` Despawning entities
  * `[ ]` If statements
