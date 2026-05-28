@@ -3,6 +3,7 @@
 #include "properties/entity.h"
 #include "properties/scene.h"
 #include "properties/collider.h"
+#include "properties/velocity.h"
 
 #include "interpret.h"
 #include <assert.h>
@@ -398,6 +399,9 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
             case MS_DT_COMPONENT_COLLIDER:
                 ms_interpreter_component_collider_set_property(&interp->context->obj.value.collider, name, val);
                 break;
+            case MS_DT_COMPONENT_VELOCITY:
+                ms_interpreter_component_velocity_set_property(&interp->context->obj.value.velocity, name, val);
+                break;
             default:
                 fprintf(stderr, "obj not implemented.\n");
                 exit(1);
@@ -431,6 +435,8 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
         switch (interp->context->obj.type) {
             case MS_DT_COMPONENT_COLLIDER:
                 return ms_interpreter_component_collider_get_property(&interp->context->obj.value.collider, name);
+            case MS_DT_COMPONENT_VELOCITY:
+                return ms_interpreter_component_velocity_get_property(&interp->context->obj.value.velocity, name);
             default:
                 fprintf(stderr, "obj not implemented.\n");
                 exit(1);

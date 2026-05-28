@@ -19,6 +19,12 @@ new entity with
         set size size
     end
     echo "collider attached"
+
+    let myvel new velocity
+    echo "velocity made"
+
+    attach myvel
+    echo "velocity attached"
 end
 
 set light_direction 0 1 0
