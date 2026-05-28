@@ -180,6 +180,20 @@ ms_node *ms_ast_parse_command_new(ms_ast *ast, ms_tokens *toks) {
     return cmd;
 }
 
+// attach command
+ms_node *ms_ast_parse_command_attach(ms_ast *ast, ms_tokens *toks) {
+    
+    // get the next thing
+    ms_node *next = ms_ast_next(ast, toks);
+    assert(next != NULL);
+
+    // create the command
+    ms_node *command = ms_node_new(MS_NT_CMD_ATTACH, (ms_node_value){ .attachCmd = { .component = next } });
+
+    // done!
+    return command;
+}
+
 
 
 
@@ -199,6 +213,8 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
         return ms_ast_parse_command_let(ast, toks, 0);
     } else if (strcmp(tok->value.chars, "get") == 0) {
         return ms_ast_parse_command_get(ast, toks);
+    } else if (strcmp(tok->value.chars, "attach") == 0) {
+        return ms_ast_parse_command_attach(ast, toks);
     } else if (strcmp(tok->value.chars, "end") == 0) {
         return ms_ast_parse_command_end(ast, toks);
     } else if (strcmp(tok->value.chars, "on") == 0) {

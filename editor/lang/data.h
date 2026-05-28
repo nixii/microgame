@@ -23,7 +23,13 @@ typedef enum {
     
     // engine objects
     MS_DT_SCENE,
-    MS_DT_ENTITY
+    MS_DT_ENTITY,
+    MS_DT_COMPONENT_COLLIDER,
+    MS_DT_COMPONENT_MESH,
+    MS_DT_COMPONENT_VELOCITY,
+
+    // resources
+    MS_DT_RESOURCE_MESH,
 } ms_data_type;
 
 // a ms value
@@ -38,6 +44,10 @@ typedef union {
     
     scene *scene;
     entity entity;
+    collider collider;
+    mesh mesh;
+
+    mesh_resource meshResource;
 } ms_data_value;
 
 // a data point

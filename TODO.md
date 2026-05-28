@@ -1,24 +1,32 @@
 
 ## To-Do list
 
+Todo #8 - more advanced features for the language:
+ * `[ ]` Creating resources
+ * `[ ]` Creating components
+ * `[ ]` Attaching components
+ * `[ ]` Detaching components
+ * `[ ]` Despawning entities
+ * `[ ]` If statements
+
 Todo #7 - beginning of the language:
  * `[x]` Design the scripting language
  * `[x]` Create the lexer
- * `[ ]` Create a basic parser
+ * `[x]` Create a basic parser
  * * `[x]` Echo command
  * * `[x]` Let command
  * * `[x]` On command
  * * `[x]` Do command
  * * `[x]` End command
- * * `[ ]` Set command
- * * `[ ]` Get command
- * * `[ ]` With command
- * `[ ]` Make a basic interpreter
- * * `[ ]` Works on non-engine-specific things
- * * `[ ]` Preload runs first
- * * `[ ]` Loads into a scene
- * * `[ ]` Can print variables in the scene
- * * `[ ]` Can set scene properties
+ * * `[x]` Set command
+ * * `[x]` Get command
+ * * `[x]` With command
+ * `[x]` Make a basic interpreter
+ * * `[x]` Works on non-engine-specific things
+ * * `[x]` Loads into a scene
+ * * `[x]` Can print variables in the scene
+ * * `[x]` Can set scene properties
+
 
 Todo #6 - test platformer:
  * `[x]` 3 simple levels

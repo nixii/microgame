@@ -2,6 +2,7 @@
 
 #include "properties/entity.h"
 #include "properties/scene.h"
+#include "properties/collider.h"
 
 #include "interpret.h"
 #include <assert.h>
@@ -28,9 +29,10 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
 // create a new scope with a possible parent
 // NULL is a fine parameter
 static ms_interpreter_scope *ms_interpreter_scope_new(ms_interpreter_scope *parent) {
-    ms_interpreter_scope *s = malloc(sizeof(ms_interpreter_scope));
+    ms_interpreter_scope *s = calloc(1, sizeof(ms_interpreter_scope));
     s->parentScope = parent;
     s->varNames = ms_names_new();
+    s->varValues = ms_datas_new();
     s->funcNames = ms_names_new();
     s->funcNodes = ms_nodes_new();
     return s;
@@ -59,7 +61,7 @@ static void ms_interpreter_scope_pop(ms_interpreter *interpreter) {
 
 // create a new context window with the entity and scene
 static ms_interpreter_context *ms_interpreter_context_new(scene *s, entity e, ms_data obj, ms_interpreter_context *parent) {
-    ms_interpreter_context *ctx = malloc(sizeof(ms_interpreter_context));
+    ms_interpreter_context *ctx = calloc(1, sizeof(ms_interpreter_context));
     ctx->parentContext = parent;
     ctx->s = s;
     ctx->e = e;
@@ -99,7 +101,15 @@ static void appendf(char **buf, size_t *len, const char *fmt, ...) {
     if (needed < 0) return;
 
     // resize it
-    *buf = realloc(*buf, *len + needed + 1);
+    char *temp = realloc(*buf, *len + needed + 1);
+    if (temp == NULL) {
+        fprintf(stderr, "temp is null.\n");
+        free(*buf);
+        *buf = NULL;
+        *len = 0;
+        exit(1);
+    }
+    *buf = temp;
 
     // append
     va_start(args, fmt);
@@ -248,11 +258,16 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
 // make a new instance of type
 static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char *typeName) {
     
-    // TODO: be able to spawn other entities
+    // TODO: mesh, mesh_resource, velocity, font_resource, image_resource, sound_resource
     if (strcmp(typeName, "entity") == 0) {
         return (ms_data){ .type = MS_DT_ENTITY, .value = (ms_data_value){ .entity = scene_spawn(interp->context->s) } };
+
     } else if (strcmp(typeName, "scene") == 0) {
         return (ms_data){ .type = MS_DT_SCENE, .value = (ms_data_value){ .scene = scene_new() } };
+
+    } else if (strcmp(typeName, "collider") == 0) {
+        // DEFAULT SIZE: <1 1 1>
+        return (ms_data){ .type = MS_DT_COMPONENT_COLLIDER, .value = (ms_data_value){ .collider = collider_new(vec3_new(1, 1, 1)) } };
     }
 
     // failure
@@ -353,8 +368,16 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
 
     // special objects
     if (interp->context->obj.type != MS_DT_NIL) {
-        fprintf(stderr, "obj not implemented.\n");
-        exit(1);
+
+        // switch the type
+        switch (interp->context->obj.type) {
+            case MS_DT_COMPONENT_COLLIDER:
+                ms_interpreter_component_collider_set_property(interp->context->s, interp->context->e, name, val);
+                break;
+            default:
+                fprintf(stderr, "obj not implemented.\n");
+                exit(1);
+        }
         return;
     }
 
@@ -379,8 +402,15 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
 
     // special objects
     if (interp->context->obj.type != MS_DT_NIL) {
-        fprintf(stderr, "obj not implemented.\n");
-        exit(1);
+
+        // switch the type
+        switch (interp->context->obj.type) {
+            case MS_DT_COMPONENT_COLLIDER:
+                return ms_interpreter_component_collider_get_property(interp->context->s, interp->context->e, name);
+            default:
+                fprintf(stderr, "obj not implemented.\n");
+                exit(1);
+        }
     }
 
     // specifically an entity
@@ -452,6 +482,12 @@ static ms_data ms_interpreter_run_code_cmd_do(ms_interpreter *interp, const ms_n
     // get all of the nodes
     const ms_nodes *nodes = &n->value.doCmd.nodes;
     assert(nodes != NULL);
+
+    // error detection
+    if (nodes->length == 0) {
+        ms_interpreter_scope_pop(interp);
+        return ms_data_nil();
+    }
 
     // run each node besides the last
     for (int i = 0; i < nodes->length - 1; i++) {

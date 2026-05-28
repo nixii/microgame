@@ -12,6 +12,11 @@ new entity with
     set scale 3 3 3
     let scale get scale
     echo "set scale to " scale
+
+    new collider with
+        echo "collider made!"
+    end
+    echo "collider attached"
 end
 
 set light_direction 0 1 0
