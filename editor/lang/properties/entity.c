@@ -52,3 +52,15 @@ ms_data ms_interpreter_entity_get_property(scene *s, entity e, const char *propN
     }
 
 }
+
+void ms_interpreter_entity_attach_component(scene *s, entity e, ms_data value) {
+
+    switch (value.type) {
+        case MS_DT_COMPONENT_COLLIDER:
+            attach_collider(s, e, value.value.collider);
+            break;
+        default:
+            fprintf(stderr, "no way to attach %d\n", value.type);
+            exit(1);
+    }
+}

@@ -26,4 +26,4 @@ end
 
 let mesh_resource load mesh obj "./assets/cube.obj"
 
-as e2 do attach new mesh from mesh_resource
+as e2 attach new mesh from mesh_resource

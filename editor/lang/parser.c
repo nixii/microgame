@@ -188,7 +188,14 @@ ms_node *ms_ast_parse_command_attach(ms_ast *ast, ms_tokens *toks) {
     assert(next != NULL);
 
     // create the command
-    ms_node *command = ms_node_new(MS_NT_CMD_ATTACH, (ms_node_value){ .attachCmd = { .component = next } });
+    ms_node *command = ms_node_new(
+        MS_NT_INVOKE, 
+        (ms_node_value){
+            .invoke = {
+                .eventName = "attach", .numParams = 1, 
+                .firstParam = next 
+            } 
+        });
 
     // done!
     return command;

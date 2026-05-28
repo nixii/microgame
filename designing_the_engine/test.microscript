@@ -13,7 +13,7 @@ new entity with
     let scale get scale
     echo "set scale to " scale
 
-    new collider with
+    attach new collider with
         echo "collider made!"
     end
     echo "collider attached"

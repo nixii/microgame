@@ -14,5 +14,6 @@
 //  - guid <string>
 void ms_interpreter_entity_set_property(scene *s, entity e, const char *propName, ms_data value);
 ms_data ms_interpreter_entity_get_property(scene *s, entity e, const char *propName);
+void ms_interpreter_entity_attach_component(scene *s, entity e, ms_data value);
 
 #endif // MS_INTERP_PROPERTIES_ENTITY_H

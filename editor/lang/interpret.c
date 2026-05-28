@@ -310,6 +310,23 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
     return instance;
 }
 
+// attach something
+static ms_data ms_interpreter_run_code_invoke_attach(ms_interpreter *interp, const ms_node *n) {
+
+    // the first parameter
+    ms_node *firstParam = n->value.invoke.firstParam;
+    assert(firstParam != NULL);
+
+    // the instance
+    ms_data value = ms_interpreter_run_code(interp, firstParam);
+
+    // the  block parameter
+    ms_interpreter_entity_attach_component(interp->context->s, interp->context->e, value);
+
+    // return the instance
+    return value;
+}
+
 // run invoked code
 static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_node *n) {
 
@@ -319,8 +336,10 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
     // engine functions
     if (strcmp(name, "echo") == 0)
         return ms_interpreter_run_code_invoke_echo(interp, n);
-    else if (strcmp(name, "new") == 0)
+    if (strcmp(name, "new") == 0)
         return ms_interpreter_run_code_invoke_new(interp, n);
+    if (strcmp(name, "attach") == 0)
+        return ms_interpreter_run_code_invoke_attach(interp, n);
 
     // error for no event foind
     fprintf(stderr, "event %s not found.\n", n->value.invoke.eventName);
