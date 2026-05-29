@@ -9,8 +9,8 @@ Todo #9 - Prepare for alpha of the language:
  * * `[ ]` On frame
 
 Todo #8 - more advanced features for the language:
- * `[ ]` Creating resources
- * * `[ ]` Creating mesh resources
+ * `[x]` Creating resources
+ * * `[x]` Creating mesh resources
  * `[ ]` Creating components
  * * `[ ]` Creating mesh components
  * * `[x]` Creating collider components

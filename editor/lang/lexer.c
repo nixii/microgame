@@ -19,7 +19,8 @@ static char *keywords[] = {
     "set",
     "get",
     "attach",
-    "as"
+    "as",
+    "load_mesh"
 };
 
 // lexer state

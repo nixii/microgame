@@ -43,11 +43,11 @@ static ms_node *ms_node_new(ms_node_type type, ms_node_value val) {
 // PARSE SPECIFIC COMMANDS
 
 // call to 'echo'
-ms_node *ms_ast_parse_command_echo(ms_ast *ast, ms_tokens *toks) {
+ms_node *ms_ast_parse_command_invoke(ms_ast *ast, ms_tokens *toks, const char *name) {
 
     // create the base command
     ms_node *cmd = ms_node_new(MS_NT_INVOKE, (ms_node_value){ .invoke = {
-        .eventName = "echo",
+        .eventName = name,
         .firstParam = NULL,
         .numParams = 0
     }});
@@ -231,7 +231,9 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
 
     // do correct command
     if (strcmp(tok->value.chars, "echo") == 0) {
-        return ms_ast_parse_command_echo(ast, toks);
+        return ms_ast_parse_command_invoke(ast, toks, "echo");
+    } else if (strcmp(tok->value.chars, "load_mesh") == 0) {
+        return ms_ast_parse_command_invoke(ast, toks, "load_mesh");
     } else if (strcmp(tok->value.chars, "let") == 0) {
         return ms_ast_parse_command_let(ast, toks, 1);
     } else if (strcmp(tok->value.chars, "as") == 0) {

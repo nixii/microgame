@@ -1,13 +1,3 @@
-let e1 new entity with
-    echo "i am an entity"
 
-    set position 1 1 1
-    let position get position
-    echo "my pos is " position
-end
+let cube_mesh load_mesh "assets/cube.obj"
 
-as e1 do
-    set position 2 2 2
-    let position get position
-    echo "my pos is " position " now"
-end

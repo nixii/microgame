@@ -261,10 +261,53 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
     return (ms_data){ .type = MS_DT_STRING, .ptr = TRUE, .value = (ms_data_value){ .str = out } };
 }
 
+// load a mesh
+static ms_data ms_interpreter_run_code_invoke_load_mesh(ms_interpreter *interp, const ms_node *n) {
+    
+    // get the path
+    ms_data meshPath = ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data);
+
+    // create the mesh
+    ms_data mesh = (ms_data){ 
+        .type = MS_DT_RESOURCE_MESH, 
+        .ptr = FALSE, 
+        .value = (ms_data_value){ 
+            .meshResource = mesh_resource_from_obj(meshPath.value.str)
+        }
+    };
+
+    // done!
+    return mesh;
+}
+
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
+// TODO: parse "from"
 // make a new instance of type
 static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char *typeName) {
     
-    // TODO: mesh, mesh_resource, velocity, font_resource, image_resource, sound_resource
+    // TODO: mesh, mesh_resource, font_resource, image_resource, sound_resource
     if (strcmp(typeName, "entity") == 0) {
         return (ms_data){ .type = MS_DT_ENTITY, .ptr = FALSE, .value = (ms_data_value){ .entity = scene_spawn(interp->context->s) } };
 
@@ -348,6 +391,8 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
         return ms_interpreter_run_code_invoke_new(interp, n);
     if (strcmp(name, "attach") == 0)
         return ms_interpreter_run_code_invoke_attach(interp, n);
+    if (strcmp(name, "load_mesh") == 0)
+        return ms_interpreter_run_code_invoke_load_mesh(interp, n);
 
     // error for no event foind
     fprintf(stderr, "event %s not found.\n", n->value.invoke.eventName);
@@ -597,6 +642,9 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
             return ms_interpreter_run_code_cmd_on(interp, n);
         case MS_NT_CMD_DO:
             return ms_interpreter_run_code_cmd_do(interp, n);
+        case MS_NT_PARAM:
+            fprintf(stderr, "you cannot run a param node type.\n");
+            exit(1);
         default:
             break;
     }
