@@ -189,7 +189,7 @@ static ms_data ms_interpreter_run_code_cmd_on(ms_interpreter *interp, const ms_n
     ms_names_append(&interp->scope->funcNames, name);
     ms_nodes_append(&interp->scope->funcNodes, block);
     printf("do %s loaded.\n", name);
-    return (ms_data){ .type = MS_DT_EVENT, .value = (ms_data_value){ .str = name } };
+    return (ms_data){ .type = MS_DT_EVENT, .ptr = TRUE, .value = (ms_data_value){ .str = name } };
 }
 
 // run the ECHO event
@@ -253,7 +253,7 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
         param = param->value.param.nextParam;
     }
     printf("%s\n", out);
-    return (ms_data){ .type = MS_DT_STRING, .value = (ms_data_value){ .str = out } };
+    return (ms_data){ .type = MS_DT_STRING, .ptr = TRUE, .value = (ms_data_value){ .str = out } };
 }
 
 // make a new instance of type
@@ -261,19 +261,19 @@ static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char 
     
     // TODO: mesh, mesh_resource, velocity, font_resource, image_resource, sound_resource
     if (strcmp(typeName, "entity") == 0) {
-        return (ms_data){ .type = MS_DT_ENTITY, .value = (ms_data_value){ .entity = scene_spawn(interp->context->s) } };
+        return (ms_data){ .type = MS_DT_ENTITY, .ptr = FALSE, .value = (ms_data_value){ .entity = scene_spawn(interp->context->s) } };
 
     } else if (strcmp(typeName, "scene") == 0) {
-        return (ms_data){ .type = MS_DT_SCENE, .value = (ms_data_value){ .scene = scene_new() } };
+        return (ms_data){ .type = MS_DT_SCENE, .ptr = TRUE, .value = (ms_data_value){ .scene = scene_new() } };
 
     } else if (strcmp(typeName, "collider") == 0) {
         // DEFAULT SIZE: <1 1 1>
-        return (ms_data){ .type = MS_DT_COMPONENT_COLLIDER, .value = (ms_data_value){ .collider = collider_new(vec3_new(1, 1, 1)) } };
+        return (ms_data){ .type = MS_DT_COMPONENT_COLLIDER, .ptr = FALSE, .value = (ms_data_value){ .collider = collider_new(vec3_new(1, 1, 1)) } };
     }
 
     else if (strcmp(typeName, "velocity") == 0) {
         // DEFAULT VELOCITY: <0 0 0>
-        return (ms_data){ .type = MS_DT_COMPONENT_VELOCITY, .value = (ms_data_value){ .velocity = velocity_new(vec3_zero()) } };
+        return (ms_data){ .type = MS_DT_COMPONENT_VELOCITY, .ptr = FALSE, .value = (ms_data_value){ .velocity = velocity_new(vec3_zero()) } };
     }
 
     // failure
@@ -327,10 +327,7 @@ static ms_data ms_interpreter_run_code_invoke_attach(ms_interpreter *interp, con
     ms_data value = ms_interpreter_run_code(interp, firstParam);
 
     // the  block parameter
-    ms_interpreter_entity_attach_component(interp->context->s, interp->context->e, value);
-
-    // return the instance
-    return value;
+    return ms_interpreter_entity_attach_component(interp->context->s, interp->context->e, value);
 }
 
 // run invoked code
@@ -397,10 +394,14 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
         // switch the type
         switch (interp->context->obj.type) {
             case MS_DT_COMPONENT_COLLIDER:
-                ms_interpreter_component_collider_set_property(&interp->context->obj.value.collider, name, val);
+                if (interp->context->obj.ptr)
+                    ms_interpreter_component_collider_set_property(interp->context->obj.value.colliderPtr, name, val);
+                else ms_interpreter_component_collider_set_property(&interp->context->obj.value.collider, name, val);
                 break;
             case MS_DT_COMPONENT_VELOCITY:
-                ms_interpreter_component_velocity_set_property(&interp->context->obj.value.velocity, name, val);
+                if (interp->context->obj.ptr)
+                    ms_interpreter_component_velocity_set_property(interp->context->obj.value.velocityPtr, name, val);
+                else ms_interpreter_component_velocity_set_property(&interp->context->obj.value.velocity, name, val);
                 break;
             default:
                 fprintf(stderr, "obj not implemented.\n");
@@ -434,9 +435,11 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
         // switch the type
         switch (interp->context->obj.type) {
             case MS_DT_COMPONENT_COLLIDER:
+                if (interp->context->obj.ptr) return ms_interpreter_component_collider_get_property(interp->context->obj.value.colliderPtr, name);
                 return ms_interpreter_component_collider_get_property(&interp->context->obj.value.collider, name);
             case MS_DT_COMPONENT_VELOCITY:
-                return ms_interpreter_component_velocity_get_property(&interp->context->obj.value.velocity, name);
+                if (interp->context->obj.ptr) return ms_interpreter_component_velocity_get_property(interp->context->obj.value.velocityPtr, name);
+                else return ms_interpreter_component_velocity_get_property(&interp->context->obj.value.velocity, name);
             default:
                 fprintf(stderr, "obj not implemented.\n");
                 exit(1);
@@ -484,19 +487,19 @@ static ms_data ms_interpreter_run_code_literal(ms_interpreter *interp, const ms_
     // create value
     switch (tok.type) {
         case MS_TT_BOOL:
-            return (ms_data){ .type = MS_DT_BOOL, .value = (ms_data_value){ .boolean = tok.value.truthy } };
+            return (ms_data){ .type = MS_DT_BOOL, .ptr = FALSE, .value = (ms_data_value){ .boolean = tok.value.truthy } };
         case MS_TT_NIL:
-            return (ms_data){ .type = MS_DT_NIL };
+            return (ms_data){ .type = MS_DT_NIL, .ptr = FALSE, };
         case MS_TT_NUMBER:
-            return (ms_data){ .type = MS_DT_NUMBER, .value = (ms_data_value){ .num = tok.value.num } };
+            return (ms_data){ .type = MS_DT_NUMBER, .ptr = FALSE, .value = (ms_data_value){ .num = tok.value.num } };
         case MS_TT_STRING:
-            return (ms_data){ .type = MS_DT_STRING, .value = (ms_data_value){ .str = tok.value.chars } };
+            return (ms_data){ .type = MS_DT_STRING, .ptr = TRUE, .value = (ms_data_value){ .str = tok.value.chars } };
         case MS_TT_VEC2:
-            return (ms_data){ .type = MS_DT_VEC2, .value = (ms_data_value){ .v2 = tok.value.v2 } };
+            return (ms_data){ .type = MS_DT_VEC2, .ptr = FALSE, .value = (ms_data_value){ .v2 = tok.value.v2 } };
         case MS_TT_VEC3:
-            return (ms_data){ .type = MS_DT_VEC3, .value = (ms_data_value){ .v3 = tok.value.v3 } };
+            return (ms_data){ .type = MS_DT_VEC3, .ptr = FALSE, .value = (ms_data_value){ .v3 = tok.value.v3 } };
         case MS_TT_VEC4:
-            return (ms_data){ .type = MS_DT_VEC4, .value = (ms_data_value){ .v4 = tok.value.v4 } };
+            return (ms_data){ .type = MS_DT_VEC4, .ptr = FALSE, .value = (ms_data_value){ .v4 = tok.value.v4 } };
         case MS_TT_IDENT:
             return ms_interpreter_get_variable(interp, tok.value.chars);
         default:
@@ -590,5 +593,5 @@ ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e, ms_data obj)
 
 // create an empty data
 ms_data ms_data_nil() {
-    return (ms_data){ .type = MS_DT_NIL };
+    return (ms_data){ .type = MS_DT_NIL, .ptr = FALSE };
 }

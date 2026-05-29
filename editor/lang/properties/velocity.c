@@ -10,7 +10,7 @@ void ms_interpreter_component_velocity_set_property(velocity *v, const char *pro
 
     // set the size of the velocity
     if (strcmp(propName, "velocity") == 0) {
-        assert(value.type == MS_DT_VEC3);
+        assert(value.type == MS_DT_VEC3 && !value.ptr);
         v->velocity = value.value.v3;
     }
 
@@ -26,7 +26,7 @@ ms_data ms_interpreter_component_velocity_get_property(velocity *v, const char *
 
     // set the size of a velocity
     if (strcmp(propName, "velocity") == 0) {
-        return (ms_data){ .type = MS_DT_VEC3, .value = (ms_data_value){ .v3 = v->velocity } };
+        return (ms_data){ .type = MS_DT_VEC3, .ptr = FALSE, .value = (ms_data_value){ .v3 = v->velocity } };
     }
 
     // not a valid property

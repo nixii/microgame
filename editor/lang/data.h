@@ -4,6 +4,13 @@
 
 #include "../da.h"
 
+#ifndef FALSE
+#   define FALSE 0
+#endif
+#ifndef TRUE
+#   define TRUE 1
+#endif
+
 // datatypes
 typedef enum {
 
@@ -44,17 +51,23 @@ typedef union {
     
     scene *scene;
     entity entity;
+
     collider collider;
+    collider *colliderPtr;
     velocity velocity;
+    velocity *velocityPtr;
     mesh mesh;
+    mesh *meshPtr;
 
     mesh_resource meshResource;
+    mesh_resource *meshResourcePtr;
 } ms_data_value;
 
 // a data point
 typedef struct {
     ms_data_type type;
     ms_data_value value;
+    uint8_t ptr;
 } ms_data;
 
 // declare the data dyn arr
