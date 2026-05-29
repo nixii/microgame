@@ -86,6 +86,24 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks, int doLetCommand
     return cmd;
 }
 
+// 'as' component
+ms_node *ms_ast_parse_command_as(ms_ast *ast, ms_tokens *toks) {
+
+    // get the name
+    ms_node *nameNode = ms_ast_next(ast, toks); // TODO: finish
+
+    // next, get the following block
+    ms_node *value = ms_ast_next(ast, toks);
+    assert(value != NULL);
+
+    // create the command
+    ms_node *cmd = ms_node_new(MS_NT_CMD_AS, (ms_node_value){ .asCmd = {
+        .who = nameNode,
+        .block = value
+    }});
+    return cmd;
+}
+
 // a call to 'get' for properties
 ms_node *ms_ast_parse_command_get(ms_ast *ast, ms_tokens *toks) {
 
@@ -216,6 +234,8 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
         return ms_ast_parse_command_echo(ast, toks);
     } else if (strcmp(tok->value.chars, "let") == 0) {
         return ms_ast_parse_command_let(ast, toks, 1);
+    } else if (strcmp(tok->value.chars, "as") == 0) {
+        return ms_ast_parse_command_as(ast, toks);
     } else if (strcmp(tok->value.chars, "set") == 0) {
         return ms_ast_parse_command_let(ast, toks, 0);
     } else if (strcmp(tok->value.chars, "get") == 0) {

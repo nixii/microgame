@@ -22,6 +22,7 @@ typedef enum {
     MS_NT_CMD_ON,
     MS_NT_CMD_DO,
     MS_NT_CMD_ATTACH,
+    MS_NT_CMD_AS,
 
     // parameters and functions
     MS_NT_INVOKE,
@@ -66,6 +67,12 @@ typedef struct {
     ms_node *component;
 } ms_node_attach;
 
+// context redefinition
+typedef struct {
+    ms_node *who;
+    ms_node *block;
+} ms_node_as;
+
 // defining a function
 typedef struct {
     const char *name;
@@ -80,6 +87,7 @@ typedef union {
     ms_node_get getCmd;
     ms_node_do doCmd;
     ms_node_on onCmd;
+    ms_node_as asCmd;
     ms_node_attach attachCmd;
     ms_token literal;
 } ms_node_value;

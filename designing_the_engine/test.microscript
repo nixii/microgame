@@ -1,32 +1,13 @@
-new entity with
-    echo "hi"
+let e1 new entity with
+    echo "i am an entity"
 
     set position 1 1 1
-    let pos get position
-    echo "set position to " pos
-
-    set rotation 45 45 45
-    let rot get rotation
-    echo "set rotation to " rot
-
-    set scale 3 3 3
-    let scale get scale
-    echo "set scale to " scale
-
-    attach new collider with
-        let size 5 5 5
-        echo "collider made!"
-        set size size
-    end
-    echo "collider attached"
-
-    let myvel new velocity
-    echo "velocity made"
-
-    attach myvel
-    echo "velocity attached"
+    let position get position
+    echo "my pos is " position
 end
 
-set light_direction 0 1 0
-let ld get light_direction
-echo "light is going (opposite) of <" ld ">!"
+as e1 do
+    set position 2 2 2
+    let position get position
+    echo "my pos is " position " now"
+end

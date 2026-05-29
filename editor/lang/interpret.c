@@ -19,6 +19,11 @@ DA_DEFINE(ms_datas, ms_data)
 // pre-declare
 static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n);
 
+// create an empty data
+ms_data ms_data_nil() {
+    return (ms_data){ .type = MS_DT_NIL, .ptr = FALSE };
+}
+
 
 
 
@@ -539,6 +544,37 @@ static ms_data ms_interpreter_run_code_cmd_do(ms_interpreter *interp, const ms_n
     return result;
 }
 
+// run an as command
+static ms_data ms_interpreter_run_code_cmd_as(ms_interpreter *interp, const ms_node *n) {
+
+    // get the new context
+    ms_data newContext = ms_interpreter_run_code(interp, n->value.asCmd.who);
+
+    // set the new context
+    switch (newContext.type) {
+        case MS_DT_COMPONENT_COLLIDER:
+        case MS_DT_COMPONENT_VELOCITY:
+            ms_interpreter_context_push(interp, interp->context->s, interp->context->e, newContext);
+            break;
+        case MS_DT_ENTITY:
+            ms_interpreter_context_push(interp, interp->context->s, newContext.value.entity, ms_data_nil());
+            break;
+        case MS_DT_SCENE:
+            ms_interpreter_context_push(interp, newContext.value.scene, NIL_ENTITY, ms_data_nil());
+            break;
+        default:
+            fprintf(stderr, "can't go into the context of %d\n", newContext.type);
+            exit(1);
+    }
+
+    // run the code
+    ms_data returnVal = ms_interpreter_run_code(interp, n->value.asCmd.block);
+
+    // pop out
+    ms_interpreter_context_pop(interp);
+    return returnVal;
+}
+
 // run a certain block of code
 static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n) {
 
@@ -553,6 +589,8 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
             return ms_interpreter_run_code_cmd_set(interp, n);
         case MS_NT_CMD_GET:
             return ms_interpreter_run_code_cmd_get(interp, n);
+        case MS_NT_CMD_AS:
+            return ms_interpreter_run_code_cmd_as(interp, n);
         case MS_NT_LITERAL:
             return ms_interpreter_run_code_literal(interp, n);
         case MS_NT_CMD_ON:
@@ -589,9 +627,4 @@ ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e, ms_data obj)
 
     // return the interpreter
     return interp;
-}
-
-// create an empty data
-ms_data ms_data_nil() {
-    return (ms_data){ .type = MS_DT_NIL, .ptr = FALSE };
 }
