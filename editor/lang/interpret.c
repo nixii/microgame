@@ -478,15 +478,17 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
             case MS_DT_COMPONENT_VELOCITY:
                 if (interp->context->obj.ptr) return ms_interpreter_component_velocity_get_property(interp->context->obj.value.velocityPtr, name);
                 else return ms_interpreter_component_velocity_get_property(&interp->context->obj.value.velocity, name);
+            case MS_DT_COMPONENT_MESH:
+                if (interp->context->obj.ptr) return ms_interpreter_component_mesh_get_property(interp->context->obj.value.meshPtr, name);
+                else return ms_interpreter_component_mesh_get_property(&interp->context->obj.value.mesh, name);
+
+            case MS_DT_ENTITY:
+                return ms_interpreter_entity_get_property(interp->context->s, interp->context->e, name);
+
             default:
                 fprintf(stderr, "obj not implemented.\n");
                 exit(1);
         }
-    }
-
-    // specifically an entity
-    if (interp->context->e != NIL_ENTITY) {
-        return ms_interpreter_entity_get_property(interp->context->s, interp->context->e, name);
     }
 
     // a scene
@@ -667,4 +669,18 @@ ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e, ms_data obj)
 
     // return the interpreter
     return interp;
+}
+
+// run all the update functions
+static void ms_interpreter_call_all_frame_fns_for_scope(ms_interpreter *interp, ms_interpreter_scope *s) {
+    if (s == NULL) return;
+    for (int i = 0; i < s->funcNames.length; i++) {
+        if (strcmp(s->funcNames.data[i], "frame") == 0) {
+            ms_interpreter_run_code_cmd_do(interp, s->funcNodes.data[i]);
+        }
+    }
+    ms_interpreter_call_all_frame_fns_for_scope(interp, s->parentScope);
+}
+void ms_interpreter_call_all_frame_fns(ms_interpreter *interp) {
+    ms_interpreter_call_all_frame_fns_for_scope(interp, interp->scope);
 }

@@ -43,3 +43,9 @@ end
 
 # start!
 call start
+
+on frame do
+    let vel 0 0 0
+    as entity_moving let vel get position
+    echo "vel: " vel
+end

@@ -30,6 +30,7 @@ int main(void) {
 
     // run
     while (game_still_running(game)) {
+        ms_interpreter_call_all_frame_fns(&interp);
         game_update(game);
     }
 
