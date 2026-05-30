@@ -184,14 +184,20 @@ ms_node *ms_ast_parse_command_new(ms_ast *ast, ms_tokens *toks) {
     assert(next != NULL);
 
     // set the type
-    cmd->value.invoke.firstParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = next, .nextParam = NULL } });
+    ms_node *lastParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = next, .nextParam = NULL } });
+    cmd->value.invoke.firstParam = lastParam;
+    cmd->value.invoke.numParams++;
 
-    // set the do if it exists
+    // is there a next section with "from"?
     ms_token *nextTok = ms_ast_peek(ast, toks);
-    if (nextTok != NULL && nextTok->type == MS_TT_KEYWORD && strcmp(nextTok->value.chars, "with") == 0) {
+    if (nextTok != NULL && nextTok->type == MS_TT_KEYWORD && strcmp(nextTok->value.chars, "from") == 0) {
         ms_ast_advance(ast, toks);
-        ms_node *block = ms_ast_parse_command_generic_block(ast, toks);
-        cmd->value.invoke.firstParam->value.param.nextParam = block;
+        lastParam->value.param.nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){
+            .param = { .data = ms_ast_next(ast, toks), .nextParam = NULL }
+        });
+        lastParam = lastParam->value.param.nextParam;
+        cmd->value.invoke.numParams++;
+        printf("param: %d\n", lastParam->value.param.data->value.literal.type);
     }
 
     // all done!

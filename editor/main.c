@@ -24,6 +24,9 @@ int main(void) {
 
     // interpret!
     ms_interpreter interp = ms_interpreter_from(&ast, s, NIL_ENTITY, ms_data_nil());
+    
+    // set the scene
+    game_set_scene(game, s);
 
     // run
     while (game_still_running(game)) {

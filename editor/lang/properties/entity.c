@@ -70,6 +70,12 @@ ms_data ms_interpreter_entity_attach_component(scene *s, entity e, ms_data value
             else attach_velocity(s, e, value.value.velocity);
             return (ms_data){ .type = MS_DT_COMPONENT_VELOCITY, .ptr = TRUE, .value = { .velocityPtr = get_velocity(s, e) } };
         
+        // meshes
+        case MS_DT_COMPONENT_MESH:
+            if (value.ptr) attach_mesh(s, e, *value.value.meshPtr);
+            else attach_mesh(s, e, value.value.mesh);
+            return (ms_data){ .type = MS_DT_COMPONENT_MESH, .ptr = TRUE, .value = {  .meshPtr = get_mesh(s, e) } };
+        
         // this component is not supported
         default:
             fprintf(stderr, "no way to attach %d\n", value.type);

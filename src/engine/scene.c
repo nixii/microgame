@@ -211,8 +211,7 @@ void scene_render(
     renderer *r, 
     vec2 mousePos, 
     int mouseLeftDown, 
-    float dt)
-{
+    float dt) {
 
     // load global transform matrices
     for (entity e = 0; e < MAX_ENTITIES; e++) {

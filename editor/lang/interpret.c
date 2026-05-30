@@ -4,6 +4,7 @@
 #include "properties/scene.h"
 #include "properties/collider.h"
 #include "properties/velocity.h"
+#include "properties/mesh.h"
 
 #include "interpret.h"
 #include <assert.h>
@@ -305,7 +306,7 @@ static ms_data ms_interpreter_run_code_invoke_load_mesh(ms_interpreter *interp, 
 // TODO: parse "from"
 // TODO: parse "from"
 // make a new instance of type
-static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char *typeName) {
+static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char *typeName, ms_data from) {
     
     // TODO: mesh, mesh_resource, font_resource, image_resource, sound_resource
     if (strcmp(typeName, "entity") == 0) {
@@ -324,6 +325,12 @@ static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char 
         return (ms_data){ .type = MS_DT_COMPONENT_VELOCITY, .ptr = FALSE, .value = (ms_data_value){ .velocity = velocity_new(vec3_zero()) } };
     }
 
+    // things with a "from" keyword
+    else if (strcmp(typeName, "mesh") == 0) {
+        assert(from.type == MS_DT_RESOURCE_MESH);
+        return (ms_data){ .type = MS_DT_COMPONENT_MESH, .ptr = FALSE, .value = (ms_data_value){ .mesh = mesh_from_resource(rgb(255, 255, 255), from.value.meshResource) } };
+    }
+
     // failure
     fprintf(stderr, "couldn't create instance of %s;  doesn't exist\n", typeName);
     exit(1);
@@ -337,28 +344,17 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
     assert(firstParam != NULL);
 
     // the name of the type
-    const char *typeName = firstParam->value.param.data->value.literal.value.chars;
+    ms_data typeName = ms_interpreter_run_code(interp, firstParam->value.param.data);
+    assert(typeName.type == MS_DT_STRING);
+
+    // is there a from?
+    ms_data from = ms_data_nil();
+    if (firstParam->value.param.nextParam != NULL) {
+        from = ms_interpreter_run_code(interp, firstParam->value.param.nextParam->value.param.data);
+    }
 
     // instantiate the instance
-    ms_data instance = ms_interpreter_spawn_instance(interp, typeName);
-
-    // the  block parameter
-    ms_node *withBlock = firstParam->value.param.nextParam;
-    if (withBlock != NULL) {
-
-        // set the scope and context
-        ms_interpreter_context_push(
-            interp, 
-            interp->context->s, 
-            instance.type == MS_DT_ENTITY ? instance.value.entity : NIL_ENTITY, 
-            instance.type == MS_DT_ENTITY ? ms_data_nil()         : instance);
-
-        // call the block
-        ms_interpreter_run_code(interp, withBlock);
-
-        // go back
-        ms_interpreter_context_pop(interp);
-    }
+    ms_data instance = ms_interpreter_spawn_instance(interp, typeName.value.str, from);
 
     // return the instance
     return instance;
@@ -443,6 +439,7 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
 
         // switch the type
         switch (interp->context->obj.type) {
+
             case MS_DT_COMPONENT_COLLIDER:
                 if (interp->context->obj.ptr)
                     ms_interpreter_component_collider_set_property(interp->context->obj.value.colliderPtr, name, val);
@@ -453,6 +450,12 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
                     ms_interpreter_component_velocity_set_property(interp->context->obj.value.velocityPtr, name, val);
                 else ms_interpreter_component_velocity_set_property(&interp->context->obj.value.velocity, name, val);
                 break;
+            case MS_DT_COMPONENT_MESH:
+                if (interp->context->obj.ptr)
+                    ms_interpreter_component_mesh_set_property(interp->context->obj.value.meshPtr, name, val);
+                else ms_interpreter_component_mesh_set_property(&interp->context->obj.value.mesh, name, val);
+                break;
+
             default:
                 fprintf(stderr, "obj not implemented.\n");
                 exit(1);
@@ -599,6 +602,7 @@ static ms_data ms_interpreter_run_code_cmd_as(ms_interpreter *interp, const ms_n
     switch (newContext.type) {
         case MS_DT_COMPONENT_COLLIDER:
         case MS_DT_COMPONENT_VELOCITY:
+        case MS_DT_COMPONENT_MESH:
             ms_interpreter_context_push(interp, interp->context->s, interp->context->e, newContext);
             break;
         case MS_DT_ENTITY:
@@ -613,11 +617,13 @@ static ms_data ms_interpreter_run_code_cmd_as(ms_interpreter *interp, const ms_n
     }
 
     // run the code
-    ms_data returnVal = ms_interpreter_run_code(interp, n->value.asCmd.block);
+    ms_interpreter_run_code(interp, n->value.asCmd.block);
 
     // pop out
     ms_interpreter_context_pop(interp);
-    return returnVal;
+
+    // return the original context!
+    return newContext;
 }
 
 // run a certain block of code
@@ -643,7 +649,7 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
         case MS_NT_CMD_DO:
             return ms_interpreter_run_code_cmd_do(interp, n);
         case MS_NT_PARAM:
-            fprintf(stderr, "you cannot run a param node type.\n");
+            fprintf(stderr, "you cannot run a param node type: %d\n", n->value.param.data->type);
             exit(1);
         default:
             break;
