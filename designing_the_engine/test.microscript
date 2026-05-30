@@ -1,5 +1,5 @@
 
-let cube_mesh load_mesh "assets/test.obj"
+let testMesh load_mesh "assets/test.obj"
 
 let testEntity as new "entity" do
 
@@ -7,9 +7,17 @@ let testEntity as new "entity" do
 
     echo "Attempting to attach mesh..."
 
-    attach as new "mesh" from cube_mesh do
+    attach as new "mesh" from testMesh do
         set color 255 255 255
     end
 
     echo "Mesh attached!"
 end
+
+on test do
+    as testEntity do
+        set rotation 0 180 0
+    end
+end
+
+call test

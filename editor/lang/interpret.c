@@ -281,34 +281,10 @@ static ms_data ms_interpreter_run_code_invoke_load_mesh(ms_interpreter *interp, 
     return mesh;
 }
 
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
-// TODO: parse "from"
 // make a new instance of type
 static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char *typeName, ms_data from) {
     
-    // TODO: mesh, mesh_resource, font_resource, image_resource, sound_resource
+    // TODO: font_resource, image_resource, sound_resource
     if (strcmp(typeName, "entity") == 0) {
         return (ms_data){ .type = MS_DT_ENTITY, .ptr = FALSE, .value = (ms_data_value){ .entity = scene_spawn(interp->context->s) } };
 
@@ -389,6 +365,13 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
         return ms_interpreter_run_code_invoke_attach(interp, n);
     if (strcmp(name, "load_mesh") == 0)
         return ms_interpreter_run_code_invoke_load_mesh(interp, n);
+
+    // run the special event
+    for (int i = 0; i < interp->scope->funcNames.length; i++) {
+        if (strcmp(interp->scope->funcNames.data[i], name) == 0) {
+            return ms_interpreter_run_code(interp, interp->scope->funcNodes.data[i]);
+        }
+    }
 
     // error for no event foind
     fprintf(stderr, "event %s not found.\n", n->value.invoke.eventName);

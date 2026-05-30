@@ -104,6 +104,17 @@ ms_node *ms_ast_parse_command_as(ms_ast *ast, ms_tokens *toks) {
     return cmd;
 }
 
+// call a generic function
+ms_node *ms_ast_parse_command_call(ms_ast *ast, ms_tokens *toks) {
+
+    // get the name
+    ms_token *name = ms_ast_advance(ast, toks);
+    assert(name->type == MS_TT_IDENT);
+
+    // return the result
+    return ms_ast_parse_command_invoke(ast, toks, name->value.chars);
+}
+
 // a call to 'get' for properties
 ms_node *ms_ast_parse_command_get(ms_ast *ast, ms_tokens *toks) {
 
@@ -258,6 +269,8 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
         return ms_ast_parse_command_generic_block(ast, toks);
     } else if (strcmp(tok->value.chars, "new") == 0) {
         return ms_ast_parse_command_new(ast, toks);
+    } else if (strcmp(tok->value.chars, "call") == 0) {
+        return ms_ast_parse_command_call(ast, toks);
     }
 
     return NULL;
