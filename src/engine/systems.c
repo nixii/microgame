@@ -218,7 +218,7 @@ static void velocity_system_resolve_axis(scene *s, entity e, transform *outpos, 
 
 // update the velocity
 void velocity_system_update(scene *s, entity e, float dt) {
-
+    
     // skip if it does not have a velocity
     if (!has_velocity(s, e)) return;
     velocity *v = get_velocity(s, e);

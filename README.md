@@ -21,4 +21,4 @@ It will be usable as a custom coding language *and* as a static C library.
 |  Version  |  Distribution  |  MacOS (arm64)  |  MacOS (x86)  |  Linux (arm64)  |  Linux (x86)  |  Windows  |
 |:---------:|:--------------:|:---------------:|:-------------:|:---------------:|:-------------:|:---------:|
 | dev branch | library | ✅ | ❗️ | ❗️ | ❗️ | ❗️ |
-|            | editor  | n/a | n/a | n/a | n/a | n/a |
+|  | scripting language | ✅ | ❗️ | ❗️ | ❗️ | ❗️ |

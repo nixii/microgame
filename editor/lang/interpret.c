@@ -73,6 +73,14 @@ static ms_interpreter_context *ms_interpreter_context_new(scene *s, entity e, ms
     ctx->s = s;
     ctx->e = e;
     ctx->obj = obj;
+
+    // special stuff
+    if (obj.type == MS_DT_NIL) {
+        if (e != NIL_ENTITY)
+            ctx->obj = (ms_data){ .type = MS_DT_ENTITY, .ptr = FALSE, .value = { .entity = e } };
+        else if (s != NULL)
+            ctx->obj = (ms_data){ .type = MS_DT_SCENE, .ptr = TRUE, .value = { .scene = s } };
+    }
     return ctx;
 }
 
@@ -194,7 +202,6 @@ static ms_data ms_interpreter_run_code_cmd_on(ms_interpreter *interp, const ms_n
     const ms_node *block = n->value.onCmd.block;
     ms_names_append(&interp->scope->funcNames, name);
     ms_nodes_append(&interp->scope->funcNodes, block);
-    printf("do %s loaded.\n", name);
     return (ms_data){ .type = MS_DT_EVENT, .ptr = TRUE, .value = (ms_data_value){ .str = name } };
 }
 
@@ -394,7 +401,6 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
         for (int i = 0; i < s->varNames.length; i++) {
             if (strcmp(s->varNames.data[i], name) == 0) {
                 s->varValues.data[i] = d;
-                printf("SETting %s.\n", name);
                 return d;
             }
         }
@@ -417,43 +423,39 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
         exit(1);
     }
 
-    // special objects
-    if (interp->context->obj.type != MS_DT_NIL) {
+    // switch the type
+    switch (interp->context->obj.type) {
 
-        // switch the type
-        switch (interp->context->obj.type) {
+        case MS_DT_COMPONENT_COLLIDER:
+            if (interp->context->obj.ptr)
+                ms_interpreter_component_collider_set_property(interp->context->obj.value.colliderPtr, name, val);
+            else ms_interpreter_component_collider_set_property(&interp->context->obj.value.collider, name, val);
+            break;
+        case MS_DT_COMPONENT_VELOCITY:
+            if (interp->context->obj.ptr) {
+                ms_interpreter_component_velocity_set_property(interp->context->obj.value.velocityPtr, name, val);
+            } else {
+                ms_interpreter_component_velocity_set_property(&interp->context->obj.value.velocity, name, val);
+            }
+            break;
+        case MS_DT_COMPONENT_MESH:
+            if (interp->context->obj.ptr)
+                ms_interpreter_component_mesh_set_property(interp->context->obj.value.meshPtr, name, val);
+            else ms_interpreter_component_mesh_set_property(&interp->context->obj.value.mesh, name, val);
+            break;
+        
+        case MS_DT_ENTITY:
+            ms_interpreter_entity_set_property(interp->context->s, interp->context->obj.value.entity, name, val);
+            break;
+        
+        case MS_DT_SCENE:
+            ms_interpreter_scene_set_property(interp->context->obj.value.scene, name, val);
+            break;
 
-            case MS_DT_COMPONENT_COLLIDER:
-                if (interp->context->obj.ptr)
-                    ms_interpreter_component_collider_set_property(interp->context->obj.value.colliderPtr, name, val);
-                else ms_interpreter_component_collider_set_property(&interp->context->obj.value.collider, name, val);
-                break;
-            case MS_DT_COMPONENT_VELOCITY:
-                if (interp->context->obj.ptr)
-                    ms_interpreter_component_velocity_set_property(interp->context->obj.value.velocityPtr, name, val);
-                else ms_interpreter_component_velocity_set_property(&interp->context->obj.value.velocity, name, val);
-                break;
-            case MS_DT_COMPONENT_MESH:
-                if (interp->context->obj.ptr)
-                    ms_interpreter_component_mesh_set_property(interp->context->obj.value.meshPtr, name, val);
-                else ms_interpreter_component_mesh_set_property(&interp->context->obj.value.mesh, name, val);
-                break;
-
-            default:
-                fprintf(stderr, "obj not implemented.\n");
-                exit(1);
-        }
-        return;
+        default:
+            fprintf(stderr, "obj of data type %d not implemented.\n", interp->context->obj.type);
+            exit(1);
     }
-
-    // specifically an entity
-    if (interp->context->e != NIL_ENTITY) {
-        ms_interpreter_entity_set_property(interp->context->s, interp->context->e, name, val);
-        return;
-    }
-
-    // a scene
-    ms_interpreter_scene_set_property(interp->context->s, name, val);
 }
 
 // get a property rather than set it
@@ -601,12 +603,13 @@ static ms_data ms_interpreter_run_code_cmd_as(ms_interpreter *interp, const ms_n
 
     // run the code
     ms_interpreter_run_code(interp, n->value.asCmd.block);
+    ms_data mutatedResult = interp->context->obj;
 
     // pop out
     ms_interpreter_context_pop(interp);
 
     // return the original context!
-    return newContext;
+    return mutatedResult;
 }
 
 // run a certain block of code

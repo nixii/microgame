@@ -208,7 +208,6 @@ ms_node *ms_ast_parse_command_new(ms_ast *ast, ms_tokens *toks) {
         });
         lastParam = lastParam->value.param.nextParam;
         cmd->value.invoke.numParams++;
-        printf("param: %d\n", lastParam->value.param.data->value.literal.type);
     }
 
     // all done!

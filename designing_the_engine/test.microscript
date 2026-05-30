@@ -1,14 +1,22 @@
 
 let testMesh load_mesh "assets/test.obj"
 
+let testEntity nil
+let testEntity_mesh nil
+let testEntity_velocity nil
+
 let testEntity as new "entity" do
 
     set position 0 0 5
 
     echo "Attempting to attach mesh..."
 
-    attach as new "mesh" from testMesh do
+    let testEntity_mesh attach as new "mesh" from testMesh do
         set color 255 255 255
+    end
+
+    let testEntity_velocity attach as new "velocity" do
+        set velocity 1 0 0
     end
 
     echo "Mesh attached!"
@@ -17,6 +25,10 @@ end
 on test do
     as testEntity do
         set rotation 0 180 0
+    end
+
+    as testEntity_mesh do
+        set color 255 0 255
     end
 end
 
