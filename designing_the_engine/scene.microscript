@@ -3,9 +3,11 @@
 let mesh_test load_mesh "assets/test.obj"
 let mesh_cube load_mesh "assets/cube.obj"
 
+let x 1 - 2
+
 # load the moving entity
 let entity_moving_velocity nil
-let entity_moving as new "entity" do
+let entity_moving new "entity" with
     set position 0 0 5
     set scale 0.7 0.7 0.7
 
@@ -48,4 +50,11 @@ on frame do
     let pos 0 0 0
     as entity_moving let pos get position
     echo "pos: " pos
+
+    let x 0
+    as pos let x get x
+    echo "x: " x
+    #if x > 3 do
+    #    echo "pos is more than 3!"
+    #end
 end

@@ -119,6 +119,15 @@ ms_token _tokenize_numbers(_lexer_state *state) {
         switch (c) {
             case '-':
             case '0'...'9': {
+                // skip this one mayhaps.
+                if (state->numRead > state->curIdx + 1 &&
+                    (state->readBuf[state->curIdx + 1] < '0' ||
+                    state->readBuf[state->curIdx + 1] > '9')) {
+                    endLoop = 1;
+                    continue;
+                }
+
+                // load the number
                 float newFloat = strtof(state->readBuf + state->curIdx, &endptr);
                 size_t diff = endptr - (state->readBuf + state->curIdx);
                 state->curIdx += diff - 1;
@@ -221,7 +230,6 @@ ms_tokens tokenize(const char *filepath) {
                     break;
 
                 // numbers and all vec types
-                case '-':
                 case '0'...'9':
                     ms_tokens_append(&tokens, _tokenize_numbers(&ls));
                     continue;
@@ -235,6 +243,7 @@ ms_tokens tokenize(const char *filepath) {
                 ////////////////
                 // SINGLE CHARS
                 // These all need to break, not continue.
+                // TODO: parse these
 
                 // end of line
                 case '\n':
@@ -254,15 +263,24 @@ ms_tokens tokenize(const char *filepath) {
                 case '+':
                     ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_PLUS });
                     break;
-                case '-':
-                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MINUS });
-                    break;
                 case '*':
                     ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MULTIPLY });
                     break;
                 case '/':
                     ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_DIVIDE });
                     break;
+
+                // minus is a bit special
+                case '-':
+                    if ((ssize_t)ls.bufSize > ls.curIdx + 1 &&
+                        ls.readBuf[ls.curIdx + 1] >= '0' &&
+                        ls.readBuf[ls.curIdx + 1] <= '9') {
+                        ms_tokens_append(&tokens, _tokenize_numbers(&ls));
+                        continue;
+                    } else {
+                        ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MINUS });
+                        break;
+                    }
             }
 
             // next token
