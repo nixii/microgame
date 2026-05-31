@@ -5,6 +5,7 @@
 #include "properties/collider.h"
 #include "properties/velocity.h"
 #include "properties/mesh.h"
+#include "properties/vec3.h"
 
 #include "interpret.h"
 #include <assert.h>
@@ -467,6 +468,10 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
         case MS_DT_SCENE:
             ms_interpreter_scene_set_property(interp->context->obj.value.scene, name, val);
             break;
+        
+        case MS_DT_VEC3:
+            ms_interpreter_vec3_set_property(&interp->context->obj.value.v3, name, val);
+            break;
 
         default:
             fprintf(stderr, "obj of data type %d not implemented.\n", interp->context->obj.type);
@@ -500,15 +505,18 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
 
             case MS_DT_ENTITY:
                 return ms_interpreter_entity_get_property(interp->context->s, interp->context->e, name);
-
-            default:
-                fprintf(stderr, "obj not implemented.\n");
-                exit(1);
+            
+            case MS_DT_SCENE:
+                return ms_interpreter_scene_get_property(interp->context->obj.value.scene, name);
+            
+            case MS_DT_VEC3:
+                return ms_interpreter_vec3_get_property(&interp->context->obj.value.v3, name);
         }
     }
 
-    // a scene
-    return ms_interpreter_scene_get_property(interp->context->s, name);
+    // failure
+    fprintf(stderr, "obj not implemented.\n");
+    exit(1);
 }
 
 // run the set command
@@ -603,11 +611,6 @@ static ms_data ms_interpreter_run_code_cmd_as(ms_interpreter *interp, const ms_n
 
     // set the new context
     switch (newContext.type) {
-        case MS_DT_COMPONENT_COLLIDER:
-        case MS_DT_COMPONENT_VELOCITY:
-        case MS_DT_COMPONENT_MESH:
-            ms_interpreter_context_push(interp, interp->context->s, interp->context->e, newContext);
-            break;
         case MS_DT_ENTITY:
             ms_interpreter_context_push(interp, interp->context->s, newContext.value.entity, ms_data_nil());
             break;
@@ -615,8 +618,8 @@ static ms_data ms_interpreter_run_code_cmd_as(ms_interpreter *interp, const ms_n
             ms_interpreter_context_push(interp, newContext.value.scene, NIL_ENTITY, ms_data_nil());
             break;
         default:
-            fprintf(stderr, "can't go into the context of %d\n", newContext.type);
-            exit(1);
+            ms_interpreter_context_push(interp, interp->context->s, interp->context->e, newContext);
+            break;
     }
 
     // run the code

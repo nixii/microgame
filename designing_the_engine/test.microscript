@@ -48,4 +48,11 @@ on frame do
     let pos 0 0 0
     as entity_moving let pos get position
     echo "pos: " pos
+
+    let x 0
+    as pos let x get x
+    echo "x: " x
+    #if x > 3 do
+    #    echo "pos is more than 3!"
+    #end
 end
