@@ -321,7 +321,8 @@ static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char 
 
 // new of something
 static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const ms_node *n) {
-
+    printf("new.\n");
+    
     // the first parameter
     ms_node *firstParam = n->value.invoke.firstParam;
     assert(firstParam != NULL);
@@ -332,12 +333,26 @@ static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const 
 
     // is there a from?
     ms_data from = ms_data_nil();
-    if (firstParam->value.param.nextParam != NULL) {
+    if (firstParam->value.param.nextParam != NULL &&
+        firstParam->value.param.nextParam->value.param.data->type != MS_NT_CMD_DO) {
         from = ms_interpreter_run_code(interp, firstParam->value.param.nextParam->value.param.data);
+        firstParam = firstParam->value.param.nextParam;
     }
 
     // instantiate the instance
     ms_data instance = ms_interpreter_spawn_instance(interp, typeName.value.str, from);
+
+    // is there a with?
+    if (firstParam->value.param.nextParam != NULL) {
+        ms_interpreter_context_push(
+            interp, 
+            interp->context->s, 
+            instance.type == MS_DT_ENTITY ? instance.value.entity : interp->context->e, 
+            instance);
+        ms_interpreter_run_code(interp, firstParam->value.param.nextParam->value.param.data);
+        instance = interp->context->obj;
+        ms_interpreter_context_pop(interp);
+    }
 
     // return the instance
     return instance;
@@ -351,7 +366,8 @@ static ms_data ms_interpreter_run_code_invoke_attach(ms_interpreter *interp, con
     assert(firstParam != NULL);
 
     // the instance
-    ms_data value = ms_interpreter_run_code(interp, firstParam);
+    ms_data value = ms_interpreter_run_code(interp, firstParam->value.param.data);
+    printf("attaching type %d\n", value.type);
 
     // the  block parameter
     return ms_interpreter_entity_attach_component(interp->context->s, interp->context->e, value);

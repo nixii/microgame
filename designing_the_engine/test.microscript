@@ -5,31 +5,31 @@ let mesh_cube load_mesh "assets/cube.obj"
 
 # load the moving entity
 let entity_moving_velocity nil
-let entity_moving as new "entity" do
+let entity_moving new "entity" with
     set position 0 0 5
     set scale 0.7 0.7 0.7
 
     # attach the mesh and collider
-    attach as new "mesh" from mesh_test do
+    attach new "mesh" from mesh_test with
         set color 255 0 255
     end
-    attach as new "collider" do
+    attach new "collider" with
         set size 2.6 2.6 2.6
     end
-    let entity_moving_velocity attach as new "velocity" do
+    let entity_moving_velocity attach new "velocity" with
         set velocity 0 0 0
     end
 end
 
 # load the static entity
-let entity_static as new "entity" do
+let entity_static new "entity" with
     set position 5 0 5
     set scale 1 1 1
 
-    attach as new "mesh" from mesh_cube do
+    attach new "mesh" from mesh_cube with
         set color 0 255 0
     end
-    attach as new "collider" do
+    attach new "collider" with
         set size 1 1 1
     end
 end

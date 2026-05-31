@@ -210,6 +210,17 @@ ms_node *ms_ast_parse_command_new(ms_ast *ast, ms_tokens *toks) {
         cmd->value.invoke.numParams++;
     }
 
+    // with block section
+    nextTok = ms_ast_peek(ast, toks);
+    if (nextTok != NULL && nextTok->type == MS_TT_KEYWORD && strcmp(nextTok->value.chars, "with") == 0) {
+        ms_ast_advance(ast, toks);
+        lastParam->value.param.nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){
+            .param = { .data = ms_ast_parse_command_generic_block(ast, toks), .nextParam = NULL }
+        });
+        lastParam = lastParam->value.param.nextParam;
+        cmd->value.invoke.numParams++;
+    }
+
     // all done!
     return cmd;
 }
@@ -227,7 +238,7 @@ ms_node *ms_ast_parse_command_attach(ms_ast *ast, ms_tokens *toks) {
         (ms_node_value){
             .invoke = {
                 .eventName = "attach", .numParams = 1, 
-                .firstParam = next 
+                .firstParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .nextParam = NULL, .data = next } })
             } 
         });
 

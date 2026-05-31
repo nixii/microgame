@@ -1,29 +1,51 @@
 
-set camera new camera with
-    set position 0 0 0
-    set rotation 0 0 0
+# load meshes
+let mesh_test load_mesh "assets/test.obj"
+let mesh_cube load_mesh "assets/cube.obj"
+
+# load the moving entity
+let entity_moving_velocity nil
+let entity_moving as new "entity" do
+    set position 0 0 5
+    set scale 0.7 0.7 0.7
+
+    # attach the mesh and collider
+    attach new "mesh" from mesh_test with
+        set color 255 0 255
+    end
+    attach new "collider" with
+        set size 2.6 2.6 2.6
+    end
+    let entity_moving_velocity attach new "velocity" with
+        set velocity 0 0 0
+    end
 end
 
-set light_direction 0 1 0
+# load the static entity
+let entity_static new "entity" with
+    set position 5 0 5
+    set scale 1 1 1
 
-let e1 new entity with
-    set guid "player"
-    set position 0 0 0
-    set rotation 0 0 0
-    set scale 1 2 1
-
-    attach new collider with
+    attach new "mesh" from mesh_cube with
+        set color 0 255 0
+    end
+    attach new "collider" with
         set size 1 1 1
     end
 end
 
-let e2 new entity with
-    set guid "floor"
-    set position 0 -2 0
-    set rotation 0 0 0
-    set scale 30 1 30
+# main function
+on start do
+    as entity_moving_velocity do
+        set velocity 1 0 0
+    end
 end
 
-let mesh_resource load mesh obj "./assets/cube.obj"
+# start!
+call start
 
-as e2 attach new mesh from mesh_resource
+on frame do
+    let pos 0 0 0
+    as entity_moving let pos get position
+    echo "pos: " pos
+end
