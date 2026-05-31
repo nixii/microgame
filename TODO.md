@@ -11,8 +11,8 @@ Todo #9 - Prepare for alpha of the language:
 Todo #8 - more advanced features for the language:
  * `[x]` Creating resources
  * * `[x]` Creating mesh resources
- * `[ ]` Creating components
- * * `[ ]` Creating mesh components
+ * `[x]` Creating components
+ * * `[x]` Creating mesh components
  * * `[x]` Creating collider components
  * * `[x]` Creating velocity components
  * `[x]` Attaching components
