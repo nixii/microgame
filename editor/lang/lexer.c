@@ -226,22 +226,49 @@ ms_tokens tokenize(const char *filepath) {
                     ms_tokens_append(&tokens, _tokenize_numbers(&ls));
                     continue;
 
-                // end of line
-                case '\n':
-                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_NEWLINE  });
-                    break;
-
                 // strings
                 case '"':
                 case '\'':
                     ms_tokens_append(&tokens, _tokenize_string(&ls, c));
                     continue;
+
+                ////////////////
+                // SINGLE CHARS
+                // These all need to break, not continue.
+
+                // end of line
+                case '\n':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_NEWLINE  });
+                    break;
+                    
+                // operators
+                case '<':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_LESS_THAN });
+                    break;
+                case '>':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_GREATER_THAN });
+                    break;
+                case '=':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_EQUALS });
+                    break;
+                case '+':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_PLUS });
+                    break;
+                case '-':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MINUS });
+                    break;
+                case '*':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_MULTIPLY });
+                    break;
+                case '/':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_DIVIDE });
+                    break;
             }
 
+            // next token
             ls.curIdx++;
         }
 
-        // free the buffer
     }
     
     // close the file
