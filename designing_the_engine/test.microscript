@@ -45,7 +45,7 @@ end
 call start
 
 on frame do
-    let vel 0 0 0
-    as entity_moving let vel get position
-    echo "vel: " vel
+    let pos 0 0 0
+    as entity_moving let pos get position
+    echo "pos: " pos
 end
