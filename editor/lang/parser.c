@@ -286,10 +286,73 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
     return NULL;
 }
 
+
+
+// Operation order prescedence
+static int ms_binop_precedence(ms_token_type t) {
+    switch (t) {
+        case MS_TT_LESS_THAN:
+        case MS_TT_GREATER_THAN:
+        case MS_TT_EQUALS:
+            return 1;
+        case MS_TT_PLUS:
+        case MS_TT_MINUS:
+            return 2;
+        case MS_TT_MULTIPLY:
+        case MS_TT_DIVIDE:
+            return 3;
+        default:
+            return -1;
+    }
+}
+
+static ms_node *ms_ast_parse_expression(ms_ast *ast, ms_tokens *toks, int minimumPrescedence);
+
+// parse a lit or parenthesized expr
+static ms_node *ms_ast_parse_primary(ms_ast *ast, ms_tokens *toks) {
+    ms_token *tok = ms_ast_peek(ast, toks);
+
+    if (tok && tok->type == MS_TT_LPAREN) {
+        ms_ast_advance(ast, toks);
+        ms_node *inner = ms_ast_parse_expression(ast, toks, 0);
+        ms_ast_advance(ast, toks);
+        return inner;
+    }
+
+    return ms_node_new(MS_NT_LITERAL, (ms_node_value){ .literal = *ms_ast_advance(ast, toks) });
+}
+
+// parse an expression
+static ms_node *ms_ast_parse_expression(ms_ast *ast, ms_tokens *toks, int minimumPrescedence) {
+    ms_node *left = ms_ast_parse_primary(ast, toks);
+
+    while (1) {
+        ms_token *next = ms_ast_peek(ast, toks);
+        if (next == NULL) break;
+
+        int prec = ms_binop_precedence(next->type);
+        if (prec < minimumPrescedence) break;
+
+        ms_token_type op = ms_ast_advance(ast, toks)->type;
+        ms_node *right = ms_ast_parse_expression(ast, toks, prec + 1);
+
+        left = ms_node_new(
+            MS_NT_BINOP,
+            (ms_node_value){
+                .binOp = {
+                    .a = left,
+                    .b = right,
+                    .operation = op
+                }
+            });
+    }
+
+    return left;
+}
+
 // parse a value
 ms_node *ms_ast_parse_literal(ms_ast *ast, ms_tokens *toks) {
-    // FIXME: dereference; good idea?
-    return ms_node_new(MS_NT_LITERAL, (ms_node_value){ .literal = *ms_ast_advance(ast, toks) });
+    return ms_ast_parse_expression(ast, toks, 0);
 }
 
 

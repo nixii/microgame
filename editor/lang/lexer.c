@@ -269,6 +269,12 @@ ms_tokens tokenize(const char *filepath) {
                 case '/':
                     ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_DIVIDE });
                     break;
+                case '(':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_LPAREN });
+                    break;
+                case ')':
+                    ms_tokens_append(&tokens, (ms_token){ .type = MS_TT_RPAREN });
+                    break;
 
                 // minus is a bit special
                 case '-':

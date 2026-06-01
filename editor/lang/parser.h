@@ -31,7 +31,15 @@ typedef enum {
 
     // literal values
     MS_NT_LITERAL,
+    MS_NT_BINOP
 } ms_node_type;
+
+// binary operation
+typedef struct {
+    ms_node *a;
+    ms_node *b;
+    ms_token_type operation;
+} ms_node_binop;
 
 // calling a function
 typedef struct {
@@ -89,6 +97,7 @@ typedef union {
     ms_node_on onCmd;
     ms_node_as asCmd;
     ms_node_attach attachCmd;
+    ms_node_binop binOp;
     ms_token literal;
 } ms_node_value;
 
