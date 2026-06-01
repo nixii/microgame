@@ -1,6 +1,9 @@
 
-# microgame
+<div align="center">
+    <img src="docs_images/microgame full title 4x.png">
+</div>
 
+## What is microgame?
 Microgame is a small game engine for retro-esque video games.<br>
 It will be usable as a custom coding language *and* as a static C library.
 
