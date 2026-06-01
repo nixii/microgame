@@ -326,11 +326,12 @@ static ms_node *ms_ast_parse_primary(ms_ast *ast, ms_tokens *toks) {
 static ms_node *ms_ast_parse_expression(ms_ast *ast, ms_tokens *toks, int minimumPrescedence) {
     ms_node *left = ms_ast_parse_primary(ast, toks);
 
-    while (1) {
+    for (;;) {
         ms_token *next = ms_ast_peek(ast, toks);
         if (next == NULL) break;
-
+        
         int prec = ms_binop_precedence(next->type);
+        printf("binop. %d prec %d\n", next->type, prec);
         if (prec < minimumPrescedence) break;
 
         ms_token_type op = ms_ast_advance(ast, toks)->type;

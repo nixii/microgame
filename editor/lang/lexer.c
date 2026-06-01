@@ -120,7 +120,7 @@ ms_token _tokenize_numbers(_lexer_state *state) {
             case '-':
             case '0'...'9': {
                 // skip this one mayhaps.
-                if (state->numRead > state->curIdx + 1 &&
+                if (c == '-' && state->numRead > state->curIdx + 1 &&
                     (state->readBuf[state->curIdx + 1] < '0' ||
                     state->readBuf[state->curIdx + 1] > '9')) {
                     endLoop = 1;
