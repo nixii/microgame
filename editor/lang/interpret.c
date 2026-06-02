@@ -51,6 +51,7 @@ static ms_interpreter_scope *ms_interpreter_scope_new(ms_interpreter_scope *pare
 static void ms_interpreter_scope_push(ms_interpreter *interpreter) {
     ms_interpreter_scope *new = ms_interpreter_scope_new(interpreter->scope);
     interpreter->scope = new;
+    printf("push\n");
 }
 
 // go back up a scope
@@ -61,6 +62,7 @@ static void ms_interpreter_scope_pop(ms_interpreter *interpreter) {
     ms_names_destroy(&interpreter->scope->funcNames);
     ms_nodes_destroy(&interpreter->scope->funcNodes);
     ms_nodes_destroy(&interpreter->scope->funcParams);
+    printf("pop\n");
     free(interpreter->scope);
     interpreter->scope = parent;
 }
@@ -330,7 +332,6 @@ static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char 
 
 // new of something
 static ms_data ms_interpreter_run_code_invoke_new(ms_interpreter *interp, const ms_node *n) {
-    printf("new.\n");
     
     // the first parameter
     ms_node *firstParam = n->value.invoke.firstParam;
@@ -376,7 +377,6 @@ static ms_data ms_interpreter_run_code_invoke_attach(ms_interpreter *interp, con
 
     // the instance
     ms_data value = ms_interpreter_run_code(interp, firstParam->value.param.data);
-    printf("attaching type %d\n", value.type);
 
     // the  block parameter
     return ms_interpreter_entity_attach_component(interp->context->s, interp->context->e, value);
@@ -410,17 +410,13 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
                 const ms_node *funcNode = s->funcNodes.data[i];
                 ms_interpreter_scope_push(interp);
                 const ms_node *paramValue = n->value.invoke.firstParam;
-                printf("got to loop\n");
                 while (param != NULL) {
-                    printf("to loop.\n");
                     ms_names_append(&s->varNames, param->value.paramDef.name);
                     if (paramValue == NULL) {
                         ms_datas_append(&s->varValues, ms_data_nil());
-                        printf("null.\n");
                     } else {
                         ms_datas_append(&s->varValues, ms_interpreter_run_code(interp, paramValue->value.param.data));
                         paramValue = paramValue->value.param.nextParam;
-                        printf("NOT null.\n");
                     }
                     param = param->value.paramDef.nextParam;
                 }
@@ -429,7 +425,7 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
                 ms_data res = ms_interpreter_run_code(interp, funcNode);
 
                 // done
-                ms_interpreter_scope_pop(interp);
+                ms_interpreter_scope_pop(interp); // TODO: fix scopes not working huhhhh
                 return res;
             }
         }

@@ -22,11 +22,6 @@ int main(void) {
     ms_tokens tokens = tokenize("designing_the_engine/test.microscript");
     ms_ast ast = parse(&tokens);
 
-    // print tokens
-    for (int i = 0; i < tokens.length; i++) {
-        printf("TT: %d\n", tokens.data[i].type);
-    }
-
     // interpret!
     ms_interpreter interp = ms_interpreter_from(&ast, s, NIL_ENTITY, ms_data_nil());
     

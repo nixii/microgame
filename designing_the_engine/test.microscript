@@ -15,7 +15,6 @@ on summon_entity with pos, col do
     echo "New entity at " pos " with color " col "!"
 end
 
-on se with pos, col call summon_entity pos col
+# on se with pos, col call summon_entity pos col
 
-call se 2 2 5, 255 0 0
-call se -2 -2 5, 0 0 255
+call summon_entity 2 2 5, 255 0 0
