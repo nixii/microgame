@@ -1,6 +1,6 @@
 
-let a 1
-let b 2
+on say with x y do
+    echo "x, y: " x " " y
+end
 
-if a = b echo "hi"
-else echo "bye"
+call say 1 2
