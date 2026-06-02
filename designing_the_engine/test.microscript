@@ -1,5 +1,8 @@
-let x (1 = 2)
-let y 3 = 3
-if x | y do
-    echo "hi"
+
+let teststr "hello!"
+
+let teststr2 echo teststr
+
+if teststr = teststr2 do
+    echo "hello is the test string."
 end
