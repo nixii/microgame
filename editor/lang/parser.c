@@ -141,15 +141,30 @@ ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
     assert(name->type == MS_TT_IDENT);
 
     // are there parameters?
+    ms_node *firstParam = NULL;
     ms_token *next = ms_ast_peek(ast, toks);
-    ms_node *nextNode = NULL;
     if (next && next->type == MS_TT_KEYWORD && strcmp(next->value.chars, "with") == 0) {
         ms_ast_advance(ast, toks);
         
         // load the parameters
         ms_token *paramName = ms_ast_peek(ast, toks);
+        ms_node **next = &firstParam;
         while (paramName != NULL && paramName->type == MS_TT_IDENT) {
-            printf("param: %s\n", paramName->value.chars);
+
+            // make the new param
+            ms_node *param = ms_node_new(
+                MS_NT_PARAM_DEF,
+                (ms_node_value){ .paramDef = {
+                    .name = paramName->value.chars,
+                    .nextParam = NULL
+                }}
+            );
+
+            // add the new param
+            *next = param;
+            next = &param->value.paramDef.nextParam;
+
+            // continue
             ms_ast_advance(ast, toks);
             paramName = ms_ast_peek(ast, toks);
         }
@@ -158,9 +173,10 @@ ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
     // get the code of the function
     ms_node *block = ms_ast_next(ast, toks);
     assert(block->type == MS_NT_CMD_DO);
+    // TODO: fix segfault.
 
     // return the final definition
-    return ms_node_new(MS_NT_CMD_ON, (ms_node_value){ .onCmd = { .name = name->value.chars, .block = block } });
+    return ms_node_new(MS_NT_CMD_ON, (ms_node_value){ .onCmd = { .name = name->value.chars, .block = block, .paramDefs = firstParam } });
 }
 
 // define a block

@@ -28,6 +28,7 @@ typedef enum {
     // parameters and functions
     MS_NT_INVOKE,
     MS_NT_PARAM,
+    MS_NT_PARAM_DEF,
     MS_NT_NEWLINE,
 
     // literal values
@@ -62,6 +63,12 @@ typedef struct {
     ms_node *nextParam;
 } ms_node_param;
 
+// arguments
+typedef struct {
+    const char *name;
+    ms_node *nextParam;
+} ms_node_param_def;
+
 // a let command
 typedef struct {
     const char *name;
@@ -93,12 +100,14 @@ typedef struct {
 typedef struct {
     const char *name;
     ms_node *block;
+    ms_node *paramDefs;
 } ms_node_on;
 
 // all kinds of values
 typedef union {
     ms_node_invoke invoke;
     ms_node_param param;
+    ms_node_param_def paramDef;
     ms_node_let letCmd;
     ms_node_get getCmd;
     ms_node_do doCmd;
