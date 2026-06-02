@@ -23,6 +23,7 @@ typedef enum {
     MS_NT_CMD_DO,
     MS_NT_CMD_ATTACH,
     MS_NT_CMD_AS,
+    MS_NT_CMD_IF,
 
     // parameters and functions
     MS_NT_INVOKE,
@@ -31,7 +32,7 @@ typedef enum {
 
     // literal values
     MS_NT_LITERAL,
-    MS_NT_BINOP
+    MS_NT_BINOP,
 } ms_node_type;
 
 // binary operation
@@ -47,6 +48,12 @@ typedef struct {
     ms_node *firstParam;
     uint8_t numParams;
 } ms_node_invoke;
+
+// conditionals
+typedef struct {
+    ms_node *condition;
+    ms_node *block;
+} ms_node_if;
 
 // a parameter node
 typedef struct {
@@ -97,6 +104,7 @@ typedef union {
     ms_node_on onCmd;
     ms_node_as asCmd;
     ms_node_attach attachCmd;
+    ms_node_if ifCmd;
     ms_node_binop binOp;
     ms_token literal;
 } ms_node_value;

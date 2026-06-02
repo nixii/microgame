@@ -246,6 +246,22 @@ ms_node *ms_ast_parse_command_attach(ms_ast *ast, ms_tokens *toks) {
     return command;
 }
 
+// if command
+ms_node *ms_ast_parse_command_if(ms_ast *ast, ms_tokens *toks) {
+
+    // get the condition
+    ms_node *cond = ms_ast_next(ast, toks);
+    ms_node *block = ms_ast_next(ast, toks);
+
+    // return the node
+    return ms_node_new(MS_NT_CMD_IF, (ms_node_value){
+        .ifCmd = {
+            .condition = cond,
+            .block = block
+        }
+    });
+}
+
 
 
 
@@ -281,6 +297,8 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
         return ms_ast_parse_command_new(ast, toks);
     } else if (strcmp(tok->value.chars, "call") == 0) {
         return ms_ast_parse_command_call(ast, toks);
+    } else if (strcmp(tok->value.chars, "if") == 0) {
+        return ms_ast_parse_command_if(ast, toks);
     }
 
     return NULL;

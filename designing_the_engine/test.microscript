@@ -1,3 +1,5 @@
 let x (1 = 2)
 let y 3 = 3
-echo x " " y " " (x | y)
+if x | y do
+    echo "hi"
+end

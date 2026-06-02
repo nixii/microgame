@@ -668,6 +668,23 @@ static ms_data ms_interpreter_run_code_cmd_as(ms_interpreter *interp, const ms_n
     return mutatedResult;
 }
 
+// if
+static ms_data ms_interpreter_run_code_cmd_if(ms_interpreter *interp, const ms_node *n) {
+
+    ms_data cond = ms_interpreter_run_code(interp, n->value.ifCmd.condition);
+
+    if (cond.type != MS_DT_BOOL) {
+        fprintf(stderr, "conditions must be booleans\n");
+        exit(1);
+    }
+
+    if (cond.value.boolean) {
+        return ms_interpreter_run_code(interp, n->value.ifCmd.block);
+    } else {
+        return cond; // return false
+    }
+}
+
 // run a certain block of code
 static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n) {
 
@@ -692,6 +709,8 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
             return ms_interpreter_run_code_cmd_on(interp, n);
         case MS_NT_CMD_DO:
             return ms_interpreter_run_code_cmd_do(interp, n);
+        case MS_NT_CMD_IF:
+            return ms_interpreter_run_code_cmd_if(interp, n);
         case MS_NT_PARAM:
             fprintf(stderr, "you cannot run a param node type: %d\n", n->value.param.data->type);
             exit(1);
