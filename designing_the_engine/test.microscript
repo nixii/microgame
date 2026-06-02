@@ -1,8 +1,6 @@
 
-let teststr "hello!"
+let a 1
+let b 2
 
-let teststr2 echo teststr
-
-if teststr = teststr2 do
-    echo "hello is the test string."
-end
+if a = b echo "hi"
+else echo "bye"

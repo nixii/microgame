@@ -252,12 +252,27 @@ ms_node *ms_ast_parse_command_if(ms_ast *ast, ms_tokens *toks) {
     // get the condition
     ms_node *cond = ms_ast_next(ast, toks);
     ms_node *block = ms_ast_next(ast, toks);
+    
+    // is there an else?
+    ms_token *next = ms_ast_peek(ast, toks);
+    while (next && next->type == MS_TT_NEWLINE) {
+        ms_ast_advance(ast, toks);
+        next = ms_ast_peek(ast, toks);
+    }
+
+    // is this an else
+    ms_node *elseBlock = NULL;
+    if (next->type == MS_TT_KEYWORD && strcmp(next->value.chars, "else") == 0) {
+        ms_ast_advance(ast, toks);
+        elseBlock = ms_ast_next(ast, toks);
+    }
 
     // return the node
     return ms_node_new(MS_NT_CMD_IF, (ms_node_value){
         .ifCmd = {
             .condition = cond,
-            .block = block
+            .block = block,
+            .elseBlock = elseBlock
         }
     });
 }

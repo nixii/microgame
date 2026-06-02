@@ -681,7 +681,10 @@ static ms_data ms_interpreter_run_code_cmd_if(ms_interpreter *interp, const ms_n
     if (cond.value.boolean) {
         return ms_interpreter_run_code(interp, n->value.ifCmd.block);
     } else {
-        return cond; // return false
+        if (n->value.ifCmd.elseBlock != NULL) {
+            return ms_interpreter_run_code(interp, n->value.ifCmd.elseBlock);
+        }
+        return ms_data_nil();
     }
 }
 

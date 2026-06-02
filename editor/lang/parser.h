@@ -53,6 +53,7 @@ typedef struct {
 typedef struct {
     ms_node *condition;
     ms_node *block;
+    ms_node *elseBlock;
 } ms_node_if;
 
 // a parameter node

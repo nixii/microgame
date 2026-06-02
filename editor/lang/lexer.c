@@ -23,7 +23,8 @@ static char *keywords[] = {
     "load_mesh",
     "from",
     "call",
-    "if"
+    "if",
+    "else"
 };
 
 // lexer state
