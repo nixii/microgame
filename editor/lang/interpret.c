@@ -224,42 +224,42 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
     while (param != NULL) {
 
         // get the token value
-        ms_token *t = &param->value.param.data->value.literal;
+        ms_data res = ms_interpreter_run_code(interp, param->value.param.data);
 
         // format-print it
-        switch (t->type) {
-            case MS_TT_STRING:
-                appendf(&out, &len, "%s", t->value.chars);
+        switch (res.type) {
+            case MS_DT_STRING:
+                appendf(&out, &len, "%s", res.value.str);
                 break;
-            case MS_TT_NUMBER:
-                appendf(&out, &len, "%f", t->value.num);
+            case MS_DT_NUMBER:
+                appendf(&out, &len, "%f", res.value.num);
                 break;
-            case MS_TT_NIL:
+            case MS_DT_NIL:
                 appendf(&out, &len, "nil");
                 break;
-            case MS_TT_BOOL:
-                appendf(&out, &len, t->value.truthy ? "true" : "false");
+            case MS_DT_BOOL:
+                appendf(&out, &len, res.value.boolean ? "true" : "false");
                 break;
-            case MS_TT_VEC2:
-                appendf(&out, &len, "%.3f %.3f", t->value.v2.x, t->value.v2.y);
+            case MS_DT_VEC2:
+                appendf(&out, &len, "%.3f %.3f", res.value.v2.x, res.value.v2.y);
                 break;
-            case MS_TT_VEC3:
-                appendf(&out, &len, "%.3f %.3f %.3f", t->value.v3.x, t->value.v3.y, t->value.v3.z);
+            case MS_DT_VEC3:
+                appendf(&out, &len, "%.3f %.3f %.3f", res.value.v3.x, res.value.v3.y, res.value.v3.z);
                 break;
-            case MS_TT_VEC4:
-                appendf(&out, &len, "%.3f %.3f %.3f %.3f", t->value.v4.scaleX, (float) t->value.v4.pixelsX, t->value.v4.scaleY, (float) t->value.v4.pixelsY);
+            case MS_DT_VEC4:
+                appendf(&out, &len, "%.3f %.3f %.3f %.3f", res.value.v4.scaleX, (float) res.value.v4.pixelsX, res.value.v4.scaleY, (float) res.value.v4.pixelsY);
                 break;
-            case MS_TT_IDENT: {
+            // case MS_T_IDENT: {
 
-                // iterate through scopes
-                ms_data value = ms_interpreter_get_variable(interp, t->value.chars);
+            //     // iterate through scopes
+            //     ms_data value = ms_interpreter_get_variable(interp, t->value.chars);
 
-                // switch depending on the type of data
-                ms_interpreter_appendf_data(&out, &len, value);
-                break;
-            }
+            //     // switch depending on the type of data
+            //     ms_interpreter_appendf_data(&out, &len, value);
+            //     break;
+            // }
             default:
-                fprintf(stderr, "unsupported value type for echo: %d.\n", param->value.param.data->value.literal.type);
+                fprintf(stderr, "unsupported value type for echo: %d.\n", res.type);
                 exit(1);
         }
 
@@ -543,6 +543,41 @@ static ms_data ms_interpreter_run_code_cmd_get(ms_interpreter *interp, const ms_
     return ms_interpreter_get_property(interp, name);
 }
 
+// expressions
+static ms_data ms_interpreter_run_code_expression(ms_interpreter *interp, const ms_node *n) {
+
+    // calculate the values
+    ms_data left = ms_interpreter_run_code(interp, n->value.binOp.a);
+    ms_data right = ms_interpreter_run_code(interp, n->value.binOp.b);
+
+    // run the operation
+    switch (n->value.binOp.operation) {
+        case MS_TT_OR:
+            return ms_data_or(left, right);
+
+        case MS_TT_EQUALS:
+            return ms_data_eq(left, right);
+        case MS_TT_LESS_THAN:
+            return ms_data_lt(left, right);
+        case MS_TT_GREATER_THAN:
+            return ms_data_gt(left, right);
+
+        
+        case MS_TT_PLUS:
+            return ms_data_add(left, right);
+        case MS_TT_MINUS:
+            return ms_data_sub(left, right);
+        case MS_TT_MULTIPLY:
+            return ms_data_mul(left, right);
+        case MS_TT_DIVIDE:
+            return ms_data_div(left, right);
+        
+        default:
+            fprintf(stderr, "can't do operation of type %d\n", n->value.binOp.operation);
+            exit(1);
+    }
+}
+
 // literal
 static ms_data ms_interpreter_run_code_literal(ms_interpreter *interp, const ms_node *n) {
     (void)(interp);
@@ -649,6 +684,8 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
             return ms_interpreter_run_code_cmd_get(interp, n);
         case MS_NT_CMD_AS:
             return ms_interpreter_run_code_cmd_as(interp, n);
+        case MS_NT_BINOP:
+            return ms_interpreter_run_code_expression(interp, n);
         case MS_NT_LITERAL:
             return ms_interpreter_run_code_literal(interp, n);
         case MS_NT_CMD_ON:

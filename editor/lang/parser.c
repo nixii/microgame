@@ -291,10 +291,12 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
 // Operation order prescedence
 static int ms_binop_precedence(ms_token_type t) {
     switch (t) {
+        case MS_TT_OR:
+            return 0;
         case MS_TT_LESS_THAN:
         case MS_TT_GREATER_THAN:
         case MS_TT_EQUALS:
-            return 1;
+        return 1;
         case MS_TT_PLUS:
         case MS_TT_MINUS:
             return 2;

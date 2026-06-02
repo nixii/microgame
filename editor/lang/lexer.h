@@ -32,6 +32,7 @@ typedef enum {
     MS_TT_MINUS,
     MS_TT_MULTIPLY,
     MS_TT_DIVIDE,
+    MS_TT_OR,
     MS_TT_LPAREN,
     MS_TT_RPAREN
 } ms_token_type;

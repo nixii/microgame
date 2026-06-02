@@ -16,3 +16,20 @@ ui_vec ui_vec_new(float sX, float pX, float sY, float pY) {
         .scaleY = sY, .pixelsY = pY
     };
 }
+
+// ops
+ui_vec ui_vec_add(ui_vec a, ui_vec b) {
+    return ui_vec_new(a.scaleX + b.scaleX, a.pixelsX + b.pixelsX, a.scaleY + b.scaleY, a.pixelsY + b.pixelsY);
+}
+ui_vec ui_vec_sub(ui_vec a, ui_vec b) {
+    return ui_vec_new(a.scaleX - b.scaleX, a.pixelsX - b.pixelsX, a.scaleY - b.scaleY, a.pixelsY - b.pixelsY);
+}
+ui_vec ui_vec_mul(ui_vec a, float scalar) {
+    return ui_vec_new(a.scaleX * scalar, a.pixelsX * scalar, a.scaleY * scalar, a.pixelsY * scalar);
+}
+ui_vec ui_vec_mul_components(ui_vec a, ui_vec b) {
+    return ui_vec_new(a.scaleX * b.scaleX, a.pixelsX * b.pixelsX, a.scaleY * b.scaleY, a.pixelsY * b.pixelsY);
+}
+ui_vec ui_vec_div(ui_vec a, float scalar) {
+    return ui_vec_new(a.scaleX / scalar, a.pixelsX / scalar, a.scaleY / scalar, a.pixelsY / scalar);
+}

@@ -2,6 +2,7 @@
 #ifndef MS_DATA_H
 #define MS_DATA_H
 
+#include <microgame/microgame.h>
 #include "../da.h"
 
 #ifndef FALSE
@@ -72,5 +73,15 @@ typedef struct {
 
 // declare the data dyn arr
 DA_DECLARE(ms_datas, ms_data);
+
+// perform operations
+ms_data ms_data_mul(ms_data a, ms_data b);
+ms_data ms_data_div(ms_data a, ms_data b);
+ms_data ms_data_add(ms_data a, ms_data b);
+ms_data ms_data_sub(ms_data a, ms_data b);
+ms_data ms_data_eq(ms_data a, ms_data b);
+ms_data ms_data_lt(ms_data a, ms_data b);
+ms_data ms_data_gt(ms_data a, ms_data b);
+ms_data ms_data_or(ms_data a, ms_data b);
 
 #endif // MS_DATA_H

@@ -10,19 +10,24 @@
 */
 #define ADD(a, b) _Generic((a), \
     vec2: vec2_add, \
-    vec3: vec3_add)(a, b)
+    vec3: vec3_add, \
+    ui_vec: ui_vec_add)(a, b)
 #define SUB(a, b) _Generic((a), \
     vec2: vec2_sub, \
-    vec3: vec3_sub)(a, b)
+    vec3: vec3_sub, \
+    ui_vec: ui_vec_sub)(a, b)
 #define MUL(a, b) _Generic((a), \
     vec2: vec2_mul, \
-    vec3: vec3_mul)(a, b)
+    vec3: vec3_mul, \
+    ui_vec: ui_vec_mul)(a, b)
 #define MUL_COMPONENTS(a, b) _Generic((a), \
     vec2: vec2_mul_components, \
-    vec3: vec3_mul_components)(a, b)
+    vec3: vec3_mul_components, \
+    ui_vec: ui_vec_mul_components)(a, b)
 #define DIV(a, b) _Generic((a), \
     vec2: vec2_div, \
-    vec3: vec3_div)(a, b)
+    vec3: vec3_div, \
+    ui_vec: ui_vec_div)(a, b)
 #define DOT(a, b) _Generic((a), \
     vec2: vec2_dot, \
     vec3: vec3_dot)(a, b)

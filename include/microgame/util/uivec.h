@@ -17,4 +17,11 @@ ui_vec ui_vec_empty();
 // ui vec with sX, pX, sY, pY
 ui_vec ui_vec_new(float sX, float pX, float sY, float pY);
 
+// math
+ui_vec ui_vec_add(ui_vec a, ui_vec b);
+ui_vec ui_vec_sub(ui_vec a, ui_vec b);
+ui_vec ui_vec_mul(ui_vec a, float scalar);
+ui_vec ui_vec_mul_components(ui_vec a, ui_vec b);
+ui_vec ui_vec_div(ui_vec a, float scalar);
+
 #endif // MG_UIVEC_H
