@@ -1,6 +1,21 @@
 
-on say with x y do
-    echo "x, y: " x " " y
+let mesh_res load_mesh "assets/cube.obj"
+
+on summon_entity with pos, col do
+    
+    new "entity" with
+
+        set position pos
+
+        attach new "mesh" from mesh_res with
+            set color col
+        end
+    end
+
+    echo "New entity at " pos " with color " col "!"
 end
 
-call say 1 2
+on se with pos, col call summon_entity pos col
+
+call se 2 2 5, 255 0 0
+call se -2 -2 5, 0 0 255

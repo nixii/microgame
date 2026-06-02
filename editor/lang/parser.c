@@ -172,8 +172,6 @@ ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
 
     // get the code of the function
     ms_node *block = ms_ast_next(ast, toks);
-    assert(block->type == MS_NT_CMD_DO);
-    // TODO: fix segfault.
 
     // return the final definition
     return ms_node_new(MS_NT_CMD_ON, (ms_node_value){ .onCmd = { .name = name->value.chars, .block = block, .paramDefs = firstParam } });

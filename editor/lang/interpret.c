@@ -43,6 +43,7 @@ static ms_interpreter_scope *ms_interpreter_scope_new(ms_interpreter_scope *pare
     s->varValues = ms_datas_new();
     s->funcNames = ms_names_new();
     s->funcNodes = ms_nodes_new();
+    s->funcParams = ms_nodes_new();
     return s;
 }
 
@@ -55,6 +56,11 @@ static void ms_interpreter_scope_push(ms_interpreter *interpreter) {
 // go back up a scope
 static void ms_interpreter_scope_pop(ms_interpreter *interpreter) {
     ms_interpreter_scope *parent = interpreter->scope->parentScope;
+    ms_names_destroy(&interpreter->scope->varNames);
+    ms_datas_destroy(&interpreter->scope->varValues);
+    ms_names_destroy(&interpreter->scope->funcNames);
+    ms_nodes_destroy(&interpreter->scope->funcNodes);
+    ms_nodes_destroy(&interpreter->scope->funcParams);
     free(interpreter->scope);
     interpreter->scope = parent;
 }
@@ -201,8 +207,10 @@ static ms_data ms_interpreter_get_variable(ms_interpreter *interp, const char *n
 static ms_data ms_interpreter_run_code_cmd_on(ms_interpreter *interp, const ms_node *n) {
     const char *name = n->value.onCmd.name;
     const ms_node *block = n->value.onCmd.block;
+    const ms_node *firstParam = n->value.onCmd.paramDefs;
     ms_names_append(&interp->scope->funcNames, name);
     ms_nodes_append(&interp->scope->funcNodes, block);
+    ms_nodes_append(&interp->scope->funcParams, firstParam);
     return (ms_data){ .type = MS_DT_EVENT, .ptr = TRUE, .value = (ms_data_value){ .str = name } };
 }
 
@@ -391,10 +399,41 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
         return ms_interpreter_run_code_invoke_load_mesh(interp, n);
 
     // run the special event
-    for (int i = 0; i < interp->scope->funcNames.length; i++) {
-        if (strcmp(interp->scope->funcNames.data[i], name) == 0) {
-            return ms_interpreter_run_code(interp, interp->scope->funcNodes.data[i]);
+    // the scope
+    ms_interpreter_scope *s = interp->scope;
+    while (s != NULL) {
+        for (int i = 0; i < s->funcNames.length; i++) {
+            if (strcmp(s->funcNames.data[i], name) == 0) {
+                
+                // push the new scope
+                const ms_node *param = s->funcParams.data[i];
+                const ms_node *funcNode = s->funcNodes.data[i];
+                ms_interpreter_scope_push(interp);
+                const ms_node *paramValue = n->value.invoke.firstParam;
+                printf("got to loop\n");
+                while (param != NULL) {
+                    printf("to loop.\n");
+                    ms_names_append(&s->varNames, param->value.paramDef.name);
+                    if (paramValue == NULL) {
+                        ms_datas_append(&s->varValues, ms_data_nil());
+                        printf("null.\n");
+                    } else {
+                        ms_datas_append(&s->varValues, ms_interpreter_run_code(interp, paramValue->value.param.data));
+                        paramValue = paramValue->value.param.nextParam;
+                        printf("NOT null.\n");
+                    }
+                    param = param->value.paramDef.nextParam;
+                }
+
+                // run the event
+                ms_data res = ms_interpreter_run_code(interp, funcNode);
+
+                // done
+                ms_interpreter_scope_pop(interp);
+                return res;
+            }
         }
+        s = s->parentScope;
     }
 
     // error for no event foind
@@ -511,6 +550,10 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
             
             case MS_DT_VEC3:
                 return ms_interpreter_vec3_get_property(&interp->context->obj.value.v3, name);
+            
+            default:
+                fprintf(stderr, "can't get a property on data type %d.\n", interp->context->obj.type);
+                exit(1);
         }
     }
 

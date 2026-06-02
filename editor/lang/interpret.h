@@ -21,6 +21,7 @@ typedef struct ms_interpreter_scope {
     ms_datas varValues;
     ms_names funcNames;
     ms_nodes funcNodes;
+    ms_nodes funcParams;
     struct ms_interpreter_scope *parentScope;
 } ms_interpreter_scope;
 
