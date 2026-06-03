@@ -389,6 +389,9 @@ static ms_node *ms_ast_parse_primary(ms_ast *ast, ms_tokens *toks) {
         return inner;
     }
 
+    if (tok->type == MS_TT_KEYWORD) {
+        return ms_ast_next(ast, toks);
+    }
     return ms_node_new(MS_NT_LITERAL, (ms_node_value){ .literal = *ms_ast_advance(ast, toks) });
 }
 

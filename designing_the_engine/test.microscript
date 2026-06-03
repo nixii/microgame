@@ -9,18 +9,25 @@ let e1 new "entity" with
     end
 end
 
+let time 0
+
 on frame with dt do
-    echo "dt: " dt
+    let time time + dt
 
-    as e1 let pos get position
-    as e1 let rot get rotation
-    as pos let yp get y
-    as rot let yr get y
-
+    # update position
     as e1 do
-        let np as get position set y (yp + dt)
-        let nr as get rotation set y (yr + 360 * dt)
-        set position np
-        set rotation nr
+
+        # calcualte the new pos
+        let newx (call cos (time)) * 5
+        let newy (call sin (time)) * 5
+
+        # set the position
+        let newpos as get position do
+            set x newx
+            set y newy
+        end
+
+        set position newpos
+        
     end
 end

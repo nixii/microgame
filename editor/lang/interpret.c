@@ -8,6 +8,7 @@
 #include "properties/vec3.h"
 
 #include "interpret.h"
+#include "microlib.h"
 #include <assert.h>
 #include <string.h>
 #include <stdarg.h>
@@ -385,6 +386,33 @@ static ms_data ms_interpreter_run_code_invoke_attach(ms_interpreter *interp, con
     return ms_interpreter_entity_attach_component(interp->context->s, interp->context->e, value);
 }
 
+// general microlib fns
+static ms_data ms_interpreter_run_code_invoke_cos(ms_interpreter *interp, const ms_node *n) {
+    assert(n->value.invoke.firstParam != NULL);
+    assert(n->value.invoke.firstParam->value.param.nextParam == NULL);
+    return ml_cos(ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data));
+}
+static ms_data ms_interpreter_run_code_invoke_sin(ms_interpreter *interp, const ms_node *n) {
+    assert(n->value.invoke.firstParam != NULL);
+    assert(n->value.invoke.firstParam->value.param.nextParam == NULL);
+    return ml_sin(ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data));
+}
+static ms_data ms_interpreter_run_code_invoke_sqrt(ms_interpreter *interp, const ms_node *n) {
+    assert(n->value.invoke.firstParam != NULL);
+    assert(n->value.invoke.firstParam->value.param.nextParam == NULL);
+    return ml_sqrt(ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data));
+}
+static ms_data ms_interpreter_run_code_invoke_square(ms_interpreter *interp, const ms_node *n) {
+    assert(n->value.invoke.firstParam != NULL);
+    assert(n->value.invoke.firstParam->value.param.nextParam == NULL);
+    return ml_square(ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data));
+}
+static ms_data ms_interpreter_run_code_invoke_length(ms_interpreter *interp, const ms_node *n) {
+    assert(n->value.invoke.firstParam != NULL);
+    assert(n->value.invoke.firstParam->value.param.nextParam == NULL);
+    return ml_length(ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data));
+}
+
 // run invoked code
 static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_node *n) {
 
@@ -400,6 +428,16 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
         return ms_interpreter_run_code_invoke_attach(interp, n);
     if (strcmp(name, "load_mesh") == 0)
         return ms_interpreter_run_code_invoke_load_mesh(interp, n);
+    if (strcmp(name, "cos") == 0)
+        return ms_interpreter_run_code_invoke_cos(interp, n);
+    if (strcmp(name, "sin") == 0)
+        return ms_interpreter_run_code_invoke_sin(interp, n);
+    if (strcmp(name, "sqrt") == 0)
+        return ms_interpreter_run_code_invoke_sqrt(interp, n);
+    if (strcmp(name, "square") == 0)
+        return ms_interpreter_run_code_invoke_square(interp, n);
+    if (strcmp(name, "length") == 0)
+        return ms_interpreter_run_code_invoke_length(interp, n);
 
     // run the special event
     // the scope
