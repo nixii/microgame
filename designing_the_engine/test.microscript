@@ -1,9 +1,26 @@
 
-on test with x do
-    echo x
-    if (x < 256) do
-        call test (x * 2)
+let m1 load_mesh "assets/test.obj"s
+
+let e1 new "entity" with
+    set position 0 -5 5
+
+    attach new "mesh" from m1 with
+        set color 200 200 255
     end
 end
 
-call test 1
+on frame with dt do
+    echo "dt: " dt
+
+    as e1 let pos get position
+    as e1 let rot get rotation
+    as pos let yp get y
+    as rot let yr get y
+
+    as e1 do
+        let np as get position set y (yp + dt)
+        let nr as get rotation set y (yr + 360 * dt)
+        set position np
+        set rotation nr
+    end
+end

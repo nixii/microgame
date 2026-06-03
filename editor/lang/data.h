@@ -84,4 +84,17 @@ ms_data ms_data_lt(ms_data a, ms_data b);
 ms_data ms_data_gt(ms_data a, ms_data b);
 ms_data ms_data_or(ms_data a, ms_data b);
 
+ms_data ms_data_bool(int truthy);
+ms_data ms_data_number(float num);
+ms_data ms_data_vec2(vec2 v2);
+ms_data ms_data_vec3(vec3 v3);
+ms_data ms_data_vec4(ui_vec v4);
+
+#define MS_DATA(a) _Generic((a), \
+    float: ms_data_number, \
+    int: ms_data_bool, \
+    vec2: ms_data_vec2, \
+    vec3: ms_data_vec3, \
+    ui_vec: ms_data_vec4)(a)
+
 #endif // MS_DATA_H

@@ -10,18 +10,11 @@ static ms_data fail(const char *msg) {
     exit(1);
 }
 
-static ms_data ms_data_bool(int truthy) { return (ms_data){ .type = MS_DT_BOOL, .ptr = FALSE, .value = (ms_data_value){ .boolean = truthy } }; }
-static ms_data ms_data_number(float num) { return (ms_data){ .type = MS_DT_NUMBER, .ptr = FALSE, .value = (ms_data_value){ .num = num } }; }
-static ms_data ms_data_vec2(vec2 v2) { return (ms_data){ .type = MS_DT_VEC2, .ptr = FALSE, .value = (ms_data_value){ .v2 = v2 } }; }
-static ms_data ms_data_vec3(vec3 v3) { return (ms_data){ .type = MS_DT_VEC3, .ptr = FALSE, .value = (ms_data_value){ .v3 = v3 } }; }
-static ms_data ms_data_vec4(ui_vec v4) { return (ms_data){ .type = MS_DT_VEC4, .ptr = FALSE, .value = (ms_data_value){ .v4 = v4 } }; }
-
-#define MS_DATA(a) _Generic((a), \
-    float: ms_data_number, \
-    int: ms_data_bool, \
-    vec2: ms_data_vec2, \
-    vec3: ms_data_vec3, \
-    ui_vec: ms_data_vec4)(a)
+ms_data ms_data_bool(int truthy) { return (ms_data){ .type = MS_DT_BOOL, .ptr = FALSE, .value = (ms_data_value){ .boolean = truthy } }; }
+ms_data ms_data_number(float num) { return (ms_data){ .type = MS_DT_NUMBER, .ptr = FALSE, .value = (ms_data_value){ .num = num } }; }
+ms_data ms_data_vec2(vec2 v2) { return (ms_data){ .type = MS_DT_VEC2, .ptr = FALSE, .value = (ms_data_value){ .v2 = v2 } }; }
+ms_data ms_data_vec3(vec3 v3) { return (ms_data){ .type = MS_DT_VEC3, .ptr = FALSE, .value = (ms_data_value){ .v3 = v3 } }; }
+ms_data ms_data_vec4(ui_vec v4) { return (ms_data){ .type = MS_DT_VEC4, .ptr = FALSE, .value = (ms_data_value){ .v4 = v4 } }; }
 
 // put scalar second
 static void normalize_scalar(ms_data *a, ms_data *b) {

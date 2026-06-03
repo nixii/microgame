@@ -683,6 +683,7 @@ static ms_data ms_interpreter_run_code_cmd_do(ms_interpreter *interp, const ms_n
 }
 
 // run an as command
+// TODO: vec3s need to be pointers
 static ms_data ms_interpreter_run_code_cmd_as(ms_interpreter *interp, const ms_node *n) {
 
     // get the new context
@@ -793,16 +794,41 @@ ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e, ms_data obj)
     return interp;
 }
 
-// run all the update functions
-static void ms_interpreter_call_all_frame_fns_for_scope(ms_interpreter *interp, ms_interpreter_scope *s) {
-    if (s == NULL) return;
-    for (int i = 0; i < s->funcNames.length; i++) {
-        if (strcmp(s->funcNames.data[i], "frame") == 0) {
-            ms_interpreter_run_code_cmd_do(interp, s->funcNodes.data[i]);
+// call 'frame'
+static void ms_interpreter_call_event_frame(ms_interpreter *interp, int i) {
+    ms_interpreter_scope *s = interp->scope;
+
+    // add parameters
+    const ms_node *param = s->funcParams.data[i];
+    const ms_node *funcNode = s->funcNodes.data[i];
+    ms_interpreter_scope_push(interp);
+    s = interp->scope;
+    int i2 = 0;
+    while (param != NULL) {
+        if (i2 == 0) {
+            ms_datas_append(&s->varValues, MS_DATA(get_dt()));
+        } else {
+            ms_datas_append(&s->varValues, ms_data_nil());
         }
+        ms_names_append(&s->varNames, param->value.paramDef.name);
+        param = param->value.paramDef.nextParam;
+        i2++;
     }
-    ms_interpreter_call_all_frame_fns_for_scope(interp, s->parentScope);
+
+    // run the event
+    ms_interpreter_run_code(interp, funcNode);
+    ms_interpreter_scope_pop(interp);
 }
+
+// run all the update functions
+static void ms_interpreter_call_all_frame_fns_for_scope(ms_interpreter *interp) {
+    const ms_interpreter_scope *s = interp->scope;
+    for (int i = 0; i < s->funcNames.length; i++) {
+        if (strcmp(s->funcNames.data[i], "frame") == 0)
+            ms_interpreter_call_event_frame(interp, i);
+    }
+}
+
 void ms_interpreter_call_all_frame_fns(ms_interpreter *interp) {
-    ms_interpreter_call_all_frame_fns_for_scope(interp, interp->scope);
+    ms_interpreter_call_all_frame_fns_for_scope(interp);
 }
