@@ -58,6 +58,7 @@ ms_node *ms_ast_parse_command_invoke(ms_ast *ast, ms_tokens *toks, const char *n
 
     // for all params it can get
     while ((toAdd = ms_ast_next(ast, toks)) != NULL) { // TODO: fix issue with "call" and parameters
+        printf("param added to %s: %d\n", name, toAdd->type);
         *nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = toAdd, .nextParam = NULL } });
         nextParam = &(*nextParam)->value.param.nextParam;
         cmd->value.invoke.numParams++;
@@ -148,7 +149,7 @@ ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
         
         // load the parameters
         ms_token *paramName = ms_ast_peek(ast, toks);
-        ms_node **next = &firstParam;
+        ms_node **nextP = &firstParam;
         while (paramName != NULL && paramName->type == MS_TT_IDENT) {
 
             // make the new param
@@ -161,8 +162,8 @@ ms_node *ms_ast_parse_command_on(ms_ast *ast, ms_tokens *toks) {
             );
 
             // add the new param
-            *next = param;
-            next = &param->value.paramDef.nextParam;
+            *nextP = param;
+            nextP = &param->value.paramDef.nextParam;
 
             // continue
             ms_ast_advance(ast, toks);
@@ -376,6 +377,11 @@ static ms_node *ms_ast_parse_expression(ms_ast *ast, ms_tokens *toks, int minimu
 static ms_node *ms_ast_parse_primary(ms_ast *ast, ms_tokens *toks) {
     ms_token *tok = ms_ast_peek(ast, toks);
 
+    if (tok == NULL) return NULL;
+    if (tok->type == MS_TT_RPAREN ||
+        tok->type == MS_TT_NEWLINE ||
+        tok->type == MS_TT_EOF) return NULL;
+
     if (tok && tok->type == MS_TT_LPAREN) {
         ms_ast_advance(ast, toks);
         ms_node *inner = ms_ast_parse_expression(ast, toks, 0);
@@ -389,6 +395,7 @@ static ms_node *ms_ast_parse_primary(ms_ast *ast, ms_tokens *toks) {
 // parse an expression
 static ms_node *ms_ast_parse_expression(ms_ast *ast, ms_tokens *toks, int minimumPrescedence) {
     ms_node *left = ms_ast_parse_primary(ast, toks);
+    if (left == NULL) return NULL;
 
     for (;;) {
         ms_token *next = ms_ast_peek(ast, toks);
@@ -399,9 +406,8 @@ static ms_node *ms_ast_parse_expression(ms_ast *ast, ms_tokens *toks, int minimu
 
         ms_token_type op = ms_ast_advance(ast, toks)->type;
         ms_node *right = ms_ast_parse_expression(ast, toks, prec + 1);
+        if (right == NULL) return NULL;
 
-        printf("binop of %d and %d.\n", left->type, right->type);
-        printf(" L  binop of %d and %d.\n", left->value.literal.type, right->value.literal.type);
         left = ms_node_new(
             MS_NT_BINOP,
             (ms_node_value){

@@ -55,7 +55,6 @@ ms_data ms_data_div(ms_data a, ms_data b) {
 }
 
 ms_data ms_data_add(ms_data a, ms_data b) {
-    printf("%d and %d = ...\n", a.type, b.type);
     assert(a.type == b.type);
     switch (a.type) {
         case MS_DT_NUMBER: return MS_DATA(a.value.num + b.value.num);

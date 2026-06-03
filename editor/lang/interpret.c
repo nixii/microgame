@@ -39,11 +39,14 @@ ms_data ms_data_nil() {
 static ms_interpreter_scope *ms_interpreter_scope_new(ms_interpreter_scope *parent) {
     ms_interpreter_scope *s = calloc(1, sizeof(ms_interpreter_scope));
     s->parentScope = parent;
+    s->childScope = NULL;
     s->varNames = ms_names_new();
     s->varValues = ms_datas_new();
     s->funcNames = ms_names_new();
     s->funcNodes = ms_nodes_new();
     s->funcParams = ms_nodes_new();
+    if (parent != NULL)
+        parent->childScope = s;
     return s;
 }
 
@@ -56,6 +59,8 @@ static void ms_interpreter_scope_push(ms_interpreter *interpreter) {
 // go back up a scope
 static void ms_interpreter_scope_pop(ms_interpreter *interpreter) {
     ms_interpreter_scope *parent = interpreter->scope->parentScope;
+    assert(parent != NULL);
+    parent->childScope = NULL;
     ms_names_destroy(&interpreter->scope->varNames);
     ms_datas_destroy(&interpreter->scope->varValues);
     ms_names_destroy(&interpreter->scope->funcNames);
@@ -410,17 +415,18 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
                 s = interp->scope;
                 const ms_node *paramValue = n->value.invoke.firstParam;
                 while (param != NULL) {
-                    ms_names_append(&s->varNames, param->value.paramDef.name);
                     if (paramValue == NULL) {
                         ms_datas_append(&s->varValues, ms_data_nil());
                     } else {
                         ms_datas_append(&s->varValues, ms_interpreter_run_code(interp, paramValue->value.param.data));
                         paramValue = paramValue->value.param.nextParam;
                     }
+                    ms_names_append(&s->varNames, param->value.paramDef.name);
                     param = param->value.paramDef.nextParam;
                 }
 
                 // run the event
+                
                 ms_data res = ms_interpreter_run_code(interp, funcNode);
 
                 // done
@@ -587,8 +593,6 @@ static ms_data ms_interpreter_run_code_expression(ms_interpreter *interp, const 
     // calculate the values
     ms_data left = ms_interpreter_run_code(interp, n->value.binOp.a);
     ms_data right = ms_interpreter_run_code(interp, n->value.binOp.b);
-    printf("left, right are %d, %d.\n", left.type, right.type);
-    printf("a, b, are %d, %d\n", n->value.binOp.a->type, n->value.binOp.b->type);
 
     // run the operation
     switch (n->value.binOp.operation) {

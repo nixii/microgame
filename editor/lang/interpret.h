@@ -23,6 +23,7 @@ typedef struct ms_interpreter_scope {
     ms_nodes funcNodes;
     ms_nodes funcParams;
     struct ms_interpreter_scope *parentScope;
+    struct ms_interpreter_scope *childScope;
 } ms_interpreter_scope;
 
 // current *context* of the interpreter (object and scene)
