@@ -163,7 +163,6 @@ ms_token _tokenize_numbers(_lexer_state *state) {
     }
 }
 
-// TODO: use strndup instead.
 // tokenize a string; either quote is fine
 ms_token _tokenize_string(_lexer_state *state, char startChar) {
 
@@ -245,7 +244,6 @@ ms_tokens tokenize(const char *filepath) {
                 ////////////////
                 // SINGLE CHARS
                 // These all need to break, not continue.
-                // TODO: parse these
 
                 // end of line
                 case '\n':

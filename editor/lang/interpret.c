@@ -430,7 +430,7 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
                 ms_data res = ms_interpreter_run_code(interp, funcNode);
 
                 // done
-                ms_interpreter_scope_pop(interp); // TODO: fix scopes not working huhhhh
+                ms_interpreter_scope_pop(interp);
                 return res;
             }
         }

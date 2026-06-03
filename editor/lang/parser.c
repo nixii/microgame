@@ -57,7 +57,7 @@ ms_node *ms_ast_parse_command_invoke(ms_ast *ast, ms_tokens *toks, const char *n
     ms_node *toAdd;
 
     // for all params it can get
-    while ((toAdd = ms_ast_next(ast, toks)) != NULL) { // TODO: fix issue with "call" and parameters
+    while ((toAdd = ms_ast_next(ast, toks)) != NULL) {
         printf("param added to %s: %d\n", name, toAdd->type);
         *nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = toAdd, .nextParam = NULL } });
         nextParam = &(*nextParam)->value.param.nextParam;
@@ -91,7 +91,7 @@ ms_node *ms_ast_parse_command_let(ms_ast *ast, ms_tokens *toks, int doLetCommand
 ms_node *ms_ast_parse_command_as(ms_ast *ast, ms_tokens *toks) {
 
     // get the name
-    ms_node *nameNode = ms_ast_next(ast, toks); // TODO: finish
+    ms_node *nameNode = ms_ast_next(ast, toks);
 
     // next, get the following block
     ms_node *value = ms_ast_next(ast, toks);

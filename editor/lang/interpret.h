@@ -6,12 +6,6 @@
 #include "parser.h"
 #include "data.h"
 
-/* TODO:
-     1. change the parser to load functions itself
-     2. load the ast into the interpreter
-     3. get some basic code running!
-*/
-
 // dynamic array to declare things
 DA_DECLARE(ms_names, const char*)
 
