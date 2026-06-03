@@ -1,20 +1,13 @@
 
 let mesh_res load_mesh "assets/cube.obj"
 
-on summon_entity with pos, col do
-    
-    new "entity" with
-
-        set position pos
-
-        attach new "mesh" from mesh_res with
-            set color col
-        end
+on test with x do
+    echo x
+    if (x < 256) + (x > 0) do
+        let val x * 2
+        call test val
     end
-
-    echo "New entity at " pos " with color " col "!"
 end
 
-# on se with pos, col call summon_entity pos col
-
-call summon_entity 2 2 5, 255 0 0
+call test 1
+echo "done!"

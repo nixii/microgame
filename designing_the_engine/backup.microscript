@@ -1,0 +1,20 @@
+
+let mesh_res load_mesh "assets/cube.obj"
+
+on summon_entity with pos, col do
+    
+    new "entity" with
+
+        set position pos
+
+        attach new "mesh" from mesh_res with
+            set color col
+        end
+    end
+
+    echo "New entity at " pos " with color " col "!"
+end
+
+# on se with pos, col call summon_entity pos col
+
+call summon_entity 2 2 5, 255 0 0

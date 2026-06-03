@@ -51,7 +51,6 @@ static ms_interpreter_scope *ms_interpreter_scope_new(ms_interpreter_scope *pare
 static void ms_interpreter_scope_push(ms_interpreter *interpreter) {
     ms_interpreter_scope *new = ms_interpreter_scope_new(interpreter->scope);
     interpreter->scope = new;
-    printf("push\n");
 }
 
 // go back up a scope
@@ -62,7 +61,6 @@ static void ms_interpreter_scope_pop(ms_interpreter *interpreter) {
     ms_names_destroy(&interpreter->scope->funcNames);
     ms_nodes_destroy(&interpreter->scope->funcNodes);
     ms_nodes_destroy(&interpreter->scope->funcParams);
-    printf("pop\n");
     free(interpreter->scope);
     interpreter->scope = parent;
 }
@@ -409,6 +407,7 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
                 const ms_node *param = s->funcParams.data[i];
                 const ms_node *funcNode = s->funcNodes.data[i];
                 ms_interpreter_scope_push(interp);
+                s = interp->scope;
                 const ms_node *paramValue = n->value.invoke.firstParam;
                 while (param != NULL) {
                     ms_names_append(&s->varNames, param->value.paramDef.name);
