@@ -6,6 +6,7 @@
 #include "properties/velocity.h"
 #include "properties/mesh.h"
 #include "properties/vec3.h"
+#include "properties/vec2.h"
 
 #include "interpret.h"
 #include "microlib.h"
@@ -412,6 +413,11 @@ static ms_data ms_interpreter_run_code_invoke_length(ms_interpreter *interp, con
     assert(n->value.invoke.firstParam->value.param.nextParam == NULL);
     return ml_length(ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data));
 }
+static ms_data ms_interpreter_run_code_invoke_get_mouse_delta(ms_interpreter *interp, const ms_node *n) {
+    (void)(interp);
+    assert(n->value.invoke.firstParam == NULL);
+    return ml_get_mouse_delta();
+}
 
 // run invoked code
 static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_node *n) {
@@ -438,6 +444,8 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
         return ms_interpreter_run_code_invoke_square(interp, n);
     if (strcmp(name, "length") == 0)
         return ms_interpreter_run_code_invoke_length(interp, n);
+    if (strcmp(name, "get_mouse_delta") == 0)
+            return ms_interpreter_run_code_invoke_get_mouse_delta(interp, n);
 
     // run the special event
     // the scope
@@ -547,6 +555,9 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
             ms_interpreter_scene_set_property(interp->context->obj.value.scene, name, val);
             break;
         
+        case MS_DT_VEC2:
+            ms_interpreter_vec2_set_property(&interp->context->obj.value.v2, name, val);
+            break;
         case MS_DT_VEC3:
             ms_interpreter_vec3_set_property(&interp->context->obj.value.v3, name, val);
             break;
@@ -587,6 +598,8 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
             case MS_DT_SCENE:
                 return ms_interpreter_scene_get_property(interp->context->obj.value.scene, name);
             
+            case MS_DT_VEC2:
+                return ms_interpreter_vec2_get_property(&interp->context->obj.value.v2, name);
             case MS_DT_VEC3:
                 return ms_interpreter_vec3_get_property(&interp->context->obj.value.v3, name);
             

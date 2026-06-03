@@ -9,5 +9,6 @@ ms_data ml_sin(ms_data a);
 ms_data ml_sqrt(ms_data a);
 ms_data ml_square(ms_data a);
 ms_data ml_length(ms_data a);
+ms_data ml_get_mouse_delta();
 
 #endif // MS_MICRO_LIB_H

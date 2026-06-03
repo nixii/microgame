@@ -1,20 +1,35 @@
 
-let mesh_res load_mesh "assets/cube.obj"
+let m1 load_mesh "assets/cube.obj"
 
-on summon_entity with pos, col do
-    
-    new "entity" with
+let e1 new "entity" with
+    set position 0 -5 5
 
-        set position pos
-
-        attach new "mesh" from mesh_res with
-            set color col
-        end
+    attach new "mesh" from m1 with
+        set color 200 200 255
     end
-
-    echo "New entity at " pos " with color " col "!"
 end
 
-# on se with pos, col call summon_entity pos col
+let time 1
 
-call summon_entity 2 2 5, 255 0 0
+on frame with dt do
+    let time time + dt * time
+
+    # update position
+    as e1 do
+
+        # calcualte the new pos
+        let newx (call cos (time)) * 5
+        let newy (call sin (time)) * 5
+
+        # set the position
+        let newpos as get position do
+            set x newx
+            set y newy
+        end
+
+        set position newpos
+        
+    end
+
+    echo (call get_mouse_delta)
+end

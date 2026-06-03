@@ -42,3 +42,6 @@ ms_data ml_length(ms_data a) {
             exit(1);
     }
 }
+ms_data ml_get_mouse_delta() {
+    return MS_DATA(get_mouse_delta());
+}
