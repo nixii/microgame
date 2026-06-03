@@ -1,13 +1,9 @@
 
-let mesh_res load_mesh "assets/cube.obj"
-
 on test with x do
     echo x
-    if (x < 256) + (x > 0) do
-        let val x * 2
-        call test val
+    if (x < 3) do
+        call test x + 1
     end
 end
 
 call test 1
-echo "done!"

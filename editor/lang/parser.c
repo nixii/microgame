@@ -57,7 +57,7 @@ ms_node *ms_ast_parse_command_invoke(ms_ast *ast, ms_tokens *toks, const char *n
     ms_node *toAdd;
 
     // for all params it can get
-    while ((toAdd = ms_ast_next(ast, toks)) != NULL) {
+    while ((toAdd = ms_ast_next(ast, toks)) != NULL) { // TODO: fix issue with "call" and parameters
         *nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = toAdd, .nextParam = NULL } });
         nextParam = &(*nextParam)->value.param.nextParam;
         cmd->value.invoke.numParams++;
@@ -400,6 +400,8 @@ static ms_node *ms_ast_parse_expression(ms_ast *ast, ms_tokens *toks, int minimu
         ms_token_type op = ms_ast_advance(ast, toks)->type;
         ms_node *right = ms_ast_parse_expression(ast, toks, prec + 1);
 
+        printf("binop of %d and %d.\n", left->type, right->type);
+        printf(" L  binop of %d and %d.\n", left->value.literal.type, right->value.literal.type);
         left = ms_node_new(
             MS_NT_BINOP,
             (ms_node_value){

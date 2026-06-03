@@ -587,6 +587,8 @@ static ms_data ms_interpreter_run_code_expression(ms_interpreter *interp, const 
     // calculate the values
     ms_data left = ms_interpreter_run_code(interp, n->value.binOp.a);
     ms_data right = ms_interpreter_run_code(interp, n->value.binOp.b);
+    printf("left, right are %d, %d.\n", left.type, right.type);
+    printf("a, b, are %d, %d\n", n->value.binOp.a->type, n->value.binOp.b->type);
 
     // run the operation
     switch (n->value.binOp.operation) {
