@@ -47,8 +47,11 @@ typedef union {
     int boolean;
 
     vec2 v2;
+    vec2 *v2Ptr;
     vec3 v3;
+    vec3 *v3Ptr;
     ui_vec v4;
+    ui_vec *v4Ptr;
     
     scene *scene;
     entity entity;

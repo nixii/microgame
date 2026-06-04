@@ -1,35 +1,31 @@
 
-let m1 load_mesh "assets/cube.obj"
+let m1 load_mesh "assets/test.obj"
 
 let e1 new "entity" with
-    set position 0 0 5
 
-    attach new "mesh" from m1 with
-        set color 200 200 255
-    end
+    set position 0 0 5
+    attach new "mesh" from m1
+
 end
 
-let time 1
-let can false
+let time 0
+let dir 1
 
 on frame with dt do
+    let time time + (dt * dir * 5)
 
-    let md call get_mouse_delta
-    as md let mdx (get x) / 240
-    as md let mdy (get y) / -240
-
-    if can do
-        as e1 do
-            let p get position
-            let p as p do
-                set x (get x) + mdx
-                set y (get y) + mdy
-            end
-            set position p
-        end
+    if time > 10 do
+        let dir -1
     end
 
-    if (mdy > 1) | (mdy < -1) do
-        let can true
+    if time < 0 do
+        let dir 1
+    end
+
+    as e1 do
+        as get position do
+            set x (5 - time)
+            echo get x
+        end
     end
 end

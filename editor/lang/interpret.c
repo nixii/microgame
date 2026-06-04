@@ -526,23 +526,24 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
         exit(1);
     }
 
+    // is it a ptr
+    int isPtr = (interp->context->obj.ptr) != 0;
+
     // switch the type
     switch (interp->context->obj.type) {
 
         case MS_DT_COMPONENT_COLLIDER:
-            if (interp->context->obj.ptr)
+            if (isPtr)
                 ms_interpreter_component_collider_set_property(interp->context->obj.value.colliderPtr, name, val);
             else ms_interpreter_component_collider_set_property(&interp->context->obj.value.collider, name, val);
             break;
         case MS_DT_COMPONENT_VELOCITY:
-            if (interp->context->obj.ptr) {
+            if (isPtr)
                 ms_interpreter_component_velocity_set_property(interp->context->obj.value.velocityPtr, name, val);
-            } else {
-                ms_interpreter_component_velocity_set_property(&interp->context->obj.value.velocity, name, val);
-            }
+            else ms_interpreter_component_velocity_set_property(&interp->context->obj.value.velocity, name, val);
             break;
         case MS_DT_COMPONENT_MESH:
-            if (interp->context->obj.ptr)
+            if (isPtr)
                 ms_interpreter_component_mesh_set_property(interp->context->obj.value.meshPtr, name, val);
             else ms_interpreter_component_mesh_set_property(&interp->context->obj.value.mesh, name, val);
             break;
@@ -556,10 +557,14 @@ static void ms_interpreter_set_property(ms_interpreter *interp, const char *name
             break;
         
         case MS_DT_VEC2:
-            ms_interpreter_vec2_set_property(&interp->context->obj.value.v2, name, val);
+            ms_interpreter_vec2_set_property(
+                isPtr ? interp->context->obj.value.v2Ptr : &interp->context->obj.value.v2, 
+                name, val);
             break;
         case MS_DT_VEC3:
-            ms_interpreter_vec3_set_property(&interp->context->obj.value.v3, name, val);
+            ms_interpreter_vec3_set_property(
+                isPtr ? interp->context->obj.value.v3Ptr : &interp->context->obj.value.v3,
+                name, val);
             break;
 
         default:
@@ -581,27 +586,29 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
     if (interp->context->obj.type != MS_DT_NIL) {
 
         // switch the type
+        ms_data_value val = interp->context->obj.value;
+        int ptr = interp->context->obj.ptr != 0;
         switch (interp->context->obj.type) {
             case MS_DT_COMPONENT_COLLIDER:
-                if (interp->context->obj.ptr) return ms_interpreter_component_collider_get_property(interp->context->obj.value.colliderPtr, name);
-                return ms_interpreter_component_collider_get_property(&interp->context->obj.value.collider, name);
+                if (ptr) return ms_interpreter_component_collider_get_property(val.colliderPtr, name);
+                return ms_interpreter_component_collider_get_property(&val.collider, name);
             case MS_DT_COMPONENT_VELOCITY:
-                if (interp->context->obj.ptr) return ms_interpreter_component_velocity_get_property(interp->context->obj.value.velocityPtr, name);
-                else return ms_interpreter_component_velocity_get_property(&interp->context->obj.value.velocity, name);
+                if (ptr) return ms_interpreter_component_velocity_get_property(val.velocityPtr, name);
+                else return ms_interpreter_component_velocity_get_property(&val.velocity, name);
             case MS_DT_COMPONENT_MESH:
-                if (interp->context->obj.ptr) return ms_interpreter_component_mesh_get_property(interp->context->obj.value.meshPtr, name);
-                else return ms_interpreter_component_mesh_get_property(&interp->context->obj.value.mesh, name);
+                if (ptr) return ms_interpreter_component_mesh_get_property(val.meshPtr, name);
+                else return ms_interpreter_component_mesh_get_property(&val.mesh, name);
 
             case MS_DT_ENTITY:
                 return ms_interpreter_entity_get_property(interp->context->s, interp->context->e, name);
             
             case MS_DT_SCENE:
-                return ms_interpreter_scene_get_property(interp->context->obj.value.scene, name);
+                return ms_interpreter_scene_get_property(val.scene, name);
             
             case MS_DT_VEC2:
-                return ms_interpreter_vec2_get_property(&interp->context->obj.value.v2, name);
+                return ms_interpreter_vec2_get_property(ptr ? val.v2Ptr : &val.v2, name);
             case MS_DT_VEC3:
-                return ms_interpreter_vec3_get_property(&interp->context->obj.value.v3, name);
+                return ms_interpreter_vec3_get_property(ptr ? val.v3Ptr : &val.v3, name);
             
             default:
                 fprintf(stderr, "can't get a property on data type %d.\n", interp->context->obj.type);

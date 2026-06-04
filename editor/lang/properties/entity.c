@@ -10,18 +10,18 @@ static float TO_RAD_SCALAR = PI / 180;
 void ms_interpreter_entity_set_property(scene *s, entity e, const char *propName, ms_data value) {
 
     if (strcmp(propName, "position") == 0) {
-        assert(value.type == MS_DT_VEC3 && !value.ptr);
-        get_transform(s, e)->pos = value.value.v3;
+        assert(value.type == MS_DT_VEC3);
+        get_transform(s, e)->pos = value.ptr ? *value.value.v3Ptr : value.value.v3;
     }
 
     else if (strcmp(propName, "rotation") == 0) {
-        assert(value.type == MS_DT_VEC3 && !value.ptr);
-        get_transform(s, e)->rot = MUL(value.value.v3, TO_RAD_SCALAR);
+        assert(value.type == MS_DT_VEC3);
+        get_transform(s, e)->rot = value.ptr ? *value.value.v3Ptr : value.value.v3;
     }
 
     else if (strcmp(propName, "scale") == 0) {
-        assert(value.type == MS_DT_VEC3 && !value.ptr);
-        get_transform(s, e)->scale = value.value.v3;
+        assert(value.type == MS_DT_VEC3);
+        get_transform(s, e)->pos = value.ptr ? *value.value.v3Ptr : value.value.v3;
     }
 
     else {
@@ -33,17 +33,18 @@ void ms_interpreter_entity_set_property(scene *s, entity e, const char *propName
 ms_data ms_interpreter_entity_get_property(scene *s, entity e, const char *propName) {
 
     if (strcmp(propName, "position") == 0) {
-        vec3 pos = get_transform(s, e)->pos;
-        return (ms_data){ .type = MS_DT_VEC3, .ptr = FALSE, .value = (ms_data_value){ .v3 = pos } };
+        vec3 *pos = &get_transform(s, e)->pos;
+        return (ms_data){ .type = MS_DT_VEC3, .ptr = TRUE, .value = (ms_data_value){ .v3Ptr = pos } };
     }
 
     else if (strcmp(propName, "rotation") == 0) {
-        vec3 rot = get_transform(s, e)->rot;
-        return (ms_data){ .type = MS_DT_VEC3, .ptr = FALSE, .value = (ms_data_value){ .v3 = MUL(rot, TO_DEG_SCALAR) } };
+        vec3 *rot = &get_transform(s, e)->rot;
+        return (ms_data){ .type = MS_DT_VEC3, .ptr = TRUE, .value = (ms_data_value){ .v3Ptr = rot } };
     }
 
     else if (strcmp(propName, "scale") == 0) {
-        return (ms_data){ .type = MS_DT_VEC3, .ptr = FALSE, .value = (ms_data_value){ .v3 = get_transform(s, e)->scale } };
+        vec3 *scale = &get_transform(s, e)->scale;
+        return (ms_data){ .type = MS_DT_VEC3, .ptr = TRUE, .value = (ms_data_value){ .v3Ptr = scale } };
     }
 
     else {
