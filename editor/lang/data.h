@@ -65,6 +65,8 @@ typedef union {
 
     mesh_resource meshResource;
     mesh_resource *meshResourcePtr;
+
+    void *genPtr;
 } ms_data_value;
 
 // a data point

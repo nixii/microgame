@@ -1,9 +1,16 @@
 
 ## To-Do list
 
+Todo #10 - Make the demo scene!
+ * `[ ]` Basic platform
+ * `[ ]` Some simple platforms to jump on
+ * `[ ]` Movement
+ * * `[ ]` Camera rot
+ * * `[ ]` WASD
+ * * `[ ]` Jumping
+ * `[ ]` Get teleported back to spawn *when* you fall off
+
 Todo #9 - Prepare for alpha of the language:
- * `[ ]` Creating scenes
- * `[ ]` Scene transfers
  * `[ ]` Events
  * * `[ ]` Keyboard input
  * * `[x]` On frame

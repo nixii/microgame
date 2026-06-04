@@ -190,7 +190,25 @@ static ms_data ms_interpreter_get_variable(ms_interpreter *interp, const char *n
     while (s != NULL) {
         for (int i = 0; i < s->varNames.length; i++) {
             if (strcmp(s->varNames.data[i], name) == 0) {
-                return s->varValues.data[i];
+                
+                // make pointerized version if it isn't simple
+                switch (s->varValues.data[i].type) {
+                    case MS_DT_STRING:
+                    case MS_DT_NUMBER:
+                    case MS_DT_BOOL:
+                    case MS_DT_NIL:
+                        return s->varValues.data[i];
+                    default: {
+                        ms_data new = (ms_data){
+                            .type = s->varValues.data[i].type,
+                            .ptr = TRUE,
+                            .value = (ms_data_value){
+                                .genPtr = &s->varValues.data[i].value
+                            }
+                        };
+                        return new;
+                    }
+                }
             }
         }
         s = s->parentScope;

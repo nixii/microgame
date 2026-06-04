@@ -15,18 +15,33 @@ let time 0
 on frame with dt do
     let time time + dt
 
-    let movement 0
+    let movement 0 0 0
     if (call is_key_down "w") do
-        let movement movement + SPEED
+        as movement do
+            set y (get y) + SPEED
+        end
     end
 
     if (call is_key_down "s") do
-        let movement movement - SPEED
+        as movement do
+            set y (get y) - SPEED
+        end
     end
 
-    as e1 do
-        as get position do
-            set y (get y) + (movement * dt)
+    if (call is_key_down "a") do
+        as movement do
+            set x (get x) - SPEED
         end
+    end
+
+    if (call is_key_down "d") do
+        as movement set x (get x) + SPEED
+    end
+    echo movement
+
+    as e1 do
+        let p get position
+
+        set position p + (movement * dt)
     end
 end
