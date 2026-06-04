@@ -37,10 +37,13 @@ on frame with dt do
     if (call is_key_down "d") do
         as movement set x (get x) + SPEED
     end
+    echo "oo"
     echo movement
 
     as e1 do
+        echo "e1"
         let p get position
+        echo "get"
 
         set position p + (movement * dt)
     end

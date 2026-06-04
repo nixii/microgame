@@ -25,9 +25,22 @@ static void normalize_scalar(ms_data *a, ms_data *b) {
     }
 }
 
+// resolve pointers
+static void resolve_pointers(ms_data *a, ms_data *b) {
+    if (a->ptr) {
+        a->ptr = FALSE;
+        a->value = *((ms_data_value *)a->value.genPtr);
+    }
+    if (b->ptr) {
+        b->ptr = FALSE;
+        b->value = *((ms_data_value *)b->value.genPtr);
+    }
+}
+
 // perform operations
 ms_data ms_data_mul(ms_data a, ms_data b) {
     normalize_scalar(&a, &b);
+    resolve_pointers(&a, &b);
     switch (a.type) {
         case MS_DT_NUMBER: return MS_DATA(a.value.num * b.value.num);
         case MS_DT_VEC2: return b.type == MS_DT_NUMBER ? MS_DATA(MUL(a.value.v2, b.value.num)) : MS_DATA(MUL_COMPONENTS(a.value.v2, b.value.v2));
@@ -38,6 +51,7 @@ ms_data ms_data_mul(ms_data a, ms_data b) {
 }
 ms_data ms_data_div(ms_data a, ms_data b) {
     normalize_scalar(&a, &b);
+    resolve_pointers(&a, &b);
     switch (a.type) {
         case MS_DT_NUMBER: return MS_DATA(a.value.num / b.value.num);
         case MS_DT_VEC2: return b.type == MS_DT_NUMBER ? MS_DATA(DIV(a.value.v2, b.value.num)) : fail("can't divide by a vec.\n");
@@ -49,11 +63,15 @@ ms_data ms_data_div(ms_data a, ms_data b) {
 
 ms_data ms_data_add(ms_data a, ms_data b) {
     assert(a.type == b.type);
+    resolve_pointers(&a, &b);
     switch (a.type) {
         case MS_DT_NUMBER: return MS_DATA(a.value.num + b.value.num);
-        case MS_DT_VEC2: return MS_DATA(ADD(a.value.v2, b.value.v2));
-        case MS_DT_VEC3: return MS_DATA(ADD(a.value.v3, b.value.v3));
-        case MS_DT_VEC4: return MS_DATA(ADD(a.value.v4, b.value.v4));
+        case MS_DT_VEC2:
+            return MS_DATA(ADD(a.value.v2, b.value.v2));
+        case MS_DT_VEC3:
+            return MS_DATA(ADD(a.value.v3, b.value.v3));
+        case MS_DT_VEC4:
+            return MS_DATA(ADD(a.value.v4, b.value.v4));
         case MS_DT_BOOL: return MS_DATA(a.value.boolean && b.value.boolean);
         default: return fail("can't do this.\n");
     }
@@ -62,9 +80,12 @@ ms_data ms_data_sub(ms_data a, ms_data b) {
     assert(a.type == b.type);
     switch (a.type) {
         case MS_DT_NUMBER: return MS_DATA(a.value.num - b.value.num);
-        case MS_DT_VEC2: return MS_DATA(SUB(a.value.v2, b.value.v2));
-        case MS_DT_VEC3: return MS_DATA(SUB(a.value.v3, b.value.v3));
-        case MS_DT_VEC4: return MS_DATA(SUB(a.value.v4, b.value.v4));
+        case MS_DT_VEC2:
+            return MS_DATA(ADD(a.value.v2, b.value.v2));
+        case MS_DT_VEC3:
+            return MS_DATA(ADD(a.value.v3, b.value.v3));
+        case MS_DT_VEC4:
+            return MS_DATA(ADD(a.value.v4, b.value.v4));
         default: return fail("can't do this.\n");
     }
 }

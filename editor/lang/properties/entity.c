@@ -33,17 +33,17 @@ void ms_interpreter_entity_set_property(scene *s, entity e, const char *propName
 ms_data ms_interpreter_entity_get_property(scene *s, entity e, const char *propName) {
 
     if (strcmp(propName, "position") == 0) {
-        vec3 *pos = &get_transform(s, e)->pos;
+        vec3 *pos = &(get_transform(s, e)->pos);
         return (ms_data){ .type = MS_DT_VEC3, .ptr = TRUE, .value = (ms_data_value){ .v3Ptr = pos } };
     }
 
     else if (strcmp(propName, "rotation") == 0) {
-        vec3 *rot = &get_transform(s, e)->rot;
+        vec3 *rot = &(get_transform(s, e)->rot);
         return (ms_data){ .type = MS_DT_VEC3, .ptr = TRUE, .value = (ms_data_value){ .v3Ptr = rot } };
     }
 
     else if (strcmp(propName, "scale") == 0) {
-        vec3 *scale = &get_transform(s, e)->scale;
+        vec3 *scale = &(get_transform(s, e)->scale);
         return (ms_data){ .type = MS_DT_VEC3, .ptr = TRUE, .value = (ms_data_value){ .v3Ptr = scale } };
     }
 
