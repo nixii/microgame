@@ -418,6 +418,11 @@ static ms_data ms_interpreter_run_code_invoke_get_mouse_delta(ms_interpreter *in
     assert(n->value.invoke.firstParam == NULL);
     return ml_get_mouse_delta();
 }
+static ms_data ms_interpreter_run_code_invoke_is_key_down(ms_interpreter *interp, const ms_node *n) {
+    (void)(interp);
+    assert(n->value.invoke.firstParam != NULL);
+    return ml_is_key_down(ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data));
+}
 
 // run invoked code
 static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_node *n) {
@@ -445,7 +450,9 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
     if (strcmp(name, "length") == 0)
         return ms_interpreter_run_code_invoke_length(interp, n);
     if (strcmp(name, "get_mouse_delta") == 0)
-            return ms_interpreter_run_code_invoke_get_mouse_delta(interp, n);
+        return ms_interpreter_run_code_invoke_get_mouse_delta(interp, n);
+    if (strcmp(name, "is_key_down") == 0)
+        return ms_interpreter_run_code_invoke_is_key_down(interp, n);
 
     // run the special event
     // the scope

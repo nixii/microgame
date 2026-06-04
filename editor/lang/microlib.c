@@ -45,3 +45,66 @@ ms_data ml_length(ms_data a) {
 ms_data ml_get_mouse_delta() {
     return MS_DATA(get_mouse_delta());
 }
+ms_data ml_is_key_down(ms_data a) {
+    assert(a.type == MS_DT_STRING);
+    char c = a.value.str[0];
+
+    // switch based on the char
+    switch (c) {
+        case 'a':
+            return MS_DATA(key_down(M_KEY_A));
+        case 'b':
+            return MS_DATA(key_down(M_KEY_B));
+        case 'c':
+            return MS_DATA(key_down(M_KEY_C));
+        case 'd':
+            return MS_DATA(key_down(M_KEY_D));
+        case 'e':
+            return MS_DATA(key_down(M_KEY_E));
+        case 'f':
+            return MS_DATA(key_down(M_KEY_F));
+        case 'g':
+            return MS_DATA(key_down(M_KEY_G));
+        case 'h':
+            return MS_DATA(key_down(M_KEY_H));
+        case 'i':
+            return MS_DATA(key_down(M_KEY_I));
+        case 'j':
+            return MS_DATA(key_down(M_KEY_J));
+        case 'k':
+            return MS_DATA(key_down(M_KEY_K));
+        case 'l':
+            return MS_DATA(key_down(M_KEY_L));
+        case 'm':
+            return MS_DATA(key_down(M_KEY_M));
+        case 'n':
+            return MS_DATA(key_down(M_KEY_N));
+        case 'o':
+            return MS_DATA(key_down(M_KEY_O));
+        case 'p':
+            return MS_DATA(key_down(M_KEY_P));
+        case 'q':
+            return MS_DATA(key_down(M_KEY_Q));
+        case 'r':
+            return MS_DATA(key_down(M_KEY_R));
+        case 's':
+            return MS_DATA(key_down(M_KEY_S));
+        case 't':
+            return MS_DATA(key_down(M_KEY_T));
+        case 'u':
+            return MS_DATA(key_down(M_KEY_U));
+        case 'v':
+            return MS_DATA(key_down(M_KEY_V));
+        case 'w':
+            return MS_DATA(key_down(M_KEY_W));
+        case 'x':
+            return MS_DATA(key_down(M_KEY_X));
+        case 'y':
+            return MS_DATA(key_down(M_KEY_Y));
+        case 'z':
+            return MS_DATA(key_down(M_KEY_Z));
+        default:
+            fprintf(stderr, "%c is not a valid key.\n", c);
+            exit(1);
+    }
+}

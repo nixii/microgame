@@ -6,7 +6,7 @@ Todo #9 - Prepare for alpha of the language:
  * `[ ]` Scene transfers
  * `[ ]` Events
  * * `[ ]` Keyboard input
- * * `[ ]` On frame
+ * * `[x]` On frame
 
 Todo #8 - more advanced features for the language:
  * `[x]` Creating resources
@@ -18,8 +18,8 @@ Todo #8 - more advanced features for the language:
  * `[x]` Attaching components
  * `[ ]` Detaching components
  * `[ ]` Despawning entities
- * `[ ]` If statements
- * `[ ]` Parameters for events
+ * `[x]` If statements
+ * `[x]` Parameters for events
 
 Todo #7 - beginning of the language:
  * `[x]` Design the scripting language
