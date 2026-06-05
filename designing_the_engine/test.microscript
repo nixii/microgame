@@ -1,4 +1,6 @@
 
+let SPEED 5
+
 let m1 load_mesh "assets/test.obj"
 
 let e1 new "entity" with
@@ -9,23 +11,26 @@ let e1 new "entity" with
 end
 
 let time 0
-let dir 1
 
 on frame with dt do
-    let time time + (dt * dir * 5)
+    let time time + dt
 
-    if time > 10 do
-        let dir -1
+    let movement 0 0 0
+    if (call is_key_down "w") do
+        as movement do
+            set y (get y) + SPEED
+        end
     end
 
-    if time < 0 do
-        let dir 1
+    if (call is_key_down "s") do
+        as movement do
+            set y (get y) - SPEED
+        end
     end
 
-    as e1 do
-        as get position do
-            set x (5 - time)
-            echo get x
+    if (call is_key_down "a") do
+        as movement do
+            set x (get x) - SPEED
         end
     end
 
@@ -36,10 +41,8 @@ on frame with dt do
     echo movement
 
     as e1 do
-        echo "e1"
-        #let p get position
-        echo "get"
+        let p get position
 
-        #set position p + (movement * dt)
+        set position p + (movement * dt)
     end
 end
