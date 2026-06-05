@@ -13,7 +13,7 @@ Todo #10 - Make the demo scene!
 Todo #9 - Prepare for alpha of the language:
  * `[ ]` Events
  * * `[ ]` Keyboard input
- * * `[x]` On frame
+ * * `[ ]` On frame
 
 Todo #8 - more advanced features for the language:
  * `[x]` Creating resources
@@ -25,8 +25,8 @@ Todo #8 - more advanced features for the language:
  * `[x]` Attaching components
  * `[ ]` Detaching components
  * `[ ]` Despawning entities
- * `[x]` If statements
- * `[x]` Parameters for events
+ * `[ ]` If statements
+ * `[ ]` Parameters for events
 
 Todo #7 - beginning of the language:
  * `[x]` Design the scripting language
