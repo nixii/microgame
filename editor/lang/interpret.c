@@ -439,6 +439,10 @@ static ms_data ms_interpreter_run_code_invoke_get_mouse_delta(ms_interpreter *in
     assert(n->value.invoke.firstParam == NULL);
     return ml_get_mouse_delta();
 }
+static ms_data ms_interpreter_run_code_invoke_is_key_down(ms_interpreter *interp, const ms_node *n) {
+    assert(n->value.invoke.firstParam != NULL);
+    return ml_is_key_down(ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data));
+}
 
 // run invoked code
 static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_node *n) {
@@ -466,7 +470,9 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
     if (strcmp(name, "length") == 0)
         return ms_interpreter_run_code_invoke_length(interp, n);
     if (strcmp(name, "get_mouse_delta") == 0)
-            return ms_interpreter_run_code_invoke_get_mouse_delta(interp, n);
+        return ms_interpreter_run_code_invoke_get_mouse_delta(interp, n);
+    if (strcmp(name, "is_key_down") == 0)
+        return ms_interpreter_run_code_invoke_is_key_down(interp, n);
 
     // run the special event
     // the scope
@@ -515,11 +521,9 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
     // the stuff to use
     const char *name = n->value.letCmd.name;
     const ms_node *internalVal = n->value.letCmd.data;
-    printf("letting %s to %p\n", name, internalVal);
 
     // calculate the value of running the value
     ms_data d = ms_interpreter_run_code(interp, internalVal);
-    printf("run done\n");
 
     // iterate through all scopes
     ms_interpreter_scope *s = interp->scope;
@@ -532,7 +536,6 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
         }
         s = s->parentScope;
     }
-    printf("scopes done\n");
 
     // append to this scope
     ms_names_append(&interp->scope->varNames, name);
@@ -742,7 +745,6 @@ static ms_data ms_interpreter_run_code_cmd_do(ms_interpreter *interp, const ms_n
     
     // get all of the nodes
     const ms_nodes *nodes = &n->value.doCmd.nodes;
-    printf("do block has %d nodes, data=%p\n", nodes->length, (void*)nodes->data);
     assert(nodes != NULL);
 
     // error detection
@@ -753,9 +755,7 @@ static ms_data ms_interpreter_run_code_cmd_do(ms_interpreter *interp, const ms_n
 
     // run each node besides the last
     for (int i = 0; i < nodes->length - 1; i++) {
-        printf("running node %d, data=%p\n", i, (void*)nodes->data);
         ms_interpreter_run_code(interp, nodes->data[i]);
-        printf("after node %d, data=%p\n", i, (void*)nodes->data);
     }
     
     // return the last node
@@ -810,6 +810,7 @@ static ms_data ms_interpreter_run_code_cmd_if(ms_interpreter *interp, const ms_n
     }
 
     if (cond.value.boolean) {
+        printf("trying to run %p\n", n->value.ifCmd.block);
         return ms_interpreter_run_code(interp, n->value.ifCmd.block);
     } else {
         if (n->value.ifCmd.elseBlock != NULL) {

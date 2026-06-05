@@ -191,7 +191,8 @@ ms_node *ms_ast_parse_command_generic_block(ms_ast *ast, ms_tokens *toks) {
     ms_token *nextTok = NULL;
     
     // while there is a next node
-    while ((nextTok = ms_ast_peek(ast, toks)) != NULL && nextTok->type != MS_TT_EOF) {
+    while ((nextTok = ms_ast_peek(ast, toks)) != NULL && 
+            nextTok->type != MS_TT_EOF) {
         if (nextTok->type == MS_TT_NEWLINE) {
             ms_ast_advance(ast, toks);
             continue;

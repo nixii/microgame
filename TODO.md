@@ -11,9 +11,9 @@ Todo #10 - Make the demo scene!
  * `[ ]` Get teleported back to spawn *when* you fall off
 
 Todo #9 - Prepare for alpha of the language:
- * `[ ]` Events
- * * `[ ]` Keyboard input
- * * `[ ]` On frame
+ * `[x]` Events
+ * * `[x]` Keyboard input
+ * * `[x]` On frame
 
 Todo #8 - more advanced features for the language:
  * `[x]` Creating resources
@@ -25,8 +25,8 @@ Todo #8 - more advanced features for the language:
  * `[x]` Attaching components
  * `[ ]` Detaching components
  * `[ ]` Despawning entities
- * `[ ]` If statements
- * `[ ]` Parameters for events
+ * `[x]` If statements
+ * `[x]` Parameters for events
 
 Todo #7 - beginning of the language:
  * `[x]` Design the scripting language

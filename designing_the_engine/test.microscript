@@ -1,48 +1,14 @@
 
-let SPEED 5
+# load meshes
+let mesh_test load_mesh "assets/test.obj"
+let mesh_cube load_mesh "assets/cube.obj"
 
-let m1 load_mesh "assets/test.obj"
-
-let e1 new "entity" with
-
-    set position 0 0 5
-    attach new "mesh" from m1
-
-end
-
-let time 0
-
-on frame with dt do
-    let time time + dt
-
-    let movement 0 0 0
-    if (call is_key_down "w") do
-        as movement do
-            set y (get y) + SPEED
-        end
-    end
-
-    if (call is_key_down "s") do
-        as movement do
-            set y (get y) - SPEED
-        end
-    end
+on frame do
+    let hit false
 
     if (call is_key_down "a") do
-        as movement do
-            set x (get x) - SPEED
-        end
+        let hit true
     end
 
-    if (call is_key_down "d") do
-        as movement set x (get x) + SPEED
-    end
-    echo "oo"
-    echo movement
-
-    as e1 do
-        let p get position
-
-        set position p + (movement * dt)
-    end
+    echo hit
 end
