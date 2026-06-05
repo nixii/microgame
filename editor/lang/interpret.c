@@ -199,6 +199,9 @@ static ms_data ms_interpreter_get_variable(ms_interpreter *interp, const char *n
                     case MS_DT_NIL:
                         return s->varValues.data[i];
                     default: {
+                        if (s->varValues.data[i].ptr) {
+                            return s->varValues.data[i];
+                        }
                         ms_data new = (ms_data){
                             .type = s->varValues.data[i].type,
                             .ptr = TRUE,
@@ -519,9 +522,11 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
     // the stuff to use
     const char *name = n->value.letCmd.name;
     const ms_node *internalVal = n->value.letCmd.data;
+    printf("letting %s to %p\n", name, internalVal);
 
     // calculate the value of running the value
     ms_data d = ms_interpreter_run_code(interp, internalVal);
+    printf("run done\n");
 
     // iterate through all scopes
     ms_interpreter_scope *s = interp->scope;
@@ -534,6 +539,7 @@ static ms_data ms_interpreter_run_code_cmd_let(ms_interpreter *interp, const ms_
         }
         s = s->parentScope;
     }
+    printf("scopes done\n");
 
     // append to this scope
     ms_names_append(&interp->scope->varNames, name);
@@ -611,29 +617,29 @@ static ms_data ms_interpreter_get_property(ms_interpreter *interp, const char *n
     if (interp->context->obj.type != MS_DT_NIL) {
 
         // switch the type
-        ms_data_value val = interp->context->obj.value;
+        ms_data_value *val = &interp->context->obj.value;
         int ptr = interp->context->obj.ptr != 0;
         switch (interp->context->obj.type) {
             case MS_DT_COMPONENT_COLLIDER:
-                if (ptr) return ms_interpreter_component_collider_get_property(val.colliderPtr, name);
-                return ms_interpreter_component_collider_get_property(&val.collider, name);
+                if (ptr) return ms_interpreter_component_collider_get_property(val->colliderPtr, name);
+                return ms_interpreter_component_collider_get_property(&val->collider, name);
             case MS_DT_COMPONENT_VELOCITY:
-                if (ptr) return ms_interpreter_component_velocity_get_property(val.velocityPtr, name);
-                else return ms_interpreter_component_velocity_get_property(&val.velocity, name);
+                if (ptr) return ms_interpreter_component_velocity_get_property(val->velocityPtr, name);
+                else return ms_interpreter_component_velocity_get_property(&val->velocity, name);
             case MS_DT_COMPONENT_MESH:
-                if (ptr) return ms_interpreter_component_mesh_get_property(val.meshPtr, name);
-                else return ms_interpreter_component_mesh_get_property(&val.mesh, name);
+                if (ptr) return ms_interpreter_component_mesh_get_property(val->meshPtr, name);
+                else return ms_interpreter_component_mesh_get_property(&val->mesh, name);
 
             case MS_DT_ENTITY:
                 return ms_interpreter_entity_get_property(interp->context->s, interp->context->e, name);
             
             case MS_DT_SCENE:
-                return ms_interpreter_scene_get_property(val.scene, name);
+                return ms_interpreter_scene_get_property(val->scene, name);
             
             case MS_DT_VEC2:
-                return ms_interpreter_vec2_get_property(ptr ? val.v2Ptr : &val.v2, name);
+                return ms_interpreter_vec2_get_property(ptr ? val->v2Ptr : &val->v2, name);
             case MS_DT_VEC3:
-                return ms_interpreter_vec3_get_property(ptr ? val.v3Ptr : &val.v3, name);
+                return ms_interpreter_vec3_get_property(ptr ? val->v3Ptr : &val->v3, name);
             
             default:
                 fprintf(stderr, "can't get a property on data type %d.\n", interp->context->obj.type);
@@ -737,11 +743,13 @@ static ms_data ms_interpreter_run_code_literal(ms_interpreter *interp, const ms_
 // run an entire "do" block
 static ms_data ms_interpreter_run_code_cmd_do(ms_interpreter *interp, const ms_node *n) {
 
+    
     // new context
     ms_interpreter_scope_push(interp);
-
+    
     // get all of the nodes
     const ms_nodes *nodes = &n->value.doCmd.nodes;
+    printf("do block has %d nodes, data=%p\n", nodes->length, (void*)nodes->data);
     assert(nodes != NULL);
 
     // error detection
@@ -752,7 +760,9 @@ static ms_data ms_interpreter_run_code_cmd_do(ms_interpreter *interp, const ms_n
 
     // run each node besides the last
     for (int i = 0; i < nodes->length - 1; i++) {
+        printf("running node %d, data=%p\n", i, (void*)nodes->data);
         ms_interpreter_run_code(interp, nodes->data[i]);
+        printf("after node %d, data=%p\n", i, (void*)nodes->data);
     }
     
     // return the last node

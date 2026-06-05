@@ -42,9 +42,9 @@ on frame with dt do
 
     as e1 do
         echo "e1"
-        let p get position
+        #let p get position
         echo "get"
 
-        set position p + (movement * dt)
+        #set position p + (movement * dt)
     end
 end
