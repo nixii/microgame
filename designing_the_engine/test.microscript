@@ -35,6 +35,7 @@ let e1 new "entity" with
     end
 end
 
+call disable_mouse
 
 let SPEED 5
 on frame with dt do

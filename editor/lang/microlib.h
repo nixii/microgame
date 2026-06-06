@@ -4,6 +4,8 @@
 
 #include "data.h"
 
+extern int mouse_disabled;
+
 ms_data ml_cos(ms_data a);
 ms_data ml_sin(ms_data a);
 ms_data ml_sqrt(ms_data a);
@@ -11,5 +13,8 @@ ms_data ml_square(ms_data a);
 ms_data ml_length(ms_data a);
 ms_data ml_get_mouse_delta();
 ms_data ml_is_key_down(ms_data a);
+ms_data ml_disable_mouse();
+ms_data ml_enable_mouse();
+ms_data ml_is_mouse_enabled();
 
 #endif // MS_MICRO_LIB_H

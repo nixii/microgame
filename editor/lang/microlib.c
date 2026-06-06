@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <math.h>
 
+int mouse_disabled = 0;
+
 ms_data ml_cos(ms_data a) {
     assert(a.type == MS_DT_NUMBER);
     return MS_DATA(cosf(a.value.num));
@@ -107,4 +109,17 @@ ms_data ml_is_key_down(ms_data a) {
             fprintf(stderr, "%c is not a valid key.\n", c);
             exit(1);
     }
+}
+ms_data ml_disable_mouse() {
+    disable_mouse();
+    mouse_disabled = 1;
+    return (ms_data){ .type = MS_DT_NIL };
+}
+ms_data ml_enable_mouse() {
+    enable_mouse();
+    mouse_disabled = 0;
+    return (ms_data){ .type = MS_DT_NIL };
+}
+ms_data ml_is_mouse_enabled() {
+    return MS_DATA(mouse_disabled == 0);
 }
