@@ -23,8 +23,7 @@ Todo #8 - more advanced features for the language:
  * * `[x]` Creating collider components
  * * `[x]` Creating velocity components
  * `[x]` Attaching components
- * `[ ]` Detaching components
- * `[ ]` Despawning entities
+ * `[x]` Despawning entities
  * `[x]` If statements
  * `[x]` Parameters for events
 
