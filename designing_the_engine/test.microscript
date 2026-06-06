@@ -1,4 +1,5 @@
 
+
 # load meshes
 let mesh_test load_mesh "assets/test.obj"
 let mesh_cube load_mesh "assets/cube.obj"
@@ -38,14 +39,13 @@ end
 let SPEED 5
 on frame with dt do
 
+    let cam_pos get camera_position
     let movement 0 0 0
 
     if (call is_key_down "a") as movement set x (get x) - 1
     if (call is_key_down "d") as movement set x (get x) + 1
-    if (call is_key_down "s") as movement set y (get y) - 1
-    if (call is_key_down "w") as movement set y (get y) + 1
+    if (call is_key_down "s") as movement set z (get z) - 1
+    if (call is_key_down "w") as movement set z (get z) + 1
 
-    as plrVel do
-        set velocity movement * SPEED
-    end
+    set camera_position cam_pos + movement * 5 * dt
 end

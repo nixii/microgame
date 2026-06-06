@@ -836,7 +836,6 @@ static ms_data ms_interpreter_run_code_cmd_if(ms_interpreter *interp, const ms_n
     }
 
     if (cond.value.boolean) {
-        printf("trying to run %p\n", n->value.ifCmd.block);
         return ms_interpreter_run_code(interp, n->value.ifCmd.block);
     } else {
         if (n->value.ifCmd.elseBlock != NULL) {
