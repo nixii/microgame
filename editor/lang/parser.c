@@ -323,6 +323,8 @@ ms_node *ms_ast_parse_command(ms_ast *ast, ms_tokens *toks) {
         return ms_ast_parse_command_invoke(ast, toks, "echo");
     } else if (strcmp(tok->value.chars, "load_mesh") == 0) {
         return ms_ast_parse_command_invoke(ast, toks, "load_mesh");
+    } else if (strcmp(tok->value.chars, "despawn") == 0) {
+        return ms_ast_parse_command_invoke(ast, toks, "despawn");
     } else if (strcmp(tok->value.chars, "let") == 0) {
         return ms_ast_parse_command_let(ast, toks, 1);
     } else if (strcmp(tok->value.chars, "as") == 0) {

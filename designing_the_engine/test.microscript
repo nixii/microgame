@@ -3,12 +3,49 @@
 let mesh_test load_mesh "assets/test.obj"
 let mesh_cube load_mesh "assets/cube.obj"
 
-on frame do
-    let hit false
+let plrVel nil
 
-    if (call is_key_down "a") do
-        let hit true
+# create an entity
+let e2 new "entity" with
+    set position 0 0 5
+    attach new "mesh" from mesh_cube with
+        set color 255 0 255
     end
 
-    echo hit
+    attach new "collider" with
+        set size 1 1 1
+    end
+end
+
+# create a second entity
+let e1 new "entity" with
+    set position 0 0 5
+    set scale 0.7 0.7 0.7
+    attach new "mesh" from mesh_test with
+        set color 255 0 0
+    end
+
+    attach new "collider" with
+        set size 1.4 1.4 1.4
+    end
+
+    let plrVel attach new "velocity" with
+        set velocity 0 0 0
+    end
+end
+
+
+let SPEED 5
+on frame with dt do
+
+    let movement 0 0 0
+
+    if (call is_key_down "a") as movement set x (get x) - 1
+    if (call is_key_down "d") as movement set x (get x) + 1
+    if (call is_key_down "s") as movement set y (get y) - 1
+    if (call is_key_down "w") as movement set y (get y) + 1
+
+    as plrVel do
+        set velocity movement * SPEED
+    end
 end

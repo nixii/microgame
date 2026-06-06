@@ -24,7 +24,9 @@ static char *keywords[] = {
     "from",
     "call",
     "if",
-    "else"
+    "else",
+    "despawn",
+    "detach"
 };
 
 // lexer state

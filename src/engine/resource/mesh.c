@@ -85,6 +85,7 @@ mesh_resource mesh_resource_from_obj(const char *objFilePath) {
                 vertices = realloc(vertices, sizeof(vec3) * verticesCap);
             }
 
+
             // set the vertex
             vertices[numVertices++] = v;
         }

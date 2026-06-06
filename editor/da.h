@@ -2,7 +2,7 @@
 #ifndef DA_H
 #define DA_H
 
-#define DA_START_SIZE 8
+#define DA_START_SIZE 128
 #define DA_GROWTH_RATE 2
 
 // just declare

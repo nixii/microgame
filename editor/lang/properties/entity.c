@@ -21,7 +21,7 @@ void ms_interpreter_entity_set_property(scene *s, entity e, const char *propName
 
     else if (strcmp(propName, "scale") == 0) {
         assert(value.type == MS_DT_VEC3);
-        get_transform(s, e)->pos = value.ptr ? *value.value.v3Ptr : value.value.v3;
+        get_transform(s, e)->scale = value.ptr ? *value.value.v3Ptr : value.value.v3;
     }
 
     else {

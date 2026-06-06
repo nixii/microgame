@@ -197,6 +197,8 @@ static ms_data ms_interpreter_get_variable(ms_interpreter *interp, const char *n
                     case MS_DT_NUMBER:
                     case MS_DT_BOOL:
                     case MS_DT_NIL:
+                    case MS_DT_ENTITY:
+                    case MS_DT_SCENE:
                         return s->varValues.data[i];
                     default: {
                         if (s->varValues.data[i].ptr) {
@@ -279,9 +281,11 @@ static ms_data ms_interpreter_run_code_invoke_echo(ms_interpreter *interp, const
             case MS_DT_VEC2:
                 appendf(&out, &len, "%.3f %.3f", res.value.v2.x, res.value.v2.y);
                 break;
-            case MS_DT_VEC3:
-                appendf(&out, &len, "%.3f %.3f %.3f", res.value.v3.x, res.value.v3.y, res.value.v3.z);
+            case MS_DT_VEC3: {
+                vec3 v = res.ptr ? *res.value.v3Ptr : res.value.v3;
+                appendf(&out, &len, "%.3f %.3f %.3f", v.x, v.y, v.z);                
                 break;
+            }
             case MS_DT_VEC4:
                 appendf(&out, &len, "%.3f %.3f %.3f %.3f", res.value.v4.scaleX, (float) res.value.v4.pixelsX, res.value.v4.scaleY, (float) res.value.v4.pixelsY);
                 break;
@@ -348,7 +352,15 @@ static ms_data ms_interpreter_spawn_instance(ms_interpreter *interp, const char 
     // things with a "from" keyword
     else if (strcmp(typeName, "mesh") == 0) {
         assert(from.type == MS_DT_RESOURCE_MESH);
-        return (ms_data){ .type = MS_DT_COMPONENT_MESH, .ptr = FALSE, .value = (ms_data_value){ .mesh = mesh_from_resource(rgb(255, 255, 255), from.value.meshResource) } };
+        return (ms_data){ 
+            .type = MS_DT_COMPONENT_MESH, 
+            .ptr = FALSE, 
+            .value = (ms_data_value){ 
+                .mesh = mesh_from_resource(
+                    rgb(255, 255, 255), 
+                    from.ptr ? *(mesh_resource*)from.value.genPtr : from.value.meshResource)
+                }
+            };
     }
 
     // failure
@@ -408,6 +420,18 @@ static ms_data ms_interpreter_run_code_invoke_attach(ms_interpreter *interp, con
     return ms_interpreter_entity_attach_component(interp->context->s, interp->context->e, value);
 }
 
+// kill an entity
+static ms_data ms_interpreter_run_code_invoke_despawn(ms_interpreter *interp, const ms_node *n) {
+    assert(n->value.invoke.firstParam != NULL);
+    assert(n->value.invoke.firstParam->value.param.nextParam == NULL);
+    ms_data toDespawn = ms_interpreter_run_code(interp, n->value.invoke.firstParam->value.param.data);
+    assert(toDespawn.type == MS_DT_ENTITY);
+    scene_despawn(
+        interp->context->s, 
+        toDespawn.value.entity);
+    return ms_data_nil();
+}
+
 // general microlib fns
 static ms_data ms_interpreter_run_code_invoke_cos(ms_interpreter *interp, const ms_node *n) {
     assert(n->value.invoke.firstParam != NULL);
@@ -455,6 +479,8 @@ static ms_data ms_interpreter_run_code_invoke(ms_interpreter *interp, const ms_n
         return ms_interpreter_run_code_invoke_echo(interp, n);
     if (strcmp(name, "new") == 0)
         return ms_interpreter_run_code_invoke_new(interp, n);
+    if (strcmp(name, "despawn") == 0)
+        return ms_interpreter_run_code_invoke_despawn(interp, n);
     if (strcmp(name, "attach") == 0)
         return ms_interpreter_run_code_invoke_attach(interp, n);
     if (strcmp(name, "load_mesh") == 0)
