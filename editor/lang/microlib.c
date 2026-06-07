@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <math.h>
+#include <string.h>
 
 int mouse_disabled = 0;
 
@@ -50,6 +51,7 @@ ms_data ml_get_mouse_delta() {
 ms_data ml_is_key_down(ms_data a) {
     assert(a.type == MS_DT_STRING);
     char c = a.value.str[0];
+    size_t len = strlen(a.value.str);
 
     // switch based on the char
     switch (c) {
@@ -105,8 +107,36 @@ ms_data ml_is_key_down(ms_data a) {
             return MS_DATA(key_down(M_KEY_Y));
         case 'z':
             return MS_DATA(key_down(M_KEY_Z));
+        case 'S':
+            return MS_DATA(key_down(M_KEY_SPACE));
+        case 'L':
+            if (len >= 2) {
+                if (a.value.str[1] == 'S')
+                    return MS_DATA(key_down(M_KEY_LSHIFT));
+                if (a.value.str[1] == 'C')
+                    return MS_DATA(key_down(M_KEY_LCTRL));
+                if (a.value.str[1] == 'A')
+                    return MS_DATA(key_down(M_KEY_LALT));
+                if (a.value.str[1] == 'M')
+                    return MS_DATA(key_down(M_KEY_LMETA));
+            }
+            fprintf(stderr, "%s is not a valid key.\n", a.value.str);
+            exit(1);
+        case 'R':
+            if (len >= 2) {
+                if (a.value.str[1] == 'S')
+                    return MS_DATA(key_down(M_KEY_RSHIFT));
+                if (a.value.str[1] == 'C')
+                    return MS_DATA(key_down(M_KEY_RCTRL));
+                if (a.value.str[1] == 'A')
+                    return MS_DATA(key_down(M_KEY_RALT));
+                if (a.value.str[1] == 'M')
+                    return MS_DATA(key_down(M_KEY_RMETA));
+            }
+            fprintf(stderr, "%s is not a valid key.\n", a.value.str);
+            exit(1);
         default:
-            fprintf(stderr, "%c is not a valid key.\n", c);
+            fprintf(stderr, "%s is not a valid key.\n", a.value.str);
             exit(1);
     }
 }

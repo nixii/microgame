@@ -2,12 +2,14 @@
 # constants
 let SENSITIVITY 0.005
 let SPEED 5
-let GRAVITY 10
+let GRAVITY 9
+let JUMP_FORCE 5
 let MAX_PITCH 3.14 / 2.2
 let MIN_PITCH 0 - MAX_PITCH
 
 # current state
 let curYVel 0
+let canJump false
 
 # load meshes
 let cube_mesh load_mesh "assets/cube.obj"
@@ -108,15 +110,34 @@ on update_movement with dt do
     if ypos = last_y do
         as final_movement set y 0
         let curYVel 0
-    end
+        let canJump true
+    end else let canJump false
 
     # curYVel goes down from gravity
     let curYVel curYVel - GRAVITY * dt
+
+    # jump
+    if canJump + (call is_key_down "SPACE") do
+        let canJump false
+        let curYVel JUMP_FORCE
+    end
+
+    # set the velocity
     as final_movement set y curYVel
 
     # update camera
     as camera_vel set velocity final_movement
     set camera_position pos
+end
+
+# save the player
+on save do
+    as get camera_position let curY get y
+    if curY < -10 do
+        as camera_entity do
+            set position 0 10 0
+        end
+    end
 end
 
 # freeze the mouse
@@ -130,5 +151,8 @@ on frame with dt do
 
     # handle movement
     call update_movement dt
+
+    # save
+    call save
    
 end 
