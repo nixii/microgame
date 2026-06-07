@@ -9,8 +9,8 @@ void ms_interpreter_component_collider_set_property(collider *c, const char *pro
 
     // set the size of the collider
     if (strcmp(propName, "size") == 0) {
-        assert(value.type == MS_DT_VEC3 && !value.ptr);
-        c->size = value.value.v3;
+        assert(value.type == MS_DT_VEC3);
+        c->size = value.ptr ? *value.value.v3Ptr : value.value.v3;
     }
 
     // not a valid property
