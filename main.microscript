@@ -67,7 +67,32 @@ end
 
 # update movement
 on update_movement with dt do
-    echo "movement."
+
+    # get keys
+    let movX 0
+    let movZ 0
+    if (call is_key_down "a") let movX movX - 1
+    if (call is_key_down "d") let movX movX + 1
+    if (call is_key_down "s") let movZ movZ - 1
+    if (call is_key_down "w") let movZ movZ + 1
+    
+    # get the amount to rotate by
+    as (get camera_rotation) let yaw_rot get y
+
+    # sin and cos
+    let sin_yaw call sin yaw_rot
+    let cos_yaw call cos yaw_rot
+
+    # update movement
+    let final_movement 0 0 0
+    as final_movement set x (movX * cos_yaw) + (movZ * sin_yaw)
+    as final_movement set z (movZ * cos_yaw) + (movX * sin_yaw)
+    let final_movement final_movement * SPEED
+    echo final_movement
+    
+    # set the velocity
+    as camera_vel set velocity final_movement
+    as camera_vel echo "   vel: " (get velocity)
 end
 
 # freeze the mouse
