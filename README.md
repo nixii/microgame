@@ -12,9 +12,6 @@ It will be usable as a custom coding language *and* as a static C library.
 - Collision & velocity built-in
 - A small custom coding language for use in the engine
 
-## Planned Features
-- ~~A full editor for the engine, coded using itself~~ **NOTE:** this feature was cut due to time constraints. It may be added at a later date
-
 ## How to build?
 1) Make sure you have Raylib installed.
 2) Run `make engine`. This creates a `./microgame` executable.

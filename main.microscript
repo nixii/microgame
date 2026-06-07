@@ -62,7 +62,7 @@ on update_test_entity with dt do
     let test_entity_timer test_entity_timer + dt
     as test_entity do
         as (get rotation) do
-            set y test_entity_timer + 1.57
+            set y test_entity_timer + 1.570796
         end
         as (get position) do
             set x 0 - (call cos test_entity_timer) * _rad
