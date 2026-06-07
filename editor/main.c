@@ -19,7 +19,7 @@ int main(void) {
     scene *s = scene_new();
 
     // load the script
-    ms_tokens tokens = tokenize("designing_the_engine/test.microscript");
+    ms_tokens tokens = tokenize("main.microscript");
     ms_ast ast = parse(&tokens);
 
     // interpret!

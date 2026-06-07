@@ -17,7 +17,7 @@ void ms_interpreter_scene_set_property(scene *s, const char *propName, ms_data v
         assert(value.type == MS_DT_VEC3);
         s->camera.transform.pos = value.ptr ? *value.value.v3Ptr : value.value.v3;
     }
-    else if (strcmp(propName, "camera_position") == 0) {
+    else if (strcmp(propName, "camera_rotation") == 0) {
         assert(value.type == MS_DT_VEC3);
         s->camera.transform.rot = value.ptr ? *value.value.v3Ptr : value.value.v3;
     }
@@ -40,7 +40,7 @@ ms_data ms_interpreter_scene_get_property(scene *s, const char *propName) {
     else if (strcmp(propName, "camera_position") == 0) {
         return MS_DATA(s->camera.transform.pos);
     }
-    else if (strcmp(propName, "camera_position") == 0) {
+    else if (strcmp(propName, "camera_rotation") == 0) {
         return MS_DATA(s->camera.transform.rot);
     }
 

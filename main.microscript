@@ -1,0 +1,85 @@
+
+# constants
+let SENSITIVITY 0.005
+let SPEED 5
+let GRAVITY 3
+let MAX_PITCH 3.14 / 2.2
+let MIN_PITCH 0 - MAX_PITCH
+
+# load meshes
+let cube_mesh load_mesh "assets/cube.obj"
+
+# basic floor
+new "entity" with
+    set position 0 -2 0
+    set scale 3 1 3
+    
+    attach new "mesh" from cube_mesh
+    attach new "collider" with
+        set size 1 1 1
+    end
+end
+
+
+# create the player
+let camera_vel nil
+let camera_entity new "entity" with
+    attach new "collider" with
+        set size 1 1 1
+    end
+
+    let camera_vel attach new "velocity"
+end
+
+# update the camera
+on update_camera with dt do
+
+    # get mouse delta
+    let mouse_dx 0
+    let mouse_dy 0
+    as (call get_mouse_delta) do
+        let mouse_dx get x
+        let mouse_dy get y
+    end
+
+    # movement vector
+    let rot_movement 0 0 0
+    as rot_movement set x mouse_dy
+    as rot_movement set y mouse_dx
+    let rot_movement rot_movement * SENSITIVITY
+
+    # add the vector
+    let newRot (get camera_rotation) + rot_movement
+
+    # get the current pitch rotation
+    as newRot let currentPitch get x
+
+    # limit
+    if currentPitch > MAX_PITCH do
+        as newRot set x MAX_PITCH
+    end else if currentPitch < MIN_PITCH do
+        as newRot set x MIN_PITCH
+    end
+
+    # set the cam rot
+    set camera_rotation newRot
+end
+
+# update movement
+on update_movement with dt do
+    echo "movement."
+end
+
+# freeze the mouse
+call disable_mouse
+
+# on frame
+on frame with dt do
+    
+    # handle camera
+    call update_camera dt
+
+    # handle movement
+    call update_movement dt
+   
+end 
