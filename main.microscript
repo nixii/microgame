@@ -6,6 +6,9 @@ let GRAVITY 3
 let MAX_PITCH 3.14 / 2.2
 let MIN_PITCH 0 - MAX_PITCH
 
+# current state
+let curYVel 0
+
 # load meshes
 let cube_mesh load_mesh "assets/cube.obj"
 
@@ -90,6 +93,10 @@ on update_movement with dt do
     as final_movement set x movX * cos_yaw + movZ * sin_yaw
     as final_movement set z (0 - movX) * sin_yaw + movZ * cos_yaw
     let final_movement final_movement * SPEED
+
+    # curYVel goes down
+    let curYVel curYVel - GRAVITY * dt
+    as final_movement set y curYVel
     
     # set the velocity
     as camera_vel set velocity final_movement
