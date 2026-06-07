@@ -28,7 +28,9 @@ let camera_entity new "entity" with
         set size 1 1 1
     end
 
-    let camera_vel attach new "velocity"
+    let camera_vel attach new "velocity" with
+        set velocity 0 0 0
+    end
 end
 
 # update the camera
@@ -85,14 +87,17 @@ on update_movement with dt do
 
     # update movement
     let final_movement 0 0 0
-    as final_movement set x (movX * cos_yaw) + (movZ * sin_yaw)
-    as final_movement set z (movZ * cos_yaw) + (movX * sin_yaw)
+    as final_movement set x movX * cos_yaw + movZ * sin_yaw
+    as final_movement set z (0 - movX) * sin_yaw + movZ * cos_yaw
     let final_movement final_movement * SPEED
-    echo final_movement
     
     # set the velocity
     as camera_vel set velocity final_movement
-    as camera_vel echo "   vel: " (get velocity)
+
+    # set camera loc
+    let pos 0 0 0
+    as camera_entity let pos (get position)
+    set camera_position pos
 end
 
 # freeze the mouse
