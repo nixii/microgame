@@ -12,7 +12,7 @@ let curYVel 0
 let canJump false
 
 # load meshes
-let cube_mesh load_mesh "assets/cube.obj"
+let test_mesh load_mesh "assets/test.obj"
 
 # function to spawn in a platform
 let pmb load_mesh "testgame1/assets/ground1_bottom.obj"
@@ -46,6 +46,28 @@ let camera_entity new "entity" with
 
     let camera_vel attach new "velocity" with
         set velocity 0 0 0
+    end
+end
+
+# Spawn spinning blender test mesh
+let test_entity new "entity" with
+    attach new "mesh" from test_mesh
+    set position 0 0 0
+end
+
+# test entity spin
+let test_entity_timer 0
+let _rad 3
+on update_test_entity with dt do
+    let test_entity_timer test_entity_timer + dt
+    as test_entity do
+        as (get rotation) do
+            set y test_entity_timer + 1.57
+        end
+        as (get position) do
+            set x 0 - (call cos test_entity_timer) * _rad
+            set z (call sin test_entity_timer) * _rad
+        end
     end
 end
 
@@ -155,7 +177,15 @@ end
 call disable_mouse
 
 # build the map
-call spawn_platform 0 -4 0, 10 3 10
+call spawn_platform 0 -4 0, 15 4 15
+
+call spawn_platform 12 -2 0, 6 2 6
+call spawn_platform 16 -1 6, 2 2 2
+call spawn_platform 16 0 12, 2 2 2
+call spawn_platform 17 1 17, 4 2 4
+call spawn_platform 12 0 16, 2 2 2
+call spawn_platform 6 -1 16, 2 2 2
+call spawn_platform 0 -2 12, 6 2 6
 
 # on frame
 on frame with dt do
@@ -168,5 +198,8 @@ on frame with dt do
 
     # save
     call save
+
+    # rotate
+    call update_test_entity dt
    
 end 
