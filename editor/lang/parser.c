@@ -58,7 +58,6 @@ ms_node *ms_ast_parse_command_invoke(ms_ast *ast, ms_tokens *toks, const char *n
 
     // for all params it can get
     while ((toAdd = ms_ast_next(ast, toks)) != NULL) {
-        printf("param added to %s: %d\n", name, toAdd->type);
         *nextParam = ms_node_new(MS_NT_PARAM, (ms_node_value){ .param = { .data = toAdd, .nextParam = NULL } });
         nextParam = &(*nextParam)->value.param.nextParam;
         cmd->value.invoke.numParams++;
@@ -471,7 +470,6 @@ ms_node *ms_ast_next(ms_ast *ast, ms_tokens *toks) {
 
 // create an entire ast
 ms_ast parse(ms_tokens *tokens) {
-    printf("parser started\n");
 
     // create the empty ast
     ms_ast ast;

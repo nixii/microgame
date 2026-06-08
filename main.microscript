@@ -49,27 +49,27 @@ let camera_entity new "entity" with
     end
 end
 
-# Spawn spinning blender test mesh
-let test_entity new "entity" with
-    attach new "mesh" from test_mesh
-    set position 0 0 0
-end
-
-# test entity spin
-let test_entity_timer 0
-let _rad 3
-on update_test_entity with dt do
-    let test_entity_timer test_entity_timer + dt
-    as test_entity do
-        as (get rotation) do
-            set y test_entity_timer + 1.570796
-        end
-        as (get position) do
-            set x 0 - (call cos test_entity_timer) * _rad
-            set z (call sin test_entity_timer) * _rad
-        end
-    end
-end
+# # Spawn spinning blender test mesh
+# let test_entity new "entity" with
+#     attach new "mesh" from test_mesh
+#     set position 0 0 0
+# end
+# 
+# # test entity spin
+# let test_entity_timer 0
+# let _rad 10
+# on update_test_entity with dt do
+#     let test_entity_timer test_entity_timer + dt
+#     as test_entity do
+#         as (get rotation) do
+#             set y test_entity_timer + 1.570796
+#         end
+#         as (get position) do
+#             set x 0 - (call cos test_entity_timer) * _rad
+#             set z (call sin test_entity_timer) * _rad
+#         end
+#     end
+# end
 
 # update the camera
 on update_camera with dt do
@@ -200,6 +200,6 @@ on frame with dt do
     call save
 
     # rotate
-    call update_test_entity dt
+    # call update_test_entity dt
    
 end 

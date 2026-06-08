@@ -906,7 +906,6 @@ static ms_data ms_interpreter_run_code(ms_interpreter *interp, const ms_node *n)
 
 // create an interpreter
 ms_interpreter ms_interpreter_from(ms_ast *ast, scene *s, entity e, ms_data obj) {
-    printf("interpreter started\n");
 
     // create the interpreter
     ms_interpreter interp = (ms_interpreter){
