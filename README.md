@@ -15,6 +15,7 @@ It will be usable as a custom coding language *and* as a static C library.
 ## How to build?
 1) Make sure you have Raylib installed.
 2) Run `make engine`. This creates a `./microgame` executable.
+> **NOTE**: You might need to change the makefile. It is set up for MacOS right now.
 3) Run the `./microgame` executable. This will run `main.microscript` in the same directory.
 
 ## Langauge docs
