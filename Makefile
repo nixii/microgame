@@ -6,7 +6,11 @@ CFLAGS = -Wall -Wextra
 IFLAGS = -Iinclude
 
 # add in raylib
-ADD_RAYLIB = -L/opt/homebrew/opt/raylib/lib -lraylib -I/opt/homebrew/opt/raylib/include
+ADD_RAYLIB = /opt/homebrew/opt/raylib/lib/libraylib.a -I/opt/homebrew/opt/raylib/include
+ADD_RAYLIB += -framework Cocoa
+ADD_RAYLIB += -framework IOKit
+ADD_RAYLIB += -framework CoreVideo
+ADD_RAYLIB += -framework Corefoundation
 
 # optimization
 OPT = -O3 # this is perfectly fine!

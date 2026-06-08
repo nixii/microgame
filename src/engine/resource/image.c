@@ -7,7 +7,6 @@
 #define STBI_ONLY_JPEG
 
 // I use stb_image for loading images withotu having to code that myself.
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
 // load an image from a path
