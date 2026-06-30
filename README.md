@@ -12,11 +12,24 @@ It will be usable as a custom coding language *and* as a static C library.
 - Collision & velocity built-in
 - A small custom coding language for use in the engine
 
-## How to build?
+## How to build
 1) Make sure you have Raylib installed.
 2) Run `make engine`. This creates a `./microgame` executable.
 > **NOTE**: You might need to change the makefile. It is set up for MacOS right now.
 3) Run the `./microgame` executable. This will run `main.microscript` in the same directory.
+
+## Examples Made in Microgame
+### Video example of main.microscript:
+<iframe width="560" height="315" src="https://www.youtube.com/embed/itvrUS_PTD8?si=qRY2uLXLikeW6gWz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+### Render a mesh (mesh.obj):
+<img src="docs_images/example-0.png">
+
+### Rotate the mesh (in radians):
+<img src="docs_images/example-1.png">
+
+### Color the mesh: 
+<img src="docs_images/example-2.png">
 
 ## Langauge docs
 Found [here (MICROSCRIPT.md)](MICROSCRIPT.md).
