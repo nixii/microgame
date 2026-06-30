@@ -19,8 +19,8 @@ It will be usable as a custom coding language *and* as a static C library.
 3) Run the `./microgame` executable. This will run `main.microscript` in the same directory.
 
 ## Examples Made in Microgame
-### Video example of main.microscript:
-<iframe width="560" height="315" src="https://www.youtube.com/embed/itvrUS_PTD8?si=qRY2uLXLikeW6gWz" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+### Video example of main.microscript (YouTube):
+[![Watch the video](https://img.youtube.com/vi/itvrUS_PTD8/default.jpg)](https://youtu.be/itvrUS_PTD8)
 
 ### Render a mesh (mesh.obj):
 <img src="docs_images/example-0.png">
