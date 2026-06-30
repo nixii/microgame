@@ -21,6 +21,7 @@ It will be usable as a custom coding language *and* as a static C library.
 ## Examples Made in Microgame
 ### Video example of main.microscript (YouTube):
 Click to go to the YouTube video.
+
 [![Watch the video](https://img.youtube.com/vi/itvrUS_PTD8/default.jpg)](https://youtu.be/itvrUS_PTD8)
 
 ### Render a mesh (mesh.obj):
